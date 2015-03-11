@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrandMutusData", "GrandMutusData\GrandMutusData.csproj", "{206B085B-F3C5-4CCB-AA5E-4111A1026A60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckGrandMutusData", "CheckGrandMutusData\CheckGrandMutusData.csproj", "{F7E926A1-1BC7-48A8-884A-7225FDCFA613}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrandMutusClassic", "GrandMutusClassic\GrandMutusClassic.csproj", "{F01D5DCA-4EFC-4C5D-A31C-F8D5DA8C9171}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{206B085B-F3C5-4CCB-AA5E-4111A1026A60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{206B085B-F3C5-4CCB-AA5E-4111A1026A60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{206B085B-F3C5-4CCB-AA5E-4111A1026A60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{206B085B-F3C5-4CCB-AA5E-4111A1026A60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7E926A1-1BC7-48A8-884A-7225FDCFA613}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7E926A1-1BC7-48A8-884A-7225FDCFA613}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7E926A1-1BC7-48A8-884A-7225FDCFA613}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7E926A1-1BC7-48A8-884A-7225FDCFA613}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F01D5DCA-4EFC-4C5D-A31C-F8D5DA8C9171}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F01D5DCA-4EFC-4C5D-A31C-F8D5DA8C9171}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F01D5DCA-4EFC-4C5D-A31C-F8D5DA8C9171}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F01D5DCA-4EFC-4C5D-A31C-F8D5DA8C9171}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
