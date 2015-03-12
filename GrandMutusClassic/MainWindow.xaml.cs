@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using HyperMutus;
+
 namespace GrandMutus
 {
 	using Data;
@@ -30,12 +32,16 @@ namespace GrandMutus
 			public MainWindow()
 			{
 				InitializeComponent();
+				// ファイル履歴ショートカットの作成位置を指定する．
+				this.FileHistoryShortcutParent = menuItemHistory;
 			}
 
 			// 4. 抽象メンバを実装する．
 			// ...ファイル履歴関連のメンバなんですが，
 			// これって，Windowに実装するべきなのでしょうか？Appに実装するべきだという気がしているのですが，
 			// UIに実装する上で何か不都合があるでしょうか？
+
+			#region BasicWindow抽象メンバの実装
 
 			protected override System.Collections.Specialized.StringCollection FileHistory
 			{
@@ -59,6 +65,8 @@ namespace GrandMutus
 				get { return App.Current.MySettings.FileHistoryDisplayCount; }
 			}
 
+			#endregion
+
 			// 5. DataContextの設定？...は不要だった．
 			public MutusDocument MyDocument
 			{
@@ -67,15 +75,70 @@ namespace GrandMutus
 				get { return (MutusDocument)NewDocument; }
 			}
 
+			// 6. XAML側では，Titleの設定をしましょう．(これはAldenteaWpfUtility.dllが必要になる．)
 
 
 			#region コマンドハンドラ
+
+			// (0.2.0)
 			private void Close_Executed(object sender, ExecutedRoutedEventArgs e)
 			{
 				this.Close();
 			}
+
+			// (0.2.1)
+			private void AddSongs_Executed(object sender, ExecutedRoutedEventArgs e)
+			{
+				var fileNames = Helpers.SelectSongFiles();
+				if (fileNames != null)
+				{
+					AddSongs(fileNames);
+					//SayInfo("曲追加完了！");
+				}
+			}
+
+			#endregion
+
+
+
+			// (0.2.1)HyperMutusから導入．AldenteaBackGroundWorkerDialog(1.1.0.0)が必要．
+			// 10/20/2014 by aldentea : AddSongの仕様変更に対応．
+			// 10/06/2014 by aldentea : UseAutoSaveOperationHistoryプロパティの制御を追加．
+			// 07/15/2014 by aldentea : 並列化？
+			// 11/08/2013 by aldentea : BackgroundWorkerDialog周辺の処理をHelpersに移動．
+			// 09/07/2011 by aldentea
+			#region 曲を追加(AddSongs)
+			void AddSongs(IEnumerable<string> fileNames)
+			{
+				//Dictionary<int, string> fileDictionary = new Dictionary<int, string>();
+
+				//this.MyDocument.UseAutoSaveOperationHistory = false;
+				try
+				{
+					Action<string> action = (fileName) =>
+					{
+						// ObservableCollectionに対する操作は，それが作られたスレッドと同じスレッドで行う必要がある．
+						var id = this.Dispatcher.Invoke(
+							new Func<string,int>(delegate(string f){ return MyDocument.AddSong(f).ID; }),	fileName);
+						//if (id.HasValue)
+						//{
+						//	fileDictionary.Add(id.Value, fileName);
+						//}
+					};
+					Helpers.WorkBackgroundParallel<string>(fileNames, action);
+					//this.MyDocument.AddOperationHistory(
+					//	new AddSongsOperationCache(this.MyDocument, fileDictionary)
+					//);
+				}
+				finally
+				{
+					//this.MyDocument.UseAutoSaveOperationHistory = true;
+				}
+			}
 			#endregion
 
 		}
+
 	}
+
 }
