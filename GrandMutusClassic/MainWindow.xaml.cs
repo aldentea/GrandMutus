@@ -33,7 +33,13 @@ namespace GrandMutus
 
 			private void Button_Click(object sender, RoutedEventArgs e)
 			{
-				((MutusDocument)this.DataContext).SaveAs(@"B:\classic.mtu");
+				((MutusDocument)this.DataContext).SaveAs(@"B:\classic.mtq");
+			}
+
+			private void ButtonLoad_Click(object sender, RoutedEventArgs e)
+			{
+				((MutusDocument)this.DataContext).Open(@"B:\classic.mtq");
+
 			}
 		}
 	}

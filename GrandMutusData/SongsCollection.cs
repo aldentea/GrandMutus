@@ -33,8 +33,11 @@ namespace GrandMutus.Data
 					{
 						var song = (Song)item;
 						// IDを付与する．
-						song.ID = GenerateNewID();
-
+						// (0.1.2)IDが既に設定されているかどうかを確認．
+						if (song.ID < 0)
+						{
+							song.ID = GenerateNewID();
+						}
 						// ☆songのプロパティ変更をここで受け取る？MutusDocumentで行えばここでは不要？
 
 					}
@@ -57,25 +60,25 @@ namespace GrandMutus.Data
 		}
 
 
-		#region XML出力関連
+		#region XML入出力関連
 
-		const string ELEMENT_NAME = "songs";
+		public const string ELEMENT_NAME = "songs";
 		const string PATH_ATTRIBUTE = "path";
 
 		/// <summary>
 		/// XMLファイルを出力するディレクトリです．
 		/// </summary>
-		/// <param name="destination_dir"></param>
+		/// <param name="destinationDir"></param>
 		/// <returns></returns>
-		public XElement GenerateElement(string destination_dir)
+		public XElement GenerateElement(string destinationDir)
 		{
 			XElement element = new XElement(ELEMENT_NAME);
 			string songs_root = null;
 			if (!string.IsNullOrEmpty(RootDirectory))
 			{
-				if (RootDirectory.Contains(destination_dir))
+				if (RootDirectory.Contains(destinationDir))
 				{
-					songs_root = RootDirectory.Substring(destination_dir.Length).TrimStart('\\');	// 相対パス化．
+					songs_root = RootDirectory.Substring(destinationDir.Length).TrimStart('\\');	// 相対パス化．
 				}
 				else
 				{
@@ -90,6 +93,16 @@ namespace GrandMutus.Data
 			}
 
 			return element;
+		}
+
+		// (0.1.2)
+		public void LoadElement(XElement songsElement)
+		{
+			this.RootDirectory = (string)songsElement.Attribute(PATH_ATTRIBUTE);
+			foreach (var song_element in songsElement.Elements(Song.ELEMENT_NAME))
+			{
+				this.Add(Song.Generate(song_element, this.RootDirectory));
+			}
 		}
 
 		#endregion

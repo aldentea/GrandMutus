@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using System.ComponentModel;
 using System.Xml.Linq;
+using System.IO;
 
 namespace GrandMutus.Data
 {
@@ -23,7 +24,7 @@ namespace GrandMutus.Data
 			get { return _id; }
 			internal set { _id = value; }
 		}
-		int _id;
+		int _id = -1;	// (0.1.2)-1は未設定であることを示す．
 
 		#region *Titleプロパティ
 		/// <summary>
@@ -93,14 +94,14 @@ namespace GrandMutus.Data
 
 
 
-		#region XML出力関連
+		#region XML入出力関連
 
 		// どこに置くかは未定．
 		// ここに置くか，XML生成専用のクラスを作成するか...
 
 
 		// このあたり本来はXNameなんだけど，手抜きをする．
-		const string ELEMENT_NAME = "song";
+		public const string ELEMENT_NAME = "song";	// (0.1.2)publicに変更．
 		const string ID_ATTRIBUTE = "id";
 		const string TITLE_ELEMENT = "title";
 		const string ARTIST_ELEMENT = "artist";
@@ -133,6 +134,34 @@ namespace GrandMutus.Data
 			}
 			element.Add(new XElement(FILE_NAME_ELEMENT, file_name));
 			return element;
+		}
+
+		// (0.1.2)
+		public static Song Generate(XElement songElement, string songsRoot = null)
+		{
+			Song song = new Song();
+
+			// XMLからインスタンスを生成するならばIDは常にあるのでは？
+			// →songをインポートする時とかはそうではないかもしれない？ので一応有無をチェックする．
+			// →でも，インポートする時はXML経由ではなくオブジェクト経由で行った方がいいのでは？(ファイル名のパスの扱いとか...)
+			var id_attribute = songElement.Attribute(ID_ATTRIBUTE);
+			if (id_attribute != null)
+			{
+				song.ID = (int)id_attribute;
+			}
+			song.Title = (string)songElement.Element(TITLE_ELEMENT);
+			song.Artist = (string)songElement.Element(ARTIST_ELEMENT);
+			var file_name = (string)songElement.Element(FILE_NAME_ELEMENT);	// 相対パスをフルパスに直す作業が必要！
+			if (!Path.IsPathRooted(file_name))
+			{
+				file_name = Path.Combine(songsRoot, file_name);
+				if (!Path.IsPathRooted(file_name))
+				{
+					throw new ArgumentException("ファイル名が相対パスで記録されています．songsRootには，絶対パスを指定して下さい．", "songsRoot");
+				}
+			}
+			song.FileName = file_name;
+			return song;
 		}
 
 

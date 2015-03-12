@@ -78,9 +78,12 @@ namespace GrandMutus.Data
 
 		#region XML出力関連
 
+		public const string ROOT_ELEMENT_NAME = "mutus";
+		const string VERSION_ATTERIBUTE = "version";
+
 		public XDocument GenerateXml(string destination)
 		{
-			XDocument xdoc = new XDocument(new XElement("mutus", new XAttribute("version", "3.0")));
+			XDocument xdoc = new XDocument(new XElement(ROOT_ELEMENT_NAME, new XAttribute(VERSION_ATTERIBUTE, "3.0")));
 			xdoc.Root.Add(Songs.GenerateElement(System.IO.Path.GetDirectoryName(destination)));
 
 			return xdoc;
@@ -98,7 +101,29 @@ namespace GrandMutus.Data
 
 		protected override bool LoadDocument(string fileName)
 		{
-			throw new NotImplementedException();
+			using (XmlReader reader = XmlReader.Create(fileName))
+			{
+				var xdoc = XDocument.Load(reader);
+				var root = xdoc.Root;
+
+				// ☆ここから下は，継承先でオーバーライドできるようにしておく．
+				if (root.Name == ROOT_ELEMENT_NAME)
+				{
+					decimal? version = (decimal?)root.Attribute(VERSION_ATTERIBUTE);
+					if (version.HasValue)
+					{
+						if (version >= 3.0M)
+						{
+							this.Songs.LoadElement(root.Element(SongsCollection.ELEMENT_NAME));
+							return true;
+						}
+					}
+				}
+
+
+			}
+			return false;
+
 		}
 
 		protected override bool SaveDocument(string destination)
