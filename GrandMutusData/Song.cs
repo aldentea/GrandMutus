@@ -92,6 +92,61 @@ namespace GrandMutus.Data
 		string _artist = string.Empty;
 		#endregion
 
+		public string RelativeFileName
+		{
+			get
+			{
+				if (this.FileName.StartsWith(Parent.RootDirectory))
+				{
+					return this.FileName.Substring(Parent.RootDirectory.Length).TrimStart('\\');
+				}
+				else
+				{
+					return this.FileName;
+				}
+			}
+		}
+
+
+		// 問題2. 親要素への参照を設定できるか？
+
+		#region *Parentプロパティ
+		SongsCollection Parent
+		{
+			get { return _parent; }
+			set
+			{
+				if (this.Parent != value)
+				{
+					this._parent = value;
+					NotifyPropertyChanged("Parent");
+					NotifyPropertyChanged("RelativeFileName");
+				}
+			}
+		}
+		SongsCollection _parent = null;
+		#endregion
+
+		// こういうプロパティを用意して，いつ設定するのか？
+		// →こういうメソッドを用意してみては？
+
+		/// ↓元のParentに依存した処理を行うならば，OnRemovedFromみたいなメソッドを用意する必要が出てきます．
+
+		/// <summary>
+		/// 自身がparentに追加された時に呼び出します．
+		/// 除外されたときは引数をnullにして呼び出せばいいのかな？
+		/// </summary>
+		/// <param name="parent"></param>
+		public virtual void OnAddedTo(SongsCollection parent)
+		{
+			this.Parent = parent;
+		}
+
+		// で，SongsCollectionのCollectionChangedから呼び出す，と．
+
+
+
+
 
 
 		#region XML入出力関連

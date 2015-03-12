@@ -38,6 +38,9 @@ namespace GrandMutus.Data
 		}
 
 
+		//public System.Collections.ObjectModel.ReadOnlyObservableCollection<Song>
+
+
 
 		#region 曲関連
 

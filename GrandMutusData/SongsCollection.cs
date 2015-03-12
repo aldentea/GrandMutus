@@ -39,7 +39,16 @@ namespace GrandMutus.Data
 							song.ID = GenerateNewID();
 						}
 						// ☆songのプロパティ変更をここで受け取る？MutusDocumentで行えばここでは不要？
+						song.OnAddedTo(this);
+					}
+					break;
+				case NotifyCollectionChangedAction.Remove:
+					foreach (var item in e.OldItems)
+					{
+						var song = (Song)item;
 
+						// どうにかする．
+						song.OnAddedTo(null);
 					}
 					break;
 				case NotifyCollectionChangedAction.Reset:

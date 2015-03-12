@@ -32,17 +32,6 @@ namespace GrandMutus
 				InitializeComponent();
 			}
 
-			private void Button_Click(object sender, RoutedEventArgs e)
-			{
-				((MutusDocument)this.DataContext).SaveAs(@"B:\classic.mtq");
-			}
-
-			private void ButtonLoad_Click(object sender, RoutedEventArgs e)
-			{
-				((MutusDocument)this.DataContext).Open(@"B:\classic.mtq");
-
-			}
-
 			// 4. 抽象メンバを実装する．
 			// ...ファイル履歴関連のメンバなんですが，
 			// これって，Windowに実装するべきなのでしょうか？Appに実装するべきだという気がしているのですが，
@@ -77,6 +66,15 @@ namespace GrandMutus
 				// NewDocumentプロパティも同じものを指す．
 				get { return (MutusDocument)NewDocument; }
 			}
+
+
+
+			#region コマンドハンドラ
+			private void Close_Executed(object sender, ExecutedRoutedEventArgs e)
+			{
+				this.Close();
+			}
+			#endregion
 
 		}
 	}

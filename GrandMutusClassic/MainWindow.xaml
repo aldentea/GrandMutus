@@ -3,6 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:wpf="clr-namespace:Aldentea.Wpf.Application;assembly=AldenteaWpfApplication"
         Title="MainWindow" Height="500" Width="800">
+    <Window.CommandBindings>
+        <CommandBinding Command="Close" Executed="Close_Executed" CanExecute="Always_CanExecute" />
+    </Window.CommandBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -10,7 +13,13 @@
         </Grid.RowDefinitions>
 
         <Menu Name="MainMenu" Grid.Row="0" HorizontalAlignment="Stretch">
-            <MenuItem Header="ファイル(_F)" />
+            <MenuItem Header="ファイル(_F)">
+                <MenuItem Header="新規作成(_N)" Command="New" />
+                <MenuItem Header="開く(_O)" Command="Open" />
+                <MenuItem Header="保存(_S)" Command="Save" />
+                <MenuItem Header="名前をつけて保存(_A)" Command="SaveAs" />
+                <MenuItem Header="終了(_X)" Command="Close" />
+            </MenuItem>
             <MenuItem Header="編集(_E)" />
             <MenuItem Header="曲リスト(_S)">
                 <MenuItem Header="曲追加(_A)" />
@@ -22,13 +31,9 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Title" MinWidth="100" Binding="{Binding Path=Title}" />
                 <DataGridTextColumn Header="Artist" MinWidth="100" Binding="{Binding Path=Artist}" />
-                <DataGridTextColumn Header="Title" MinWidth="100" Binding="{Binding Path=FileName}" />
+                <DataGridTextColumn Header="FileName" MinWidth="100" Binding="{Binding Path=RelativeFileName, Mode=OneWay}" />
             </DataGrid.Columns>
         </DataGrid>
-        <Button Grid.Row="1" Content="Save" HorizontalAlignment="Left" Margin="180,403,0,0" VerticalAlignment="Top" Width="75"
-                Click="Button_Click"/>
-        <Button Grid.Row="1" Content="Load" HorizontalAlignment="Left" Margin="280,403,0,0" VerticalAlignment="Top" Width="75"
-                Click="ButtonLoad_Click"/>
 
     </Grid>
 </wpf:BasicWindow>
