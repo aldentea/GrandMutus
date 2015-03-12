@@ -92,13 +92,15 @@ namespace GrandMutus.Data
 		string _artist = string.Empty;
 		#endregion
 
+		// (0.2.1)
 		public string RelativeFileName
 		{
 			get
 			{
-				if (this.FileName.StartsWith(Parent.RootDirectory))
+				string root = Parent.RootDirectory;
+				if (!string.IsNullOrEmpty(root) && this.FileName.StartsWith(root))
 				{
-					return this.FileName.Substring(Parent.RootDirectory.Length).TrimStart('\\');
+					return this.FileName.Substring(root.Length).TrimStart('\\');
 				}
 				else
 				{

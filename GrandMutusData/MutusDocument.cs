@@ -28,7 +28,7 @@ namespace GrandMutus.Data
 		public MutusDocument()
 		{
 			_songs = new SongsCollection();
-
+			//_songs.CollectionChanged += Songs_CollectionChanged;
 
 			_xmlWriterSettings = new XmlWriterSettings
 			{
@@ -51,7 +51,7 @@ namespace GrandMutus.Data
 			Song song = new Song { FileName = fileName };
 			LoadInformation(song);
 			_songs.Add(song);
-			SongAdded(this, new ItemEventArgs<Song> { Item = song });
+			//SongAdded(this, new ItemEventArgs<Song> { Item = song });
 			return song;
 		}
 
@@ -70,10 +70,13 @@ namespace GrandMutus.Data
 		}
 		#endregion
 
+
+
+
 		/// <summary>
 		/// 曲が追加された時に発生します．
 		/// </summary>
-		public event EventHandler<ItemEventArgs<Song>> SongAdded = delegate { };
+		//public event EventHandler<ItemEventArgs<Song>> SongAdded = delegate { };
 
 		#endregion
 

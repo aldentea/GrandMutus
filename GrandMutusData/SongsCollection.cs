@@ -34,7 +34,7 @@ namespace GrandMutus.Data
 						var song = (Song)item;
 						// IDを付与する．
 						// (0.1.2)IDが既に設定されているかどうかを確認．
-						if (song.ID < 0)
+						if (song.ID <= 0)	// 無効な値．
 						{
 							song.ID = GenerateNewID();
 						}
@@ -121,9 +121,10 @@ namespace GrandMutus.Data
 
 		#region ID管理関連
 
+		// (0.2.1)無効なIDとして負の値を使うことにしたので，Anyに条件を付加．
 		int GenerateNewID()
 		{
-			int new_id = this.UsedIDList.Any() ? this.UsedIDList.Max() + 1 : 1;
+			int new_id = this.UsedIDList.Any(n => n > 0) ? this.UsedIDList.Max() + 1 : 1;
 			// ↑Max()は，要素が空ならInvalidOperationExceptionをスローする．
 
 			//UsedIDList.Add(new_id);
