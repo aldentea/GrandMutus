@@ -8,10 +8,57 @@ using System.Windows;
 
 namespace GrandMutus.Classic
 {
+
+	// 1. Appの継承元を変更する(XAMLも忘れずに！)．
+
 	/// <summary>
 	/// App.xaml の相互作用ロジック
 	/// </summary>
-	public partial class App : Application
+	public partial class App : Aldentea.Wpf.Application.Application
 	{
+
+		#region  2. お決まりの設定．(コピペでいいかも．)
+		// 06/18/2014 by aldentea 
+		protected App()
+			: base()
+		{
+			this.Document = new GrandMutus.Data.MutusDocument();
+			this.Exit += new ExitEventHandler(App_Exit);
+		}
+
+		void App_Exit(object sender, ExitEventArgs e)
+		{
+			MySettings.Save();
+		}
+
+		// 07/09/2014 by aldentea : Settingsクラスに合わせてinternalに設定．
+		// 06/13/2014 by aldentea
+		#region *MySettingsプロパティ
+		/// <summary>
+		/// アプリケーションの設定を取得します．
+		/// </summary>
+		internal Properties.Settings MySettings
+		{
+			get
+			{
+				// 単に"Properties"では通らない．
+				return GrandMutus.Classic.Properties.Settings.Default;
+			}
+		}
+		#endregion
+
+		// 06/13/2014 by aldentea : これはその都度実装する必要がありますかねぇ．
+		public new static App Current
+		{
+			get
+			{
+				return System.Windows.Application.Current as App;
+			}
+		}
+
+		#endregion
+
+		// ここらへんまでお決まり．
+
 	}
 }
