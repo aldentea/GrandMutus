@@ -10,8 +10,8 @@ using System.IO;
 
 namespace GrandMutus.Data
 {
-
-	public class MutusDocument : Aldentea.Wpf.Document.DocumentBase
+	// (0.2.0)継承元をDocumentWithOperationHistoryに変更．
+	public class MutusDocument : DocumentWithOperationHistory
 	{
 		// とりあえずpublicにしてみる．
 		public SongsCollection Songs { get { return _songs; } }
@@ -29,12 +29,21 @@ namespace GrandMutus.Data
 		{
 			_songs = new SongsCollection();
 			//_songs.CollectionChanged += Songs_CollectionChanged;
-
+			_songs.ItemChanged += Songs_ItemChanged;
 			_xmlWriterSettings = new XmlWriterSettings
 			{
 				Indent = true,
 				NewLineHandling = NewLineHandling.Entitize
 			};
+		}
+
+		void Songs_ItemChanged(object sender, ItemEventArgs<IOperationCache> e)
+		{
+			var operationCache = (IOperationCache)e.Item;
+			if (operationCache != null)
+			{
+				this.AddOperationHistory(operationCache);
+			}
 		}
 
 

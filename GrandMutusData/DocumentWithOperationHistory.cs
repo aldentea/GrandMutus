@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace GrandMutus.Data
 {
-
-	// ALdentea.Wpf.Document名前空間の同名クラスを試しに実装してみる．
+	// (0.2.0)新規作成．
+	// Aldentea.Wpf.Document名前空間の同名クラスを試しに実装してみる．
 	// ↑の2.3.0で反映させる予定．
 
 	public abstract class DocumentWithOperationHistory : Aldentea.Wpf.Document.DocumentBase
@@ -18,6 +18,8 @@ namespace GrandMutus.Data
 			: base()
 		{
 			this.Opened += new EventHandler(DocumentWithOperationHistory_Opened);
+
+		
 		}
 		#endregion
 
@@ -164,6 +166,8 @@ namespace GrandMutus.Data
 		}
 		#endregion
 
+		// ★新たな実装では，アンドゥやリドゥの場合と統合しました．
+
 		// 10/23/2014 by aldentea
 		// リドゥ時も(アンドゥ時と同じように)スキップするように変更．
 		// リドゥ時は，これらの処理をRedoメソッドで行います．
@@ -176,6 +180,7 @@ namespace GrandMutus.Data
 		/// 操作履歴を追加します．
 		/// </summary>
 		/// <param name="item"></param>
+		/*
 		public void AddOperationHistory(IOperationCache item)
 		{
 			if (!_undoing && !_redoing)
@@ -188,34 +193,67 @@ namespace GrandMutus.Data
 				undoHistory.Clear();
 			}
 		}
+		 * */
+
+		protected void AddOperationHistory(IOperationCache item)
+		{
+			if (operationHistory.Count > 0 && operationHistory.Peek().CanCancelWith(item))
+			{
+				// アンドゥ(相当の)操作を行った場合．
+
+				// itemをpushする代わりに，operationHistoryの先頭(末尾？)の要素とキャンセルする．
+				operationHistory.Pop();
+				undoHistory.Push(item);
+
+				OperationCount--;
+			}
+			else if (undoHistory.Count > 0 && undoHistory.Peek().CanCancelWith(item))
+			{
+				// リドゥ(相当の)操作を行った場合．
+
+				undoHistory.Pop();
+				operationHistory.Push(item);
+
+				OperationCount++;
+			}
+			else
+			{
+				// それ以外の操作を行った場合．
+
+				operationHistory.Push(item);
+				// もはやリドゥはできないので，スタックを空にする．
+				undoHistory.Clear();
+
+				if (OperationCount >= 0)
+				{
+					OperationCount++;
+				}
+			}
+		}
 		#endregion
+
 
 		/// <summary>
 		/// アンドゥ中に立てるフラグ．
 		/// アンドゥ動作をoperationCacheに入れないようにするため．
 		/// </summary>
-		bool _undoing = false;
+		//bool _undoing = false;
 
+
+		// ★新たな実装では，ここではPopせずPeekを使っています．
+		// Popの処理は，AddOperationHistoryメソッドで行います．
 		#region *元に戻す(Undo)
 		public void Undo()
 		{
 			if (this.CanUndo)
 			{
-				IOperationCache item = this.operationHistory.Pop();
-				try
-				{
-					this._undoing = true;
-					item.Reverse();
-					OperationCount--;
-					undoHistory.Push(item);
-				}
-				finally
-				{
-					this._undoing = false;
-				}
+				this.operationHistory.Peek().Reverse();
 			}
 		}
 		#endregion
+
+		// ★新たな実装では，ここではPopせずPeekを使っています．
+		// Popの処理は，AddOperationHistoryメソッドで行います．
 
 		// 10/23/2014 by aldentea : _redoingフラグをfalseにしてからOperationHistory周辺の処理をするように変更．
 		// 10/20/2014 by aldentea : item.Doの後の2行を追加．(AutoSave～を切る前提なので，これを使わない場合とは相性が悪いかも．)
@@ -228,24 +266,11 @@ namespace GrandMutus.Data
 		{
 			if (this.CanRedo)
 			{
-				var item = this.undoHistory.Pop();
-				this._redoing = true;
-				try
-				{
-					item.Do();
-					// 普通に実行すれば，OperationCountやundoHistoryは適切に処理されるはず．
-					// ↑いや，違うでしょ．undoHistoryがクリアされてしまうので，独自の処理が必要だね．
-				}
-				finally
-				{
-					this._redoing = false;
-				}
-				OperationCount++;
-				operationHistory.Push(item);
+				this.undoHistory.Peek().Reverse();
 			}
 		}
 
-		bool _redoing = false;
+		//bool _redoing = false;
 		#endregion
 
 		#endregion
@@ -259,9 +284,9 @@ namespace GrandMutus.Data
 		/// <summary>
 		/// 正方向実行．
 		/// </summary>
-		void Do();
+		//void Do();
 
-		// ↓いらなくなるかも！
+		// ↑いらなくなるかも！
 
 		/// <summary>
 		/// 逆方向実行．
@@ -275,11 +300,13 @@ namespace GrandMutus.Data
 		/// <returns></returns>
 		bool CanCancelWith(IOperationCache other);
 
+		// ↓これ使うの？
+
 		/// <summary>
 		/// 自身と対になるOperationCacheを返します．
 		/// </summary>
 		/// <returns></returns>
-		IOperationCache GetInverse();
+		//IOperationCache GetInverse();
 
 	}
 	#endregion

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace GrandMutus.Data
 {
 
-
+	// (0.2.0)新規作成．
 
 
 
@@ -32,10 +32,10 @@ namespace GrandMutus.Data
 			this._currentValue = to;
 		}
 
-		public abstract void Do();
+		//public abstract void Do();
 		public abstract void Reverse();
 		public abstract bool CanCancelWith(IOperationCache other);
-		public abstract IOperationCache GetInverse();
+		//public abstract IOperationCache GetInverse();
 	}
 
 	public class SongTitleChangedCache : PropertyChangedCache<string>
@@ -55,10 +55,10 @@ namespace GrandMutus.Data
 		// 並列実行の対応も気になりますが…
 
 
-		public override void Do()
-		{
-			_song.Title = _currentValue;
-		}
+		//public override void Do()
+		//{
+		//	_song.Title = _currentValue;
+		//}
 
 		public override void Reverse()
 		{
@@ -81,10 +81,10 @@ namespace GrandMutus.Data
 			}
 		}
 
-		public override IOperationCache GetInverse()
-		{
-			return new SongTitleChangedCache(this._song, this._currentValue, this._previousValue);
-		}
+		//public override IOperationCache GetInverse()
+		//{
+		//	return new SongTitleChangedCache(this._song, this._currentValue, this._previousValue);
+		//}
 
 	}
 }

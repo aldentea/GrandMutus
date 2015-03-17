@@ -11,7 +11,7 @@ using System.IO;
 namespace GrandMutus.Data
 {
 
-	public class Song : INotifyPropertyChanged
+	public class Song : INotifyPropertyChanged, INotifyPropertyChanging
 	{
 		// 問題1. IDをどうやって付与しようか？
 		// →コンストラクタをinternalにする．
@@ -40,6 +40,7 @@ namespace GrandMutus.Data
 			{
 				if (Title != value)
 				{
+					NotifyPropertyChanging("Title");
 					this._title = value;
 					NotifyPropertyChanged("Title");
 				}
@@ -235,6 +236,14 @@ namespace GrandMutus.Data
 		}
 
 		#endregion
+
+
+		public event PropertyChangingEventHandler PropertyChanging = delegate { };
+		protected void NotifyPropertyChanging(string propertyName)
+		{
+			this.PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
+		}
+
 
 	}
 

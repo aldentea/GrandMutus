@@ -39,6 +39,7 @@ namespace GrandMutus.Data
 							song.ID = GenerateNewID();
 						}
 						// ☆songのプロパティ変更をここで受け取る？MutusDocumentで行えばここでは不要？
+						song.PropertyChanging += Song_PropertyChanging;
 						song.PropertyChanged += Song_PropertyChanged;
 						song.OnAddedTo(this);
 					}
@@ -47,7 +48,7 @@ namespace GrandMutus.Data
 					foreach (var item in e.OldItems)
 					{
 						var song = (Song)item;
-
+						song.PropertyChanging -= Song_PropertyChanging;
 						song.PropertyChanged -= Song_PropertyChanged;
 						// どうにかする．
 						song.OnAddedTo(null);
@@ -60,12 +61,37 @@ namespace GrandMutus.Data
 			}
 		}
 
+
+		string _titleCache = string.Empty;	// 手抜き．Songオブジェクト自体もキャッシュするべき．
+
+		void Song_PropertyChanging(object sender, System.ComponentModel.PropertyChangingEventArgs e)
+		{
+			Song song = (Song)sender;
+			switch(e.PropertyName)
+			{
+				case "Title":
+					this._titleCache = song.Title;
+					break;
+			}
+		}
+
 		void Song_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
-			
+			var song = (Song)sender;
+			//if (song.Title != _titleCache)
+			//{
+				this.ItemChanged(this, new ItemEventArgs<IOperationCache>
+				{
+					Item = new SongTitleChangedCache(song, _titleCache, song.Title)
+				});
+			//}
+			_titleCache = string.Empty;
 			// ドキュメントにNotifyしたい！？
 			//e.PropertyName
 		}
+
+		public event EventHandler<ItemEventArgs<IOperationCache>> ItemChanged = delegate { };
+
 
 		/// <summary>
 		/// 初期化します．
