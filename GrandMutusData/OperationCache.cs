@@ -35,7 +35,7 @@ namespace GrandMutus.Data
 		public abstract void Do();
 		public abstract void Reverse();
 		public abstract bool CanCancelWith(IOperationCache other);
-		public abstract void GetInverse();
+		public abstract IOperationCache GetInverse();
 	}
 
 	public class SongTitleChangedCache : PropertyChangedCache<string>
@@ -68,7 +68,7 @@ namespace GrandMutus.Data
 		// そもそもoperationCache.Reverse(); だけでアンドゥできる仕組みだったのに，
 		// 実装側のコードが複雑になってしまっては意味がないのではないか？
 
-		public bool CanCancelWith(IOperationCache other)
+		public override bool CanCancelWith(IOperationCache other)
 		{
 			var other_cache = other as SongTitleChangedCache;
 			if (other_cache == null)
@@ -81,7 +81,7 @@ namespace GrandMutus.Data
 			}
 		}
 
-		public IOperationCache GetInverse()
+		public override IOperationCache GetInverse()
 		{
 			return new SongTitleChangedCache(this._song, this._currentValue, this._previousValue);
 		}
