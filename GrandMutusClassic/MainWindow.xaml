@@ -14,6 +14,11 @@
             Command="{x:Static hypermutus:Commands.AddSongsCommand}"
             Executed="AddSongs_Executed"
             CanExecute="Always_CanExecute" />
+        <CommandBinding
+            Command="Undo"
+            Executed="Undo_Executed"
+            CanExecute="Undo_CanExecute" />
+            
     </Window.CommandBindings>
     <Window.Resources>
         <util:CaptionConverter x:Key="captionConverter" ApplicationName="GrandMutusClassic" />

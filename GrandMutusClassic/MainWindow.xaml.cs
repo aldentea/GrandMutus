@@ -137,6 +137,19 @@ namespace GrandMutus
 			}
 			#endregion
 
+			private void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
+			{
+				if (MyDocument.CanUndo)
+				{
+					MyDocument.Undo();
+				}
+			}
+
+			private void Undo_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+			{
+				e.CanExecute = MyDocument.CanUndo;
+			}
+
 		}
 
 	}
