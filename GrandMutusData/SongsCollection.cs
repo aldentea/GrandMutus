@@ -39,6 +39,7 @@ namespace GrandMutus.Data
 							song.ID = GenerateNewID();
 						}
 						// ☆songのプロパティ変更をここで受け取る？MutusDocumentで行えばここでは不要？
+						song.PropertyChanged += Song_PropertyChanged;
 						song.OnAddedTo(this);
 					}
 					break;
@@ -47,15 +48,23 @@ namespace GrandMutus.Data
 					{
 						var song = (Song)item;
 
+						song.PropertyChanged -= Song_PropertyChanged;
 						// どうにかする．
 						song.OnAddedTo(null);
 					}
 					break;
 				case NotifyCollectionChangedAction.Reset:
-					// ClearしたときにはResetが発生するのか？
+					// ClearしたときにはResetが発生するのか？←そのようです．
 					break;
 
 			}
+		}
+
+		void Song_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			
+			// ドキュメントにNotifyしたい！？
+			//e.PropertyName
 		}
 
 		/// <summary>
