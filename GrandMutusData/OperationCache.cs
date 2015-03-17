@@ -38,6 +38,8 @@ namespace GrandMutus.Data
 		//public abstract IOperationCache GetInverse();
 	}
 
+
+	#region SongTitleChangedCacheクラス
 	public class SongTitleChangedCache : PropertyChangedCache<string>
 	{
 		Song _song;
@@ -87,4 +89,40 @@ namespace GrandMutus.Data
 		//}
 
 	}
+	#endregion
+
+
+
+	#region SongArtistChangedCacheクラス
+	public class SongArtistChangedCache : PropertyChangedCache<string>
+	{
+		Song _song;
+
+		public SongArtistChangedCache(Song song, string from, string to)
+			: base(from, to)
+		{
+			this._song = song;
+		}
+
+		public override void Reverse()
+		{
+			_song.Title = _previousValue;
+		}
+
+		public override bool CanCancelWith(IOperationCache other)
+		{
+			var other_cache = other as SongArtistChangedCache;
+			if (other_cache == null)
+			{ return false; }
+			else
+			{
+				return other_cache._song == this._song &&
+					other_cache._previousValue == this._currentValue &&
+					other_cache._currentValue == this._previousValue;
+			}
+		}
+
+	}
+	#endregion
+
 }

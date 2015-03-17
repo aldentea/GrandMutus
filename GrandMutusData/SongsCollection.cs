@@ -63,6 +63,7 @@ namespace GrandMutus.Data
 
 
 		string _titleCache = string.Empty;	// 手抜き．Songオブジェクト自体もキャッシュするべき．
+		string _artistCache = string.Empty;
 
 		void Song_PropertyChanging(object sender, System.ComponentModel.PropertyChangingEventArgs e)
 		{
@@ -72,20 +73,33 @@ namespace GrandMutus.Data
 				case "Title":
 					this._titleCache = song.Title;
 					break;
+				case "Artist":
+					this._artistCache = song.Artist;
+					break;
 			}
 		}
 
 		void Song_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			var song = (Song)sender;
-			//if (song.Title != _titleCache)
-			//{
-				this.ItemChanged(this, new ItemEventArgs<IOperationCache>
-				{
-					Item = new SongTitleChangedCache(song, _titleCache, song.Title)
-				});
-			//}
-			_titleCache = string.Empty;
+
+			switch (e.PropertyName)
+			{
+				case "Title":
+					this.ItemChanged(this, new ItemEventArgs<IOperationCache>
+					{
+						Item = new SongTitleChangedCache(song, _titleCache, song.Title)
+					});
+					_titleCache = string.Empty;
+					break;
+				case "Artist":
+					this.ItemChanged(this, new ItemEventArgs<IOperationCache>
+					{
+						Item = new SongArtistChangedCache(song, _artistCache, song.Artist)
+					});
+					_artistCache = string.Empty;
+					break;
+			}
 			// ドキュメントにNotifyしたい！？
 			//e.PropertyName
 		}

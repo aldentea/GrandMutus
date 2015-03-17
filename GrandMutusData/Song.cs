@@ -85,6 +85,7 @@ namespace GrandMutus.Data
 			{
 				if (Artist != value)
 				{
+					NotifyPropertyChanging("Artist");
 					this._artist = value;
 					NotifyPropertyChanged("Artist");
 				}
@@ -237,12 +238,13 @@ namespace GrandMutus.Data
 
 		#endregion
 
-
+		#region INotifyPropertyChanging実装
 		public event PropertyChangingEventHandler PropertyChanging = delegate { };
 		protected void NotifyPropertyChanging(string propertyName)
 		{
 			this.PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
 		}
+		#endregion
 
 
 	}
