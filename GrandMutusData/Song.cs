@@ -96,6 +96,30 @@ namespace GrandMutus.Data
 		string _artist = string.Empty;
 		#endregion
 
+		// (0.3.2)TimeSpan型にしてみました．
+		#region *SabiPosプロパティ
+		/// <summary>
+		/// 曲のサビの位置を取得／設定します．
+		/// </summary>
+		public TimeSpan SabiPos
+		{
+			get
+			{
+				return _sabiPos;
+			}
+			set
+			{
+				if (this.SabiPos != value)
+				{
+					NotifyPropertyChanging("SabiPos");
+					this._sabiPos = value;
+					NotifyPropertyChanged("SabiPos");
+				}
+			}
+		}
+		TimeSpan _sabiPos = TimeSpan.Zero;
+		#endregion
+
 		// (0.3.0)Parentがnullの場合の対策をしておく(OnAddTo(null)が呼ばれるときにまずいことになったので)．
 		// (0.2.1)←もっと前？
 		#region *RelativeFileNameプロパティ
@@ -169,8 +193,10 @@ namespace GrandMutus.Data
 		const string TITLE_ELEMENT = "title";
 		const string ARTIST_ELEMENT = "artist";
 		const string FILE_NAME_ELEMENT = "file_name";
+		const string SABI_POS_ATTRIBUTE = "sabi_pos";
 
-
+		// (0.3.2)sabi_pos要素を出力．
+		#region *XML要素を生成(GenerateElement)
 		/// <summary>
 		/// 
 		/// </summary>
@@ -182,6 +208,8 @@ namespace GrandMutus.Data
 			element.Add(new XAttribute(ID_ATTRIBUTE, this.ID));
 			element.Add(new XElement(TITLE_ELEMENT, this.Title));
 			element.Add(new XElement(ARTIST_ELEMENT, this.Artist));
+			// (0.3.2)とりあえず従前のように秒数を出力しておく．
+			element.Add(new XAttribute(SABI_POS_ATTRIBUTE, this.SabiPos.TotalSeconds));	
 
 			// XMLに出力する曲のファイル名．
 			string file_name;
@@ -198,8 +226,11 @@ namespace GrandMutus.Data
 			element.Add(new XElement(FILE_NAME_ELEMENT, file_name));
 			return element;
 		}
+		#endregion
 
+		// (0.3.2)sabi_pos属性の処理を追加．
 		// (0.1.2)
+		#region *[static]XML要素からオブジェクトを生成(Generate)
 		public static Song Generate(XElement songElement, string songsRoot = null)
 		{
 			Song song = new Song();
@@ -224,8 +255,13 @@ namespace GrandMutus.Data
 				}
 			}
 			song.FileName = file_name;
+			var sabi_pos = (double?)songElement.Attribute(SABI_POS_ATTRIBUTE);
+			if (sabi_pos.HasValue)
+			{	song.SabiPos = TimeSpan.FromSeconds(sabi_pos.Value); }
+
 			return song;
 		}
+		#endregion
 
 
 		#endregion

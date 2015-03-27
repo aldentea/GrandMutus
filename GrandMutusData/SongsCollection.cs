@@ -19,14 +19,18 @@ namespace GrandMutus.Data
 		/// </summary>
 		public string RootDirectory { get; set; }
 
-
+		#region *コンストラクタ(SongsCollection)
 		public SongsCollection()
 		{
 			this.CollectionChanged += SongsCollection_CollectionChanged;
 		}
+		#endregion
 
 
 		#region コレクション変更関連
+
+		// ☆曲をRemoveしてからUndoすると，IDが変わってしまう．
+		// これはこういう仕様でいいでしょうか？後から困ったことにならないかなぁ？
 
 
 		// (0.3.1)
@@ -78,7 +82,7 @@ namespace GrandMutus.Data
 						//song.OnAddedTo(null);
 					}
 					// (MutusDocumentを経由せずに)UIから削除される場合もあるので，
-					// ここでOperationCacheの処理をした方がいいのでは？
+					// ここでOperationCacheの処理を行うことにした．
 					if (song_files.Count > 0)
 					{
 						this.SongsRemoved(this, new ItemEventArgs<IEnumerable<string>> { Item = song_files });
