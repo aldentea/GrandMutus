@@ -25,6 +25,7 @@ namespace GrandMutus.Data
 		XmlWriterSettings _xmlWriterSettings;
 		#endregion
 
+		#region *コンストラクタ(MutusDocument)
 		public MutusDocument()
 		{
 			_songs = new SongsCollection();
@@ -36,7 +37,9 @@ namespace GrandMutus.Data
 				NewLineHandling = NewLineHandling.Entitize
 			};
 		}
+		#endregion
 
+		// (0.2.0)Songs以外でも共通に使えるのではなかろうか？
 		void Songs_ItemChanged(object sender, ItemEventArgs<IOperationCache> e)
 		{
 			var operationCache = (IOperationCache)e.Item;
@@ -47,26 +50,93 @@ namespace GrandMutus.Data
 		}
 
 
-		//public System.Collections.ObjectModel.ReadOnlyObservableCollection<Song>
-
-
-
 		#region 曲関連
 
 		// Songオブジェクトはここで(のみ)作るようにする？
 
+		List<string> _addedSongFiles = new List<string>();
+
+		#region *曲を追加(AddSongs)
+		/// <summary>
+		/// このメソッドが直接呼び出されることは想定していません．
+		/// 呼び出し元でAddSongsActionに設定されるActionの中で呼び出して下さい(ややこしい...)．
+		/// </summary>
+		/// <param name="fileName"></param>
+		/// <returns></returns>
 		public Song AddSong(string fileName)
 		{
 			Song song = new Song { FileName = fileName };
 			LoadInformation(song);
-			_songs.Add(song);
-			//SongAdded(this, new ItemEventArgs<Song> { Item = song });
-			return song;
+			try
+			{
+				_songs.Add(song);
+				_addedSongFiles.Add(song.FileName);
+				//SongAdded(this, new ItemEventArgs<Song> { Item = song });
+				return song;
+			}
+			catch (SongDuplicateException)
+			{
+				// ここで削除する．
+				_songs.Remove(song);
+				return null;
+			}
 		}
+
+
+		public void AddSongs(IEnumerable<string> fileNames)
+		{
+			// この時点では既に入っているファイルと重複している可能性があるので，ここで除いておく．
+			var excepted_file_names = fileNames.Where(fileName => !_songs.Any(s => s.FileName == fileName));
+			IList<Song> added_songs;
+
+			if (AddSongsAction == null)
+			{
+				// 同期的に実行．
+				added_songs = new List<Song>();
+				foreach (var fileName in excepted_file_names)
+				{
+					var song = AddSong(fileName);
+					if (song != null)
+					{ added_songs.Add(song); }
+				}
+			}
+			else
+			{
+				// 通常は呼び出し元に制御を渡して，UIを表示する．
+				added_songs = AddSongsAction.Invoke(excepted_file_names);
+			}
+			
+			AddOperationHistory(new SongsAddedCache(this, added_songs.Select(s => s.FileName).ToArray()));
+		}
+		#endregion
+
+		public Func<IEnumerable<string>, IList<Song>> AddSongsAction = null;
+
+		// (0.3.0)
+		#region *曲を削除(RemoveSongs)
+		public void RemoveSongs(IEnumerable<string> fileNames)
+		{
+			RemoveSongs(fileNames.Select(fileName => _songs.FirstOrDefault(s => s.FileName == fileName)).Where(s => s != null));
+		}
+
+		// (0.3.0)
+		public void RemoveSongs(IEnumerable<Song> songs)
+		{
+			IList<string> removed_song_files = new List<string>();
+			foreach (var song in songs)
+			{
+				if (_songs.Remove(song))
+				{
+					removed_song_files.Add(song.FileName);
+				}
+			}
+			AddOperationHistory(new SongsRemovedCache(this, removed_song_files));
+		}
+		#endregion
 
 		// HyperMutusからのパクリ．古いメソッドだけど，とりあえずそのまま使う．
 		// 場所も未定．とりあえずstatic化してここに置いておく．
-		#region *ファイルからメタデータを読み込み(LoadInformation)
+		#region *[static]ファイルからメタデータを読み込み(LoadInformation)
 		/// <summary>
 		/// songのFileNameプロパティで指定されたファイルからメタデータを読み込みます．
 		/// </summary>
@@ -78,7 +148,6 @@ namespace GrandMutus.Data
 			//song.SabiPos = tag == null ? 0.0M : tag.SabiPos;
 		}
 		#endregion
-
 
 
 
@@ -121,7 +190,7 @@ namespace GrandMutus.Data
 				var xdoc = XDocument.Load(reader);
 				var root = xdoc.Root;
 
-				// ☆ここから下は，継承先でオーバーライドできるようにしておく．
+				// ☆ここから下は，継承先でオーバーライドできるようにしておきましょう．
 				if (root.Name == ROOT_ELEMENT_NAME)
 				{
 					decimal? version = (decimal?)root.Attribute(VERSION_ATTERIBUTE);

@@ -32,6 +32,11 @@ namespace GrandMutus
 			public MainWindow()
 			{
 				InitializeComponent();
+
+				// ↓この設定を忘れると，曲ファイル追加時に画面が固まるかも．
+				this.MyDocument.AddSongsAction = this.AddSongsParallel;
+
+				
 				// ファイル履歴ショートカットの作成位置を指定する．
 				this.FileHistoryShortcutParent = menuItemHistory;
 			}
@@ -100,30 +105,51 @@ namespace GrandMutus
 			#endregion
 
 
-
-			// (0.2.1)HyperMutusから導入．AldenteaBackGroundWorkerDialog(1.1.0.0)が必要．
+			// (0.2.3)実質の処理をAddSongsParallelに移動(Document側の仕様変更に対応)．
+			// (0.2.1)HyperMutusから導入．AldenteaBackgroundWorkerDialog(1.1.0.0)が必要．
 			// 10/20/2014 by aldentea : AddSongの仕様変更に対応．
 			// 10/06/2014 by aldentea : UseAutoSaveOperationHistoryプロパティの制御を追加．
 			// 07/15/2014 by aldentea : 並列化？
 			// 11/08/2013 by aldentea : BackgroundWorkerDialog周辺の処理をHelpersに移動．
 			// 09/07/2011 by aldentea
 			#region 曲を追加(AddSongs)
-			void AddSongs(IEnumerable<string> fileNames)
+			public void AddSongs(IEnumerable<string> fileNames)
+			{
+				this.MyDocument.AddSongs(fileNames);
+			}
+			
+			IList<Song> AddSongsParallel(IEnumerable<string> fileNames)
 			{
 				//Dictionary<int, string> fileDictionary = new Dictionary<int, string>();
+				List<Song> added_songs = new List<Song>();
 
 				//this.MyDocument.UseAutoSaveOperationHistory = false;
 				try
 				{
 					Action<string> action = (fileName) =>
 					{
-						// ObservableCollectionに対する操作は，それが作られたスレッドと同じスレッドで行う必要がある．
-						var id = this.Dispatcher.Invoke(
-							new Func<string,int>(delegate(string f){ return MyDocument.AddSong(f).ID; }),	fileName);
-						//if (id.HasValue)
-						//{
-						//	fileDictionary.Add(id.Value, fileName);
-						//}
+						try
+						{
+							// ObservableCollectionに対する操作は，それが作られたスレッドと同じスレッドで行う必要がある．
+
+							var song = this.Dispatcher.Invoke(
+								new Func<string, Song>(delegate(string f) { return MyDocument.AddSong(f); }), fileName);
+							if (song is Song)
+							{
+								added_songs.Add((Song)song);
+							}
+							// idを返すのって何のためだっけ？
+							//var id = this.Dispatcher.Invoke(
+							//	new Func<string, int>(delegate(string f) { return MyDocument.AddSong(f).ID; }), fileName);
+							//if (id.HasValue)
+							//{
+							//	fileDictionary.Add(id.Value, fileName);
+							//}
+						}
+						catch (SongDuplicateException)
+						{
+							// 何か知らせる？
+						}
 					};
 					Helpers.WorkBackgroundParallel<string>(fileNames, action);
 					//this.MyDocument.AddOperationHistory(
@@ -134,8 +160,12 @@ namespace GrandMutus
 				{
 					//this.MyDocument.UseAutoSaveOperationHistory = true;
 				}
+				return added_songs;
 			}
 			#endregion
+
+
+			#region コマンドハンドラ
 
 			private void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
 			{
@@ -149,6 +179,8 @@ namespace GrandMutus
 			{
 				e.CanExecute = MyDocument.CanUndo;
 			}
+
+			#endregion
 
 		}
 

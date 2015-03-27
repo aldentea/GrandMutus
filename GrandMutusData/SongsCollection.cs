@@ -19,11 +19,13 @@ namespace GrandMutus.Data
 		/// </summary>
 		public string RootDirectory { get; set; }
 
+
 		public SongsCollection()
 		{
 			this.CollectionChanged += SongsCollection_CollectionChanged;
 		}
 
+		// (0.3.0)すでにある曲を追加したときの処理を追加．
 		void SongsCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			switch (e.Action)
@@ -32,6 +34,14 @@ namespace GrandMutus.Data
 					foreach (var item in e.NewItems)
 					{
 						var song = (Song)item;
+
+						if (this.Items.Any(s => s != song && s.FileName == song.FileName))
+						{
+							// 既にある曲ファイルと重複している！
+							//this.Remove(song); // ←CollectionChangedイベントハンドラ内でこれはできない！
+							throw new SongDuplicateException { FileName = song.FileName };
+						}
+
 						// IDを付与する．
 						// (0.1.2)IDが既に設定されているかどうかを確認．
 						if (song.ID <= 0)	// 無効な値．
@@ -51,7 +61,7 @@ namespace GrandMutus.Data
 						song.PropertyChanging -= Song_PropertyChanging;
 						song.PropertyChanged -= Song_PropertyChanged;
 						// どうにかする．
-						song.OnAddedTo(null);
+						//song.OnAddedTo(null);
 					}
 					break;
 				case NotifyCollectionChangedAction.Reset:
@@ -191,5 +201,13 @@ namespace GrandMutus.Data
 		#endregion
 
 	}
+
+	// (0.3.0)
+	#region SongDuplicateExceptionクラス
+	public class SongDuplicateException : ApplicationException
+	{
+		public string FileName { get; set; }
+	}
+	#endregion
 
 }

@@ -19,12 +19,14 @@ namespace GrandMutus.Data
 		// そこでIDを付与する．
 		// 付与するときも，internalなsetterを用いる．
 
+		#region *IDプロパティ
 		public int ID
 		{
 			get { return _id; }
 			internal set { _id = value; }
 		}
 		int _id = -1;	// (0.1.2)-1は未設定であることを示す．
+		#endregion
 
 		#region *Titleプロパティ
 		/// <summary>
@@ -94,12 +96,14 @@ namespace GrandMutus.Data
 		string _artist = string.Empty;
 		#endregion
 
-		// (0.2.1)
+		// (0.3.0)Parentがnullの場合の対策をしておく(OnAddTo(null)が呼ばれるときにまずいことになったので)．
+		// (0.2.1)←もっと前？
+		#region *RelativeFileNameプロパティ
 		public string RelativeFileName
 		{
 			get
 			{
-				string root = Parent.RootDirectory;
+				string root = Parent == null ? string.Empty : Parent.RootDirectory;
 				if (!string.IsNullOrEmpty(root) && this.FileName.StartsWith(root))
 				{
 					return this.FileName.Substring(root.Length).TrimStart('\\');
@@ -110,7 +114,7 @@ namespace GrandMutus.Data
 				}
 			}
 		}
-
+		#endregion
 
 		// 問題2. 親要素への参照を設定できるか？
 

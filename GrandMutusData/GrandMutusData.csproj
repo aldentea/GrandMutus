@@ -60,6 +60,8 @@
     <Compile Include="OperationCache.cs" />
     <Compile Include="Song.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SongOperationCache.cs" />
+    <Compile Include="SongsCache.cs" />
     <Compile Include="SongsCollection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
