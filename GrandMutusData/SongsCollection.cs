@@ -25,6 +25,18 @@ namespace GrandMutus.Data
 			this.CollectionChanged += SongsCollection_CollectionChanged;
 		}
 
+
+		#region コレクション変更関連
+
+
+		// (0.3.1)
+		/// <summary>
+		/// 曲が削除された時に発生します．
+		/// </summary>
+		public event EventHandler<ItemEventArgs<IEnumerable<string>>> SongsRemoved = delegate { };
+
+
+		// (0.3.1)曲の削除時にSongsRemovedイベントを発生． 
 		// (0.3.0)すでにある曲を追加したときの処理を追加．
 		void SongsCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
@@ -55,13 +67,21 @@ namespace GrandMutus.Data
 					}
 					break;
 				case NotifyCollectionChangedAction.Remove:
+					IList<string> song_files = new List<string>();
 					foreach (var item in e.OldItems)
 					{
 						var song = (Song)item;
 						song.PropertyChanging -= Song_PropertyChanging;
 						song.PropertyChanged -= Song_PropertyChanged;
+						song_files.Add(song.FileName);
 						// どうにかする．
 						//song.OnAddedTo(null);
+					}
+					// (MutusDocumentを経由せずに)UIから削除される場合もあるので，
+					// ここでOperationCacheの処理をした方がいいのでは？
+					if (song_files.Count > 0)
+					{
+						this.SongsRemoved(this, new ItemEventArgs<IEnumerable<string>> { Item = song_files });
 					}
 					break;
 				case NotifyCollectionChangedAction.Reset:
@@ -70,6 +90,15 @@ namespace GrandMutus.Data
 
 			}
 		}
+
+		#endregion
+
+		#region アイテム変更関連
+
+		/// <summary>
+		/// 格納されているアイテムのプロパティ値が変化したときに発生します．
+		/// </summary>
+		public event EventHandler<ItemEventArgs<IOperationCache>> ItemChanged = delegate { };
 
 
 		string _titleCache = string.Empty;	// 手抜き．Songオブジェクト自体もキャッシュするべき．
@@ -114,7 +143,7 @@ namespace GrandMutus.Data
 			//e.PropertyName
 		}
 
-		public event EventHandler<ItemEventArgs<IOperationCache>> ItemChanged = delegate { };
+		#endregion
 
 
 		/// <summary>

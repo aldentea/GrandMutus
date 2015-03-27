@@ -31,6 +31,7 @@ namespace GrandMutus.Data
 			_songs = new SongsCollection();
 			//_songs.CollectionChanged += Songs_CollectionChanged;
 			_songs.ItemChanged += Songs_ItemChanged;
+			_songs.SongsRemoved += Songs_SongsRemoved;
 			_xmlWriterSettings = new XmlWriterSettings
 			{
 				Indent = true,
@@ -119,6 +120,8 @@ namespace GrandMutus.Data
 			RemoveSongs(fileNames.Select(fileName => _songs.FirstOrDefault(s => s.FileName == fileName)).Where(s => s != null));
 		}
 
+		// (0.3.1)OperationCacheの追加はSongsRemovedイベントハンドラで行うことにする
+		// (曲の削除はUIから直接行われることが想定されるため)．
 		// (0.3.0)
 		public void RemoveSongs(IEnumerable<Song> songs)
 		{
@@ -130,9 +133,14 @@ namespace GrandMutus.Data
 					removed_song_files.Add(song.FileName);
 				}
 			}
-			AddOperationHistory(new SongsRemovedCache(this, removed_song_files));
 		}
 		#endregion
+
+		// (0.3.1)
+		void Songs_SongsRemoved(object sender, ItemEventArgs<IEnumerable<string>> e)
+		{
+			AddOperationHistory(new SongsRemovedCache(this, e.Item));
+		}
 
 		// HyperMutusからのパクリ．古いメソッドだけど，とりあえずそのまま使う．
 		// 場所も未定．とりあえずstatic化してここに置いておく．
