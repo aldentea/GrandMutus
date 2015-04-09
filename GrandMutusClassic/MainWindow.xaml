@@ -58,6 +58,7 @@
                 <DataGridTextColumn Header="Title" MinWidth="100" Binding="{Binding Path=Title}" />
                 <DataGridTextColumn Header="Artist" MinWidth="100" Binding="{Binding Path=Artist}" />
                 <DataGridTextColumn Header="FileName" MinWidth="100" Binding="{Binding Path=RelativeFileName, Mode=OneWay}" />
+                <DataGridTextColumn Header="SabiPos" MinWidth="100" Binding="{Binding Path=SabiPos, StringFormat=m\\:ss\\.ff}" />
             </DataGrid.Columns>
         </DataGrid>
 
