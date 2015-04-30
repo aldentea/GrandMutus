@@ -17,6 +17,10 @@ namespace GrandMutus.Data
 		public SongsCollection Songs { get { return _songs; } }
 		readonly SongsCollection _songs;
 
+		// (0.3.3)とりあえずIntroQuestionだけに対応している。
+		public QuestionsCollection Questions { get { return _questions; } }
+		readonly QuestionsCollection _questions;
+
 		#region *WriterSettingsプロパティ
 		public XmlWriterSettings WriterSettings
 		{
@@ -25,13 +29,22 @@ namespace GrandMutus.Data
 		XmlWriterSettings _xmlWriterSettings;
 		#endregion
 
+		// (0.3.3)Questions関連処理を追加。
 		#region *コンストラクタ(MutusDocument)
 		public MutusDocument()
 		{
+			// Songs関連処理
+
 			_songs = new SongsCollection();
 			//_songs.CollectionChanged += Songs_CollectionChanged;
 			_songs.ItemChanged += Songs_ItemChanged;
 			_songs.SongsRemoved += Songs_SongsRemoved;
+
+
+			// Questions関連処理
+			_questions = new QuestionsCollection(this);
+
+			// XML出力関連処理
 			_xmlWriterSettings = new XmlWriterSettings
 			{
 				Indent = true,
@@ -164,6 +177,16 @@ namespace GrandMutus.Data
 		/// </summary>
 		//public event EventHandler<ItemEventArgs<Song>> SongAdded = delegate { };
 
+		public Song GetSong(int id)
+		{
+			return Songs.SingleOrDefault(song => song.ID == id);
+		}
+
+		#endregion
+
+
+		#region イントロ問題関連
+
 		#endregion
 
 
@@ -207,6 +230,7 @@ namespace GrandMutus.Data
 						if (version >= 3.0M)
 						{
 							this.Songs.LoadElement(root.Element(SongsCollection.ELEMENT_NAME));
+							this.Questions.LoadElement(root.Element(QuestionsCollection.ELEMENT_NAME));
 							return true;
 						}
 					}

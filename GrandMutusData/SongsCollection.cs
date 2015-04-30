@@ -27,6 +27,7 @@ namespace GrandMutus.Data
 		#endregion
 
 
+
 		#region コレクション変更関連
 
 		// ☆曲をRemoveしてからUndoすると，IDが変わってしまう．
@@ -167,9 +168,9 @@ namespace GrandMutus.Data
 		const string PATH_ATTRIBUTE = "path";
 
 		/// <summary>
-		/// XMLファイルを出力するディレクトリです．
+		/// 
 		/// </summary>
-		/// <param name="destinationDir"></param>
+		/// <param name="destinationDir">XMLファイルを出力するディレクトリです．</param>
 		/// <returns></returns>
 		public XElement GenerateElement(string destinationDir)
 		{

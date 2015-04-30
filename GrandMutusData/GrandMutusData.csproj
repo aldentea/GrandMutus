@@ -54,10 +54,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IntroQuestion.cs" />
     <Compile Include="DocumentWithOperationHistory.cs" />
     <Compile Include="ItemEventArgs.cs" />
     <Compile Include="MutusDocument.cs" />
     <Compile Include="OperationCache.cs" />
+    <Compile Include="QuestionsCollection.cs" />
     <Compile Include="Song.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SongOperationCache.cs" />

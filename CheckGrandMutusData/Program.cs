@@ -27,7 +27,7 @@ namespace GrandMutus.Data
 			{
 				MutusDocument document = new MutusDocument();
 
-				document.SongAdded += (s, e) => { Console.WriteLine("{0} 「{1}」が追加されました．", e.Item.ID, e.Item.Title); };
+				//document.SongAdded += (s, e) => { Console.WriteLine("{0} 「{1}」が追加されました．", e.Item.ID, e.Item.Title); };
 
 				document.AddSong(System.IO.Path.Combine(MySettings.SongsRoot, "JOY01156.mp3"));
 				document.AddSong(System.IO.Path.Combine(MySettings.SongsRoot, "JOY01181.mp3"));

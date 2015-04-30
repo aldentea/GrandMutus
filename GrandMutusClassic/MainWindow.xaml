@@ -18,7 +18,7 @@
             Command="Undo"
             Executed="Undo_Executed"
             CanExecute="Undo_CanExecute" />
-            
+
     </Window.CommandBindings>
     <Window.Resources>
         <util:CaptionConverter x:Key="captionConverter" ApplicationName="GrandMutusClassic" />
@@ -50,17 +50,36 @@
                 <MenuItem Header="曲追加(_A)" Command="{x:Static hypermutus:Commands.AddSongsCommand}" />
             </MenuItem>
         </Menu>
+        <TabControl HorizontalAlignment="Left" Height="418" Margin="23,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="759"
+                    TabStripPlacement="Bottom" >
+            <TabItem Header="Songs">
+                <Grid Background="#FFE5E5E5">
 
-        <DataGrid Grid.Row="1" HorizontalAlignment="Left" Height="314" Margin="25,53,0,0" VerticalAlignment="Top" Width="648"
+                    <DataGrid HorizontalAlignment="Left" Height="318" Margin="25,20,0,0" VerticalAlignment="Top" Width="718"
                   ItemsSource="{Binding Path=Songs}" CanUserAddRows="False" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="#" Binding="{Binding Path=ID, Mode=OneWay}" />
-                <DataGridTextColumn Header="Title" MinWidth="100" Binding="{Binding Path=Title}" />
-                <DataGridTextColumn Header="Artist" MinWidth="100" Binding="{Binding Path=Artist}" />
-                <DataGridTextColumn Header="FileName" MinWidth="100" Binding="{Binding Path=RelativeFileName, Mode=OneWay}" />
-                <DataGridTextColumn Header="SabiPos" MinWidth="100" Binding="{Binding Path=SabiPos, StringFormat=m\\:ss\\.ff}" />
-            </DataGrid.Columns>
-        </DataGrid>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="#" Binding="{Binding Path=ID, Mode=OneWay}" />
+                            <DataGridTextColumn Header="Title" MinWidth="100" Binding="{Binding Path=Title}" />
+                            <DataGridTextColumn Header="Artist" MinWidth="100" Binding="{Binding Path=Artist}" />
+                            <DataGridTextColumn Header="FileName" MinWidth="100" Binding="{Binding Path=RelativeFileName, Mode=OneWay}" />
+                            <DataGridTextColumn Header="SabiPos" MinWidth="100" Binding="{Binding Path=SabiPos, StringFormat=m\\:ss\\.ff}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Questions">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CanUserAddRows="False" AutoGenerateColumns="False"
+                              ItemsSource="{Binding Path=Questions}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="#" Binding="{Binding Path=ID, Mode=OneWay}" />
+                            <DataGridTextColumn Header="No" Binding="{Binding Path=No, Mode=TwoWay}" />
+                            <DataGridTextColumn Header="Category" Binding="{Binding Path=Category, Mode=TwoWay}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
 
     </Grid>
 </wpf:BasicWindow>
