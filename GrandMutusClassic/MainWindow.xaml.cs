@@ -24,6 +24,7 @@ namespace GrandMutus
 		// (0.2.0)
 		// 3. 継承元を変更する(XAMLも忘れずに！)．
 
+		#region MainWindowクラス
 		/// <summary>
 		/// MainWindow.xaml の相互作用ロジック
 		/// </summary>
@@ -183,6 +184,7 @@ namespace GrandMutus
 			#endregion
 
 		}
+		#endregion
 
 	}
 

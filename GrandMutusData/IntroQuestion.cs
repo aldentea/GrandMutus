@@ -94,6 +94,10 @@ namespace GrandMutus.Data
 			}
 		}
 
+		#region *PlayPosプロパティ
+		/// <summary>
+		/// 出題時の再生開始位置を取得／設定します．
+		/// </summary>
 		public TimeSpan PlayPos
 		{
 			get
@@ -113,6 +117,7 @@ namespace GrandMutus.Data
 			}
 		}
 		TimeSpan _playPos = TimeSpan.Zero;
+		#endregion
 
 		// (0.3.3)
 		#region *コンストラクタ(IntroQuestion)
@@ -162,6 +167,8 @@ namespace GrandMutus.Data
 		#endregion
 
 
+		#region XML入出力関連
+
 		// このあたり本来はXNameなんだけど，手抜きをする．
 		public const string ELEMENT_NAME = "intro";
 		const string ID_ATTRIBUTE = "id";
@@ -169,6 +176,27 @@ namespace GrandMutus.Data
 		const string SONG_ID_ATTRIBUTE = "song_id";
 		const string CATEGORY_ATTRIBUTE = "category";
 		const string PLAY_POS_ATTRIBUTE = "play_pos";
+
+		// (0.3.3)
+		#region *XML要素を生成(GenerateElement)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		public XElement GenerateElement()
+		{
+			var element = new XElement(ELEMENT_NAME);
+			element.Add(new XAttribute(ID_ATTRIBUTE, this.ID));
+			element.Add(new XAttribute(NO_ATTRIBUTE, this.No));
+			element.Add(new XAttribute(CATEGORY_ATTRIBUTE, this.Category));
+			element.Add(new XAttribute(SONG_ID_ATTRIBUTE, this.SongID));
+			// (0.3.3)とりあえず従前のように秒数を出力しておく．
+			element.Add(new XAttribute(PLAY_POS_ATTRIBUTE, this.PlayPos.TotalSeconds));
+
+			return element;
+		}
+		#endregion
+
 
 
 		// (0.3.3)
@@ -196,6 +224,8 @@ namespace GrandMutus.Data
 
 			return question;
 		}
+		#endregion
+
 		#endregion
 
 

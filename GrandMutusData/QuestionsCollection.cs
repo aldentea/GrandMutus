@@ -92,7 +92,7 @@ namespace GrandMutus.Data
 
 			foreach (IntroQuestion question in this.Items)
 			{
-				//element.Add(question.GenerateElement());
+				element.Add(question.GenerateElement());
 			}
 
 			return element;

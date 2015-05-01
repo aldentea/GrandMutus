@@ -12,6 +12,7 @@ using System.Xml.Linq;
 namespace GrandMutus.Data
 {
 
+	#region SongsCollectionクラス
 	public class SongsCollection : ObservableCollection<Song>
 	{
 		/// <summary>
@@ -235,6 +236,8 @@ namespace GrandMutus.Data
 		#endregion
 
 	}
+	#endregion
+
 
 	// (0.3.0)
 	#region SongDuplicateExceptionクラス

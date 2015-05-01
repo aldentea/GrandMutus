@@ -50,12 +50,16 @@
                 <MenuItem Header="曲追加(_A)" Command="{x:Static hypermutus:Commands.AddSongsCommand}" />
             </MenuItem>
         </Menu>
-        <TabControl HorizontalAlignment="Left" Height="418" Margin="23,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="759"
+        <TabControl HorizontalAlignment="Left" Height="418" Margin="23,10,0,0" Grid.Row="1"
+                    VerticalAlignment="Top" Width="759"
                     TabStripPlacement="Bottom" >
             <TabItem Header="Songs">
                 <Grid Background="#FFE5E5E5">
-
-                    <DataGrid HorizontalAlignment="Left" Height="318" Margin="25,20,0,0" VerticalAlignment="Top" Width="718"
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" MinHeight="50" />
+                    </Grid.RowDefinitions>
+                    <DataGrid HorizontalAlignment="Stretch" Grid.Row="0" Margin="20,0" VerticalAlignment="Stretch"
                   ItemsSource="{Binding Path=Songs}" CanUserAddRows="False" AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="#" Binding="{Binding Path=ID, Mode=OneWay}" />

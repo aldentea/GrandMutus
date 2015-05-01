@@ -196,11 +196,12 @@ namespace GrandMutus.Data
 		public const string ROOT_ELEMENT_NAME = "mutus";
 		const string VERSION_ATTERIBUTE = "version";
 
+		// (0.3.3.1)Questionsの出力を追加．
 		public XDocument GenerateXml(string destination)
 		{
 			XDocument xdoc = new XDocument(new XElement(ROOT_ELEMENT_NAME, new XAttribute(VERSION_ATTERIBUTE, "3.0")));
 			xdoc.Root.Add(Songs.GenerateElement(System.IO.Path.GetDirectoryName(destination)));
-
+			xdoc.Root.Add(Questions.GenerateElement());
 			return xdoc;
 		}
 
