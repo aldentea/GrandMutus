@@ -181,6 +181,35 @@ namespace GrandMutus
 				e.CanExecute = MyDocument.CanUndo;
 			}
 
+
+			// (0.3.4)
+			void AddQuestions_Execute(object sender, ExecutedRoutedEventArgs e)
+			{
+				if (e.Parameter is Song)
+				{ }
+				else if (e.Parameter is IEnumerable<Song>)
+				{
+					AddQuestions((IEnumerable<Song>)e.Parameter);
+				}
+				else if (e.Parameter is System.Collections.IList)
+				{
+					AddQuestions(((System.Collections.IList)e.Parameter).Cast<Song>());
+				}
+
+			}
+
+			void AddQuestions(IEnumerable<Song> songs)
+			{
+				//MyDocument
+			}
+
+			// (0.3.4)
+			void AddQuestions_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+			{
+				e.CanExecute = e.Parameter is Song || e.Parameter is IEnumerable<Song> || e.Parameter is System.Collections.IList;
+			}
+
+
 			#endregion
 
 		}

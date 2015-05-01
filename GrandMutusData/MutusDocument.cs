@@ -187,6 +187,15 @@ namespace GrandMutus.Data
 
 		#region イントロ問題関連
 
+		// (0.3.4)とりあえず．
+		public void AddIntroQuestions(IEnumerable<Song> songs)
+		{
+			foreach (var song in songs)
+			{
+				// ★作りかけ
+			}
+		}
+
 		#endregion
 
 
