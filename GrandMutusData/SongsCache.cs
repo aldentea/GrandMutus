@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace GrandMutus.Data
 {
-
+	// (0.4.0) ファイル名だけではなく、Songオブジェクトを保持するように変更。
 	// (0.3.0) ReverseメソッドとCanCancelWithメソッドがabstractです．
 	#region [abstract]SongsCacheクラス
 	public abstract class SongsCache : IOperationCache
 	{
 		public MutusDocument Document { get; protected set; }
-		public ISet<string> FileNames
+		public ISet<Song> Songs
 		{ get; protected set; }
 
-		protected SongsCache(MutusDocument document, IEnumerable<string> fileNames)
+		protected SongsCache(MutusDocument document, IEnumerable<Song> songs)
 		{
 			this.Document = document;
-			this.FileNames = new HashSet<string>(fileNames);
+			this.Songs = new HashSet<Song>(songs);
 		}
 
 		public abstract void Reverse();
@@ -29,11 +29,11 @@ namespace GrandMutus.Data
 		/// </summary>
 		/// <param name="other"></param>
 		/// <returns></returns>
-		public bool HasSameFileNamesWith(SongsCache other)
+		public bool HasSameSongsWith(SongsCache other)
 		{
-			if (this.FileNames.Count == other.FileNames.Count)
+			if (this.Songs.Count == other.Songs.Count)
 			{
-				return this.FileNames.Except(other.FileNames).Count() == 0;
+				return this.Songs.Select(s => s.ID).Except(other.Songs.Select(s => s.ID)).Count() == 0;
 			}
 			else
 			{
@@ -43,46 +43,48 @@ namespace GrandMutus.Data
 	}
 	#endregion
 
+	// (0.4.0) ファイル名だけではなく、Songオブジェクトを保持するように変更。
 	// (0.3.0)
 	#region SongsAddedCacheクラス
 	public class SongsAddedCache : SongsCache
 	{
-		public SongsAddedCache(MutusDocument document, IEnumerable<string> fileNames)
-			: base(document, fileNames)
+		public SongsAddedCache(MutusDocument document, IEnumerable<Song> songs)
+			: base(document, songs)
 		{ }
 
 		public override void Reverse()
 		{
-			Document.RemoveSongs(this.FileNames);
+			Document.RemoveSongs(this.Songs);
 		}
 
 		public override bool CanCancelWith(IOperationCache other)
 		{
 			return other is SongsRemovedCache
 				&& ((SongsCache)other).Document == this.Document
-				&& this.HasSameFileNamesWith((SongsCache)other);
+				&& this.HasSameSongsWith((SongsCache)other);
 		}
 	}
 	#endregion
 
+	// (0.4.0) ファイル名だけではなく、Songオブジェクトを保持するように変更。
 	// (0.3.0)
 	#region SongsRemovedCacheクラス
 	public class SongsRemovedCache : SongsCache
 	{
-		public SongsRemovedCache(MutusDocument document, IEnumerable<string> fileNames)
-			: base(document, fileNames)
+		public SongsRemovedCache(MutusDocument document, IEnumerable<Song> songs)
+			: base(document, songs)
 		{ }
 
 		public override void Reverse()
 		{
-			Document.AddSongs(this.FileNames);
+			Document.AddSongs(this.Songs);
 		}
 
 		public override bool CanCancelWith(IOperationCache other)
 		{
 			return other is SongsAddedCache
 				&& ((SongsCache)other).Document == this.Document
-				&& this.HasSameFileNamesWith((SongsCache)other);
+				&& this.HasSameSongsWith((SongsCache)other);
 		}
 	}
 	#endregion

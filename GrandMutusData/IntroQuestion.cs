@@ -119,6 +119,17 @@ namespace GrandMutus.Data
 		TimeSpan _playPos = TimeSpan.Zero;
 		#endregion
 
+		// (0.4.0)
+		#region *Answerプロパティ
+		/// <summary>
+		/// (出題者が識別するための)問題の簡単な説明を取得します。
+		/// </summary>
+		public string Answer
+		{
+			get { return string.Format("{0} / {1}", this.Song.Title, this.Song.Artist); }
+		}
+		#endregion
+
 		// (0.3.3)
 		#region *コンストラクタ(IntroQuestion)
 		internal IntroQuestion(int songID)

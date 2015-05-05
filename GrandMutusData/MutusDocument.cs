@@ -68,6 +68,9 @@ namespace GrandMutus.Data
 
 		// Songオブジェクトはここで(のみ)作るようにする？
 
+		/// <summary>
+		/// (0.3.4)現時点では未使用！
+		/// </summary>
 		List<string> _addedSongFiles = new List<string>();
 
 		#region *曲を追加(AddSongs)
@@ -81,16 +84,21 @@ namespace GrandMutus.Data
 		{
 			Song song = new Song { FileName = fileName };
 			LoadInformation(song);
+			return this.AddSong(song);
+		}
+
+		private Song AddSong(Song song)
+		{
 			try
 			{
-				_songs.Add(song);
+				_songs.Add(song);	// この後の処理でSongDuplicateExceptionが発生する。
 				_addedSongFiles.Add(song.FileName);
 				//SongAdded(this, new ItemEventArgs<Song> { Item = song });
 				return song;
 			}
 			catch (SongDuplicateException)
 			{
-				// ここで削除する．
+				// この時点ではsongが_songsに追加された状態になっているので、ここで削除する。
 				_songs.Remove(song);
 				return null;
 			}
@@ -120,7 +128,23 @@ namespace GrandMutus.Data
 				added_songs = AddSongsAction.Invoke(excepted_file_names);
 			}
 			
-			AddOperationHistory(new SongsAddedCache(this, added_songs.Select(s => s.FileName).ToArray()));
+			AddOperationHistory(new SongsAddedCache(this, added_songs.ToArray()));
+		}
+
+		// 曲削除をアンドゥしたときに使うことを想定しています。
+		public void AddSongs(IEnumerable<Song> songs)
+		{
+			// ここは同期実行でいいでしょう。
+			// 同期的に実行．
+			var added_songs = new List<Song>();
+			foreach (var song in songs)
+			{
+				var added_song = AddSong(song);
+				if (added_song != null)
+				{ added_songs.Add(added_song); }
+			}
+			AddOperationHistory(new SongsAddedCache(this, added_songs.ToArray()));
+
 		}
 		#endregion
 
@@ -150,7 +174,7 @@ namespace GrandMutus.Data
 		#endregion
 
 		// (0.3.1)
-		void Songs_SongsRemoved(object sender, ItemEventArgs<IEnumerable<string>> e)
+		void Songs_SongsRemoved(object sender, ItemEventArgs<IEnumerable<Song>> e)
 		{
 			AddOperationHistory(new SongsRemovedCache(this, e.Item));
 		}
@@ -192,7 +216,8 @@ namespace GrandMutus.Data
 		{
 			foreach (var song in songs)
 			{
-				// ★作りかけ
+				var question = new IntroQuestion(song.ID);
+				_questions.Add(question);
 			}
 		}
 
@@ -224,6 +249,7 @@ namespace GrandMutus.Data
 			Songs.Initialize();
 		}
 
+		// (0.4.0.1)Songs.RootDirectoryの設定を追加。
 		protected override bool LoadDocument(string fileName)
 		{
 			using (XmlReader reader = XmlReader.Create(fileName))
@@ -239,6 +265,7 @@ namespace GrandMutus.Data
 					{
 						if (version >= 3.0M)
 						{
+							this.Songs.RootDirectory = Path.GetDirectoryName(fileName);	// RootDirectoryのデフォルトの値を設定する。
 							this.Songs.LoadElement(root.Element(SongsCollection.ELEMENT_NAME));
 							this.Questions.LoadElement(root.Element(QuestionsCollection.ELEMENT_NAME));
 							return true;

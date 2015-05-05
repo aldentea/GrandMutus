@@ -39,7 +39,7 @@ namespace GrandMutus.Data
 		/// <summary>
 		/// 曲が削除された時に発生します．
 		/// </summary>
-		public event EventHandler<ItemEventArgs<IEnumerable<string>>> SongsRemoved = delegate { };
+		public event EventHandler<ItemEventArgs<IEnumerable<Song>>> SongsRemoved = delegate { };
 
 
 		// (0.3.1)曲の削除時にSongsRemovedイベントを発生． 
@@ -67,27 +67,30 @@ namespace GrandMutus.Data
 							song.ID = GenerateNewID();
 						}
 						// ☆songのプロパティ変更をここで受け取る？MutusDocumentで行えばここでは不要？
+						// ↑とりあえずこのクラスで使っています。
 						song.PropertyChanging += Song_PropertyChanging;
 						song.PropertyChanged += Song_PropertyChanged;
 						song.OnAddedTo(this);
 					}
 					break;
 				case NotifyCollectionChangedAction.Remove:
-					IList<string> song_files = new List<string>();
-					foreach (var item in e.OldItems)
+					//★IList<string> song_files = new List<string>();
+					IList<Song> songs = new List<Song>();
+					foreach (var song in e.OldItems.Cast<Song>())
 					{
-						var song = (Song)item;
+						// 削除にあたって、変更通知機能を抑止。
 						song.PropertyChanging -= Song_PropertyChanging;
 						song.PropertyChanged -= Song_PropertyChanged;
-						song_files.Add(song.FileName);
+						//★song_files.Add(song.FileName);
+						songs.Add(song);
 						// どうにかする．
 						//song.OnAddedTo(null);
 					}
 					// (MutusDocumentを経由せずに)UIから削除される場合もあるので，
 					// ここでOperationCacheの処理を行うことにした．
-					if (song_files.Count > 0)
+					if (songs.Count > 0)
 					{
-						this.SongsRemoved(this, new ItemEventArgs<IEnumerable<string>> { Item = song_files });
+						this.SongsRemoved(this, new ItemEventArgs<IEnumerable<Song>> { Item = songs });
 					}
 					break;
 				case NotifyCollectionChangedAction.Reset:
@@ -198,10 +201,15 @@ namespace GrandMutus.Data
 			return element;
 		}
 
+		// (0.4.0.2)RootDirectoryが指定されていなければここでオーバーライドしないように修正。
 		// (0.1.2)
 		public void LoadElement(XElement songsElement)
 		{
-			this.RootDirectory = (string)songsElement.Attribute(PATH_ATTRIBUTE);
+			if (songsElement.Attribute(PATH_ATTRIBUTE) != null)
+			{
+				this.RootDirectory = (string)songsElement.Attribute(PATH_ATTRIBUTE);
+			}
+
 			foreach (var song_element in songsElement.Elements(Song.ELEMENT_NAME))
 			{
 				this.Add(Song.Generate(song_element, this.RootDirectory));

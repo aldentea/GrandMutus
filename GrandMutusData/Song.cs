@@ -140,6 +140,7 @@ namespace GrandMutus.Data
 		}
 		#endregion
 
+
 		// 問題2. 親要素への参照を設定できるか？
 
 		#region *Parentプロパティ

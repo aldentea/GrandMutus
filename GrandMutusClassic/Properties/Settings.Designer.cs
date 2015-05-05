@@ -57,5 +57,17 @@ namespace GrandMutus.Classic.Properties {
                 this["FileHistoryDisplayCount"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.5")]
+        public double SongPlayerVolume {
+            get {
+                return ((double)(this["SongPlayerVolume"]));
+            }
+            set {
+                this["SongPlayerVolume"] = value;
+            }
+        }
     }
 }

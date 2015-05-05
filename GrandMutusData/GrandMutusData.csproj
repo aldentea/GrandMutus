@@ -59,6 +59,7 @@
     <Compile Include="ItemEventArgs.cs" />
     <Compile Include="MutusDocument.cs" />
     <Compile Include="OperationCache.cs" />
+    <Compile Include="QuestionsCache.cs" />
     <Compile Include="QuestionsCollection.cs" />
     <Compile Include="Song.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

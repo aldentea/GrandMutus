@@ -74,7 +74,7 @@ namespace GrandMutus.Data
 
 		public override void Reverse()
 		{
-			_song.Title = _previousValue;
+			_song.Artist = _previousValue;
 		}
 
 		public override bool CanCancelWith(IOperationCache other)

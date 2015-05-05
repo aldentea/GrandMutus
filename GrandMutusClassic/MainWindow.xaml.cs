@@ -34,6 +34,9 @@ namespace GrandMutus
 			{
 				InitializeComponent();
 
+				_songPlayer.Volume = App.Current.MySettings.SongPlayerVolume;
+
+				this.MyDocument.Initialized += MyDocument_Initialized;
 				// ↓この設定を忘れると，曲ファイル追加時に画面が固まるかも．
 				this.MyDocument.AddSongsAction = this.AddSongsParallel;
 
@@ -41,6 +44,20 @@ namespace GrandMutus
 				// ファイル履歴ショートカットの作成位置を指定する．
 				this.FileHistoryShortcutParent = menuItemHistory;
 			}
+
+			// (0.3.1)
+			void MyDocument_Initialized(object sender, EventArgs e)
+			{
+				_songPlayer.Close();
+				_currentSong = null;
+			}
+
+			// (0.3.1)
+			private void MainWindow_Closed(object sender, EventArgs e)
+			{
+				App.Current.MySettings.SongPlayerVolume = _songPlayer.Volume;
+			}
+
 
 			// 4. 抽象メンバを実装する．
 			// ...ファイル履歴関連のメンバなんですが，
@@ -168,6 +185,8 @@ namespace GrandMutus
 
 			#region コマンドハンドラ
 
+			#region Undo
+
 			private void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
 			{
 				if (MyDocument.CanUndo)
@@ -181,8 +200,12 @@ namespace GrandMutus
 				e.CanExecute = MyDocument.CanUndo;
 			}
 
+			#endregion
+
 
 			// (0.3.4)
+			#region AddQuestions
+
 			void AddQuestions_Execute(object sender, ExecutedRoutedEventArgs e)
 			{
 				if (e.Parameter is Song)
@@ -200,7 +223,7 @@ namespace GrandMutus
 
 			void AddQuestions(IEnumerable<Song> songs)
 			{
-				//MyDocument
+				MyDocument.AddIntroQuestions(songs);
 			}
 
 			// (0.3.4)
@@ -209,8 +232,96 @@ namespace GrandMutus
 				e.CanExecute = e.Parameter is Song || e.Parameter is IEnumerable<Song> || e.Parameter is System.Collections.IList;
 			}
 
+			#endregion
 
 			#endregion
+
+
+			#region 曲再生関連
+
+			public HyperMutus.SongPlayer SongPlayer
+			{
+				get
+				{
+					return _songPlayer;
+				}
+			}
+			HyperMutus.SongPlayer _songPlayer = new SongPlayer();
+			Song _currentSong = null;
+
+
+			#region Playコマンド
+
+			void Play_Executed(object sender, ExecutedRoutedEventArgs e)
+			{
+				if (e.Parameter is Song)
+				{
+					Song song = (Song)e.Parameter;
+					_songPlayer.Open(song.FileName);
+					_currentSong = song;
+					_songPlayer.Play();
+				}
+			}
+
+			void Play_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+			{
+				e.CanExecute = e.Parameter is Song;
+			}
+
+			#endregion
+
+			#region SwitchPlayPauseコマンド
+
+			void SwitchPlayPause_Executed(object sender, ExecutedRoutedEventArgs e)
+			{
+				if (_songPlayer.CurrentState != SongPlayer.State.Inactive)
+				{
+					_songPlayer.TogglePlayPause();
+				}
+			}
+
+			#endregion
+
+
+			void SeekRelative_executed(object sender, ExecutedRoutedEventArgs e)
+			{
+ 				if (_songPlayer.CurrentState != HyperMutus.SongPlayer.State.Inactive)
+				{
+					double sec;
+					if (Double.TryParse(e.Parameter.ToString(), out sec))
+					{
+						_songPlayer.CurrentPosition = _songPlayer.CurrentPosition.Add(TimeSpan.FromSeconds(sec));
+					}
+				}
+			}
+
+
+			void SeekSabi_Executed(object sender, ExecutedRoutedEventArgs e)
+			{
+				if (_songPlayer.CurrentState != SongPlayer.State.Inactive)
+				{
+					_songPlayer.CurrentPosition = _currentSong.SabiPos;
+				}
+
+			}
+
+			void SongPlayer_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+			{
+				e.CanExecute = _songPlayer.CurrentState != SongPlayer.State.Inactive;
+			}
+
+			void SetSabiPos_Executed(object sender, ExecutedRoutedEventArgs e)
+			{
+				if (_songPlayer.CurrentState != SongPlayer.State.Inactive)
+				{
+					_currentSong.SabiPos = _songPlayer.CurrentPosition;
+				}
+			}
+
+
+			#endregion
+
+
 
 		}
 		#endregion

@@ -5,7 +5,8 @@
         xmlns:util="clr-namespace:Aldentea.Wpf.Utility;assembly=AldenteaWpfUtility"
         xmlns:hypermutus="clr-namespace:HyperMutus;assembly=MutusBase"
         xmlns:classic="clr-namespace:GrandMutus.Classic"
-        Height="500" Width="800">
+        Height="500" Width="800"
+        Closed="MainWindow_Closed">
     <Window.CommandBindings>
         <CommandBinding
             Command="Close"
@@ -23,8 +24,32 @@
             Command="{x:Static classic:Commands.AddQuestionsCommand}"
             Executed="AddQuestions_Execute"
             CanExecute="AddQuestions_CanExecute" />
+        <CommandBinding Command="Play"
+                        Executed="Play_Executed"
+                        CanExecute="Play_CanExecute" />
+        <CommandBinding
+            Command="{x:Static hypermutus:Commands.SwitchPlayPauseCommand}"
+            Executed="SwitchPlayPause_Executed"
+            CanExecute="SongPlayer_CanExecute" />
+        <CommandBinding
+            Command="{x:Static hypermutus:Commands.SeekSabiCommand}"
+            Executed="SeekSabi_Executed"
+            CanExecute="SongPlayer_CanExecute" />
+        <CommandBinding Command="{x:Static classic:Commands.SetSabiPosCommand}"
+                        Executed="SetSabiPos_Executed"
+                        CanExecute="SongPlayer_CanExecute" />
+        <CommandBinding Command="{x:Static hypermutus:Commands.SeekRelativeCommand}"
+                        Executed="SeekRelative_executed"
+                        CanExecute="SongPlayer_CanExecute" />
 
     </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Key="F7" Modifiers="Shift" Command="{x:Static hypermutus:Commands.SeekRelativeCommand}" CommandParameter="30" />
+        <KeyBinding Key="F7" Command="{x:Static hypermutus:Commands.SeekRelativeCommand}" CommandParameter="5" />
+        <KeyBinding Key="F4" Command="{x:Static hypermutus:Commands.SeekRelativeCommand}" CommandParameter="-5" />
+        <KeyBinding Key="F4" Modifiers="Shift" Command="{x:Static hypermutus:Commands.SeekRelativeCommand}" CommandParameter="-30" />
+        <KeyBinding Key="F6" Command="{x:Static hypermutus:Commands.SeekSabiCommand}" />
+    </Window.InputBindings>
     <Window.Resources>
         <util:CaptionConverter x:Key="captionConverter" ApplicationName="GrandMutusClassic" />
     </Window.Resources>
@@ -50,7 +75,9 @@
                 <MenuItem Header="名前をつけて保存(_A)" Command="SaveAs" />
                 <MenuItem Header="終了(_X)" Command="Close" />
             </MenuItem>
-            <MenuItem Header="編集(_E)" />
+            <MenuItem Header="編集(_E)">
+                <MenuItem Header="元に戻す(_U)" Command="Undo" />
+            </MenuItem>
             <MenuItem Header="曲リスト(_S)">
                 <MenuItem Header="曲追加(_A)" Command="{x:Static hypermutus:Commands.AddSongsCommand}" />
             </MenuItem>
@@ -63,6 +90,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" MinHeight="50" />
+                        <RowDefinition Name="gridRowSongPlayer" Height="120" />
                     </Grid.RowDefinitions>
                     <DataGrid HorizontalAlignment="Stretch" Grid.Row="0" Margin="20,0" VerticalAlignment="Stretch"
                   ItemsSource="{Binding Path=Songs}" CanUserAddRows="False" AutoGenerateColumns="False"
@@ -79,6 +107,24 @@
                             RenderTransformOrigin="-0.28,0.667"
                             Command="{x:Static classic:Commands.AddQuestionsCommand}"
                             CommandParameter="{Binding ElementName=dataGridSongs, Path=SelectedItems}" />
+                    <Button Content="曲再生" HorizontalAlignment="Left" Margin="359,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75"
+                    	RenderTransformOrigin="-0.28,0.667"
+                    	Command="Play" CommandParameter="{Binding SelectedItem, ElementName=dataGridSongs}" />
+                    <Grid Grid.Row="2">
+                        <Button Content="Play" Height="30" Width="75"
+                                HorizontalAlignment="Left" VerticalAlignment="Top" Margin="32,10,0,0"
+                                Command="{x:Static hypermutus:Commands.SwitchPlayPauseCommand}" />
+
+                        <Button Content="サビ" Height="30" Width="75"
+                    	HorizontalAlignment="Left" VerticalAlignment="Top" Margin="133,10,0,0"
+                    	Command="{x:Static hypermutus:Commands.SeekSabiCommand}" />
+                        <Button Content="サビ設定" Height="30" Width="75"
+                    	HorizontalAlignment="Left" VerticalAlignment="Top" Margin="290,10,0,0"
+                    	Command="{x:Static classic:Commands.SetSabiPosCommand}" />
+                        <Slider HorizontalAlignment="Left" Margin="477,95,0,0" VerticalAlignment="Top" Width="256" ToolTip="音量"
+                                Value="{Binding RelativeSource={RelativeSource AncestorType=classic:MainWindow}, Path=SongPlayer.Volume}"
+                                Maximum="1" Minimum="0" />
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Questions">
@@ -89,6 +135,8 @@
                             <DataGridTextColumn Header="#" Binding="{Binding Path=ID, Mode=OneWay}" />
                             <DataGridTextColumn Header="No" Binding="{Binding Path=No, Mode=TwoWay}" />
                             <DataGridTextColumn Header="Category" Binding="{Binding Path=Category, Mode=TwoWay}" />
+                            <DataGridTextColumn Header="問題" Binding="{Binding Path=Answer, Mode=OneWay}"
+                                                MinWidth="200" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
