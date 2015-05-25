@@ -13,13 +13,13 @@ namespace GrandMutus.Data
 	public abstract class QuestionsCache : IOperationCache
 	{
 		public MutusDocument Document { get; protected set; }
-		public ISet<IntroQuestion> Questions
+		public ISet<Question> Questions
 		{ get; protected set; }
 
-		protected QuestionsCache(MutusDocument document, IEnumerable<IntroQuestion> introQuestions)
+		protected QuestionsCache(MutusDocument document, IEnumerable<Question> questions)
 		{
 			this.Document = document;
-			this.Questions = new HashSet<IntroQuestion>(introQuestions);
+			this.Questions = new HashSet<Question>(questions);
 		}
 
 		public abstract void Reverse();
@@ -49,7 +49,7 @@ namespace GrandMutus.Data
 	#region QuestionsAddedCacheクラス
 	public class QuestionsAddedCache : QuestionsCache
 	{
-		public QuestionsAddedCache(MutusDocument document, IEnumerable<IntroQuestion> questions)
+		public QuestionsAddedCache(MutusDocument document, IEnumerable<Question> questions)
 			: base(document, questions)
 		{ }
 
@@ -73,7 +73,7 @@ namespace GrandMutus.Data
 	#region QuestionsRemovedCacheクラス
 	public class QuestionsRemovedCache : QuestionsCache
 	{
-		public QuestionsRemovedCache(MutusDocument document, IEnumerable<IntroQuestion> questions)
+		public QuestionsRemovedCache(MutusDocument document, IEnumerable<Question> questions)
 			: base(document, questions)
 		{ }
 

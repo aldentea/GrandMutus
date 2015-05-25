@@ -10,7 +10,7 @@ using System.Xml.Linq;
 namespace GrandMutus.Data
 {
 	// (0.3.3)
-	public class QuestionsCollection : ObservableCollection<IntroQuestion>
+	public class QuestionsCollection : ObservableCollection<Question>
 	{
 		#region *コンストラクタ(QuestionsCollection)
 		QuestionsCollection()
@@ -40,7 +40,7 @@ namespace GrandMutus.Data
 		/// <summary>
 		/// 問題が削除された時に発生します．
 		/// </summary>
-		public event EventHandler<ItemEventArgs<IEnumerable<IntroQuestion>>> QuestionsRemoved = delegate { };
+		public event EventHandler<ItemEventArgs<IEnumerable<Question>>> QuestionsRemoved = delegate { };
 
 
 		// (0.4.1) Remove時の処理を追加(ほとんどSongsCollectionのコピペ)．
@@ -51,7 +51,7 @@ namespace GrandMutus.Data
 				case NotifyCollectionChangedAction.Add:
 					foreach (var item in e.NewItems)
 					{
-						var question = (IntroQuestion)item;
+						var question = (Question)item;
 
 						// IDを付与する．
 						// (0.1.2)IDが既に設定されているかどうかを確認．
@@ -67,8 +67,8 @@ namespace GrandMutus.Data
 					break;
 
 				case NotifyCollectionChangedAction.Remove:
-					IList<IntroQuestion> questions = new List<IntroQuestion>();
-					foreach (var question in e.OldItems.Cast<IntroQuestion>())
+					IList<Question> questions = new List<Question>();
+					foreach (var question in e.OldItems.Cast<Question>())
 					{
 						// Questionでは、変更通知機能がまだ(ちょっと↑で)実装されていない．
 						// 削除にあたって、変更通知機能を抑止。
@@ -81,7 +81,7 @@ namespace GrandMutus.Data
 					// ここでOperationCacheの処理を行うことにした．
 					if (questions.Count > 0)
 					{
-						this.QuestionsRemoved(this, new ItemEventArgs<IEnumerable<IntroQuestion>> { Item = questions });
+						this.QuestionsRemoved(this, new ItemEventArgs<IEnumerable<Question>> { Item = questions });
 					}
 					break;
 			}

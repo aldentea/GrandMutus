@@ -211,7 +211,7 @@ namespace GrandMutus.Data
 		#endregion
 
 
-		#region イントロ問題関連
+		#region 問題関連
 
 		// (0.3.4)とりあえず．
 		public void AddIntroQuestions(IEnumerable<Song> songs)
@@ -229,7 +229,7 @@ namespace GrandMutus.Data
 
 		// (0.4.1)
 		#region *問題を追加(AddQuestions)
-		private IntroQuestion AddQuestion(IntroQuestion question)
+		private Question AddQuestion(Question question)
 		{
 			_questions.Add(question);	// ←失敗することは通常想定されないよね？
 			return question;
@@ -239,9 +239,9 @@ namespace GrandMutus.Data
 		/// 問題削除をアンドゥしたときに使うことを想定しています。
 		/// </summary>
 		/// <param name="questions"></param>
-		public void AddQuestions(IEnumerable<IntroQuestion> questions)
+		public void AddQuestions(IEnumerable<Question> questions)
 		{
-			var added_questions = new List<IntroQuestion>();
+			var added_questions = new List<Question>();
 			foreach (var question in questions)
 			{
 				var added_song = AddQuestion(question);
@@ -254,7 +254,7 @@ namespace GrandMutus.Data
 		#endregion
 
 		// (0.4.1)
-		void Questions_QuestionsRemoved(object sender, ItemEventArgs<IEnumerable<IntroQuestion>> e)
+		void Questions_QuestionsRemoved(object sender, ItemEventArgs<IEnumerable<Question>> e)
 		{
 			AddOperationHistory(new QuestionsRemovedCache(this, e.Item));
 		}
@@ -264,13 +264,14 @@ namespace GrandMutus.Data
 
 		// (0.4.1)OperationCacheの追加はSongsRemovedイベントハンドラで行うことにする
 		// (曲の削除はUIから直接行われることが想定されるため)．
-		public void RemoveQuestions(IEnumerable<IntroQuestion> questions)
+		public void RemoveQuestions(IEnumerable<Question> questions)
 		{
 			IList<string> removed_song_files = new List<string>();
 			foreach (var question in questions)
 			{
 				if (_questions.Remove(question))
 				{
+					// ↓これって何かに使っているっけ？
 					//removed_song_files.Add(question.FileName);
 				}
 			}
