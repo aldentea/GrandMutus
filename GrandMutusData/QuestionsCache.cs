@@ -7,33 +7,34 @@ using System.Threading.Tasks;
 namespace GrandMutus.Data
 {
 
+	// (0.4.1) SongsCacheと同様の実装に変更．
 	// (0.3.4) ReverseメソッドとCanCancelWithメソッドがabstractです．
 	#region [abstract]QuestionsCacheクラス
 	public abstract class QuestionsCache : IOperationCache
 	{
 		public MutusDocument Document { get; protected set; }
-		public ISet<int> IDSet
+		public ISet<IntroQuestion> Questions
 		{ get; protected set; }
 
-		protected QuestionsCache(MutusDocument document, IEnumerable<int> songIDs)
+		protected QuestionsCache(MutusDocument document, IEnumerable<IntroQuestion> introQuestions)
 		{
 			this.Document = document;
-			this.IDSet = new HashSet<int>(songIDs);
+			this.Questions = new HashSet<IntroQuestion>(introQuestions);
 		}
 
 		public abstract void Reverse();
 		public abstract bool CanCancelWith(IOperationCache other);
 
 		/// <summary>
-		/// FileNamesプロパティの中身が同一であればtrueを返します．
+		/// Questionsプロパティの中身が同一であればtrueを返します．
 		/// </summary>
 		/// <param name="other"></param>
 		/// <returns></returns>
-		public bool HasSameIDSetWith(QuestionsCache other)
+		public bool HasSameQuestionsWith(QuestionsCache other)
 		{
-			if (this.IDSet.Count == other.IDSet.Count)
+			if (this.Questions.Count == other.Questions.Count)
 			{
-				return this.IDSet.Except(other.IDSet).Count() == 0;
+				return this.Questions.Except(other.Questions).Count() == 0;
 			}
 			else
 			{
@@ -45,24 +46,48 @@ namespace GrandMutus.Data
 
 
 	// (0.3.4)
-	#region SongsAddedCacheクラス
+	#region QuestionsAddedCacheクラス
 	public class QuestionsAddedCache : QuestionsCache
 	{
-		public QuestionsAddedCache(MutusDocument document, IEnumerable<int> questionIDs)
-			: base(document, questionIDs)
+		public QuestionsAddedCache(MutusDocument document, IEnumerable<IntroQuestion> questions)
+			: base(document, questions)
 		{ }
 
 		public override void Reverse()
 		{
-			//Document.RemoveQuestions(this.IDSet);
+			Document.RemoveQuestions(this.Questions);
 		}
 
 		public override bool CanCancelWith(IOperationCache other)
 		{
-			return false;
-			//return other is SongsRemovedCache
-			//	&& ((SongsCache)other).Document == this.Document
-			//	&& this.HasSameFileNamesWith((SongsCache)other);
+			//return false;
+			return other is QuestionsRemovedCache
+				&& ((QuestionsCache)other).Document == this.Document
+				&& this.HasSameQuestionsWith((QuestionsCache)other);
+		}
+	}
+	#endregion
+
+
+	// (0.4.1)
+	#region QuestionsRemovedCacheクラス
+	public class QuestionsRemovedCache : QuestionsCache
+	{
+		public QuestionsRemovedCache(MutusDocument document, IEnumerable<IntroQuestion> questions)
+			: base(document, questions)
+		{ }
+
+
+		public override void Reverse()
+		{
+			Document.AddQuestions(this.Questions);
+		}
+
+		public override bool CanCancelWith(IOperationCache other)
+		{
+			return other is QuestionsAddedCache
+				&& ((QuestionsCache)other).Document == this.Document
+				&& this.HasSameQuestionsWith((QuestionsCache)other);
 		}
 	}
 	#endregion

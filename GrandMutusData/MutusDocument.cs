@@ -44,6 +44,8 @@ namespace GrandMutus.Data
 			// Questions関連処理
 			_questions = new QuestionsCollection(this);
 
+			_questions.QuestionsRemoved += Questions_QuestionsRemoved;
+
 			// XML出力関連処理
 			_xmlWriterSettings = new XmlWriterSettings
 			{
@@ -214,12 +216,68 @@ namespace GrandMutus.Data
 		// (0.3.4)とりあえず．
 		public void AddIntroQuestions(IEnumerable<Song> songs)
 		{
+			var added_questions = new List<IntroQuestion>();
 			foreach (var song in songs)
 			{
 				var question = new IntroQuestion(song.ID);
 				_questions.Add(question);
+				added_questions.Add(question);
+			}
+			// ここで操作履歴処理を行う．(削除の場合と異なりUIから直接，というのは考えられない．)
+			AddOperationHistory(new QuestionsAddedCache(this, added_questions.ToArray()));
+		}
+
+		// (0.4.1)
+		#region *問題を追加(AddQuestions)
+		private IntroQuestion AddQuestion(IntroQuestion question)
+		{
+			_questions.Add(question);	// ←失敗することは通常想定されないよね？
+			return question;
+		}
+
+		/// <summary>
+		/// 問題削除をアンドゥしたときに使うことを想定しています。
+		/// </summary>
+		/// <param name="questions"></param>
+		public void AddQuestions(IEnumerable<IntroQuestion> questions)
+		{
+			var added_questions = new List<IntroQuestion>();
+			foreach (var question in questions)
+			{
+				var added_song = AddQuestion(question);
+				if (added_song != null)
+				{ added_questions.Add(added_song); }
+			}
+			AddOperationHistory(new QuestionsAddedCache(this, added_questions.ToArray()));
+
+		}
+		#endregion
+
+		// (0.4.1)
+		void Questions_QuestionsRemoved(object sender, ItemEventArgs<IEnumerable<IntroQuestion>> e)
+		{
+			AddOperationHistory(new QuestionsRemovedCache(this, e.Item));
+		}
+
+
+		#region *問題を削除(RemoveQuestions)
+
+		// (0.4.1)OperationCacheの追加はSongsRemovedイベントハンドラで行うことにする
+		// (曲の削除はUIから直接行われることが想定されるため)．
+		public void RemoveQuestions(IEnumerable<IntroQuestion> questions)
+		{
+			IList<string> removed_song_files = new List<string>();
+			foreach (var question in questions)
+			{
+				if (_questions.Remove(question))
+				{
+					//removed_song_files.Add(question.FileName);
+				}
 			}
 		}
+
+		#endregion
+
 
 		#endregion
 

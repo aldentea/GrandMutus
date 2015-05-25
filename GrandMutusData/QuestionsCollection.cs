@@ -35,6 +35,15 @@ namespace GrandMutus.Data
 
 
 		#region コレクション変更関連
+
+		// (0.4.1)
+		/// <summary>
+		/// 問題が削除された時に発生します．
+		/// </summary>
+		public event EventHandler<ItemEventArgs<IEnumerable<IntroQuestion>>> QuestionsRemoved = delegate { };
+
+
+		// (0.4.1) Remove時の処理を追加(ほとんどSongsCollectionのコピペ)．
 		private void QuestionsCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			switch (e.Action)
@@ -54,6 +63,25 @@ namespace GrandMutus.Data
 						//question.PropertyChanging += Question_PropertyChanging;
 						//question.PropertyChanged += Question_PropertyChanged;
 						question.OnAddedTo(this);
+					}
+					break;
+
+				case NotifyCollectionChangedAction.Remove:
+					IList<IntroQuestion> questions = new List<IntroQuestion>();
+					foreach (var question in e.OldItems.Cast<IntroQuestion>())
+					{
+						// Questionでは、変更通知機能がまだ(ちょっと↑で)実装されていない．
+						// 削除にあたって、変更通知機能を抑止。
+						//question.PropertyChanging -= Song_PropertyChanging;
+						//question.PropertyChanged -= Song_PropertyChanged;
+
+						questions.Add(question);
+					}
+					// (MutusDocumentを経由せずに)UIから削除される場合もあるので，
+					// ここでOperationCacheの処理を行うことにした．
+					if (questions.Count > 0)
+					{
+						this.QuestionsRemoved(this, new ItemEventArgs<IEnumerable<IntroQuestion>> { Item = questions });
 					}
 					break;
 			}
