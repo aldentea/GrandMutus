@@ -112,6 +112,7 @@ namespace GrandMutus.Data
 
 		string _titleCache = string.Empty;	// 手抜き．Songオブジェクト自体もキャッシュするべき．
 		string _artistCache = string.Empty;
+		TimeSpan _sabiPosCache = TimeSpan.Zero;
 
 		void Song_PropertyChanging(object sender, System.ComponentModel.PropertyChangingEventArgs e)
 		{
@@ -123,6 +124,9 @@ namespace GrandMutus.Data
 					break;
 				case "Artist":
 					this._artistCache = song.Artist;
+					break;
+				case "SabiPos":
+					this._sabiPosCache = song.SabiPos;
 					break;
 			}
 		}
@@ -146,6 +150,13 @@ namespace GrandMutus.Data
 						Item = new SongArtistChangedCache(song, _artistCache, song.Artist)
 					});
 					_artistCache = string.Empty;
+					break;
+				case "SabiPos":
+					this.ItemChanged(this, new ItemEventArgs<IOperationCache>
+					{
+						Item = new SongSabiPosChangedCache(song, _sabiPosCache, song.SabiPos)
+					});
+					_sabiPosCache = TimeSpan.Zero;
 					break;
 			}
 			// ドキュメントにNotifyしたい！？
