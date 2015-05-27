@@ -14,5 +14,20 @@
     <Setting Name="SongPlayerVolume" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.5</Value>
     </Setting>
+    <Setting Name="WindowMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="WindowRect" Type="System.Windows.Rect" Scope="User">
+      <Value Profile="(Default)">0,0,640,480</Value>
+    </Setting>
+    <Setting Name="WriterSettingsIndent" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="WriterSettingsIndentChars" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ICA=</Value>
+    </Setting>
+    <Setting Name="WriterSettingsNewLineHandling" Type="System.Xml.NewLineHandling" Scope="User">
+      <Value Profile="(Default)">Replace</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

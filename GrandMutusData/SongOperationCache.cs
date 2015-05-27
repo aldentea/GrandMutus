@@ -93,4 +93,37 @@ namespace GrandMutus.Data
 	}
 	#endregion
 
+	// (0.4.2)
+	#region SongArtistChangedCacheクラス
+	public class SongSabiPosChangedCache : PropertyChangedCache<TimeSpan>
+	{
+		Song _song;
+
+		public SongSabiPosChangedCache(Song song, TimeSpan from, TimeSpan to)
+			: base(from, to)
+		{
+			this._song = song;
+		}
+
+		public override void Reverse()
+		{
+			_song.SabiPos = _previousValue;
+		}
+
+		public override bool CanCancelWith(IOperationCache other)
+		{
+			var other_cache = other as SongSabiPosChangedCache;
+			if (other_cache == null)
+			{ return false; }
+			else
+			{
+				return other_cache._song == this._song &&
+					other_cache._previousValue == this._currentValue &&
+					other_cache._currentValue == this._previousValue;
+			}
+		}
+
+	}
+	#endregion
+
 }

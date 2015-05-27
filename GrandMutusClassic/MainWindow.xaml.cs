@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using HyperMutus;
+using System.Windows.Threading;	// for DispatcherTimer.
 
 namespace GrandMutus
 {
@@ -28,13 +29,14 @@ namespace GrandMutus
 		/// <summary>
 		/// MainWindow.xaml の相互作用ロジック
 		/// </summary>
-		public partial class MainWindow : Aldentea.Wpf.Application.BasicWindow
+		public partial class MainWindow : WindowController
 		{
 			public MainWindow()
 			{
 				InitializeComponent();
 
 				_songPlayer.Volume = App.Current.MySettings.SongPlayerVolume;
+				
 
 				this.MyDocument.Initialized += MyDocument_Initialized;
 				// ↓この設定を忘れると，曲ファイル追加時に画面が固まるかも．
@@ -45,7 +47,7 @@ namespace GrandMutus
 				this.FileHistoryShortcutParent = menuItemHistory;
 			}
 
-			// (0.3.1)
+			// (0.3.1)起動時、「新規作成」時に呼び出されるはず。
 			void MyDocument_Initialized(object sender, EventArgs e)
 			{
 				_songPlayer.Close();
@@ -58,45 +60,6 @@ namespace GrandMutus
 				App.Current.MySettings.SongPlayerVolume = _songPlayer.Volume;
 			}
 
-
-			// 4. 抽象メンバを実装する．
-			// ...ファイル履歴関連のメンバなんですが，
-			// これって，Windowに実装するべきなのでしょうか？Appに実装するべきだという気がしているのですが，
-			// UIに実装する上で何か不都合があるでしょうか？
-
-			#region BasicWindow抽象メンバの実装
-
-			protected override System.Collections.Specialized.StringCollection FileHistory
-			{
-				get
-				{
-					return App.Current.MySettings.FileHistory;
-				}
-				set
-				{
-					App.Current.MySettings.FileHistory = value;
-				}
-			}
-
-			protected override byte FileHistoryCount
-			{
-				get { return App.Current.MySettings.FileHistoryCount; }
-			}
-
-			protected override byte FileHistoryDisplayCount
-			{
-				get { return App.Current.MySettings.FileHistoryDisplayCount; }
-			}
-
-			#endregion
-
-			// 5. DataContextの設定？...は不要だった．
-			public MutusDocument MyDocument
-			{
-				// AppのDocumentプロパティに設定したオブジェクトが，自動的にDataContextに設定される．
-				// NewDocumentプロパティも同じものを指す．
-				get { return (MutusDocument)NewDocument; }
-			}
 
 			// 6. XAML側では，Titleの設定をしましょう．(これはAldenteaWpfUtility.dllが必要になる．)
 
@@ -249,6 +212,8 @@ namespace GrandMutus
 			HyperMutus.SongPlayer _songPlayer = new SongPlayer();
 			Song _currentSong = null;
 
+			DispatcherTimer _songPlayerTimer = null;
+
 
 			#region Playコマンド
 
@@ -258,6 +223,11 @@ namespace GrandMutus
 				{
 					Song song = (Song)e.Parameter;
 					_songPlayer.Open(song.FileName);
+
+					_songPlayerTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.25) };	// 可変にする？
+					_songPlayerTimer.Tick += SongPlayerTimer_Tick;
+					//_songPlayerTimer.IsEnabled = true;
+
 					_currentSong = song;
 					_songPlayer.Play();
 				}
@@ -310,6 +280,8 @@ namespace GrandMutus
 				e.CanExecute = _songPlayer.CurrentState != SongPlayer.State.Inactive;
 			}
 
+			#region SetSabiPosコマンド
+
 			void SetSabiPos_Executed(object sender, ExecutedRoutedEventArgs e)
 			{
 				if (_songPlayer.CurrentState != SongPlayer.State.Inactive)
@@ -318,9 +290,15 @@ namespace GrandMutus
 				}
 			}
 
+			#endregion
 
 			#endregion
 
+
+			private void SongPlayerTimer_Tick(object sender, EventArgs e)
+			{
+				labelCurrentPosition.Content = _songPlayer.CurrentPosition.ToString("m\\:ss");
+			}
 
 
 		}

@@ -69,5 +69,65 @@ namespace GrandMutus.Classic.Properties {
                 this["SongPlayerVolume"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool WindowMaximized {
+            get {
+                return ((bool)(this["WindowMaximized"]));
+            }
+            set {
+                this["WindowMaximized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0,0,640,480")]
+        public global::System.Windows.Rect WindowRect {
+            get {
+                return ((global::System.Windows.Rect)(this["WindowRect"]));
+            }
+            set {
+                this["WindowRect"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool WriterSettingsIndent {
+            get {
+                return ((bool)(this["WriterSettingsIndent"]));
+            }
+            set {
+                this["WriterSettingsIndent"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ICA=")]
+        public string WriterSettingsIndentChars {
+            get {
+                return ((string)(this["WriterSettingsIndentChars"]));
+            }
+            set {
+                this["WriterSettingsIndentChars"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Replace")]
+        public global::System.Xml.NewLineHandling WriterSettingsNewLineHandling {
+            get {
+                return ((global::System.Xml.NewLineHandling)(this["WriterSettingsNewLineHandling"]));
+            }
+            set {
+                this["WriterSettingsNewLineHandling"] = value;
+            }
+        }
     }
 }
