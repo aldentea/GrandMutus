@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using HyperMutus;
+using System.Windows.Threading;	// for DispatcherTimer.
 
 namespace GrandMutus
 {
@@ -35,6 +36,7 @@ namespace GrandMutus
 				InitializeComponent();
 
 				_songPlayer.Volume = App.Current.MySettings.SongPlayerVolume;
+				
 
 				this.MyDocument.Initialized += MyDocument_Initialized;
 				// ↓この設定を忘れると，曲ファイル追加時に画面が固まるかも．
@@ -210,6 +212,8 @@ namespace GrandMutus
 			HyperMutus.SongPlayer _songPlayer = new SongPlayer();
 			Song _currentSong = null;
 
+			DispatcherTimer _songPlayerTimer = null;
+
 
 			#region Playコマンド
 
@@ -219,6 +223,11 @@ namespace GrandMutus
 				{
 					Song song = (Song)e.Parameter;
 					_songPlayer.Open(song.FileName);
+
+					_songPlayerTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.25) };	// 可変にする？
+					_songPlayerTimer.Tick += SongPlayerTimer_Tick;
+					//_songPlayerTimer.IsEnabled = true;
+
 					_currentSong = song;
 					_songPlayer.Play();
 				}
@@ -271,6 +280,8 @@ namespace GrandMutus
 				e.CanExecute = _songPlayer.CurrentState != SongPlayer.State.Inactive;
 			}
 
+			#region SetSabiPosコマンド
+
 			void SetSabiPos_Executed(object sender, ExecutedRoutedEventArgs e)
 			{
 				if (_songPlayer.CurrentState != SongPlayer.State.Inactive)
@@ -279,9 +290,15 @@ namespace GrandMutus
 				}
 			}
 
+			#endregion
 
 			#endregion
 
+
+			private void SongPlayerTimer_Tick(object sender, EventArgs e)
+			{
+				labelCurrentPosition.Content = _songPlayer.CurrentPosition.ToString("m\\:ss");
+			}
 
 
 		}

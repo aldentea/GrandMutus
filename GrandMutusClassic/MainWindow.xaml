@@ -82,9 +82,7 @@
                 <MenuItem Header="曲追加(_A)" Command="{x:Static hypermutus:Commands.AddSongsCommand}" />
             </MenuItem>
         </Menu>
-        <TabControl HorizontalAlignment="Left" Height="418" Margin="23,10,0,0" Grid.Row="1"
-                    VerticalAlignment="Top" Width="759"
-                    TabStripPlacement="Bottom" >
+        <TabControl Margin="10" Grid.Row="1" TabStripPlacement="Bottom" >
             <TabItem Header="Songs">
                 <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
@@ -121,10 +119,17 @@
                         <Button Content="サビ設定" Height="30" Width="75"
                     	HorizontalAlignment="Left" VerticalAlignment="Top" Margin="290,10,0,0"
                     	Command="{x:Static classic:Commands.SetSabiPosCommand}" />
-                        <Slider HorizontalAlignment="Left" Margin="477,95,0,0" VerticalAlignment="Top" Width="256" ToolTip="音量"
+                        <Slider HorizontalAlignment="Left" Margin="479,22,0,0" VerticalAlignment="Top" Width="256" ToolTip="音量"
                                 Value="{Binding RelativeSource={RelativeSource AncestorType=classic:MainWindow}, Path=SongPlayer.Volume}"
                                 Maximum="1" Minimum="0" />
                     </Grid>
+                    <Label Name="labelCurrentPosition2"
+                           Content="{Binding RelativeSource={RelativeSource AncestorType=Window}, 
+                                Path=SongPlayer.CurrentPosition, Mode=OneWay}" ContentStringFormat="m\:ss"
+                           HorizontalAlignment="Left"
+                           Margin="521,73,0,0" Grid.Row="2" VerticalAlignment="Top"/>
+                    <Label Name="labelCurrentPosition" Content="Label" HorizontalAlignment="Left"
+                           Margin="661,73,0,0" Grid.Row="2" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Questions">
