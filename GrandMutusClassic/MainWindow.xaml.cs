@@ -28,7 +28,7 @@ namespace GrandMutus
 		/// <summary>
 		/// MainWindow.xaml の相互作用ロジック
 		/// </summary>
-		public partial class MainWindow : Aldentea.Wpf.Application.BasicWindow
+		public partial class MainWindow : WindowController
 		{
 			public MainWindow()
 			{
@@ -58,37 +58,6 @@ namespace GrandMutus
 				App.Current.MySettings.SongPlayerVolume = _songPlayer.Volume;
 			}
 
-
-			// 4. 抽象メンバを実装する．
-			// ...ファイル履歴関連のメンバなんですが，
-			// これって，Windowに実装するべきなのでしょうか？Appに実装するべきだという気がしているのですが，
-			// UIに実装する上で何か不都合があるでしょうか？
-
-			#region BasicWindow抽象メンバの実装
-
-			protected override System.Collections.Specialized.StringCollection FileHistory
-			{
-				get
-				{
-					return App.Current.MySettings.FileHistory;
-				}
-				set
-				{
-					App.Current.MySettings.FileHistory = value;
-				}
-			}
-
-			protected override byte FileHistoryCount
-			{
-				get { return App.Current.MySettings.FileHistoryCount; }
-			}
-
-			protected override byte FileHistoryDisplayCount
-			{
-				get { return App.Current.MySettings.FileHistoryDisplayCount; }
-			}
-
-			#endregion
 
 			// 5. DataContextの設定？...は不要だった．
 			public MutusDocument MyDocument
