@@ -45,7 +45,7 @@ namespace GrandMutus
 				this.FileHistoryShortcutParent = menuItemHistory;
 			}
 
-			// (0.3.1)
+			// (0.3.1)起動時、「新規作成」時に呼び出されるはず。
 			void MyDocument_Initialized(object sender, EventArgs e)
 			{
 				_songPlayer.Close();
@@ -58,14 +58,6 @@ namespace GrandMutus
 				App.Current.MySettings.SongPlayerVolume = _songPlayer.Volume;
 			}
 
-
-			// 5. DataContextの設定？...は不要だった．
-			public MutusDocument MyDocument
-			{
-				// AppのDocumentプロパティに設定したオブジェクトが，自動的にDataContextに設定される．
-				// NewDocumentプロパティも同じものを指す．
-				get { return (MutusDocument)NewDocument; }
-			}
 
 			// 6. XAML側では，Titleの設定をしましょう．(これはAldenteaWpfUtility.dllが必要になる．)
 
