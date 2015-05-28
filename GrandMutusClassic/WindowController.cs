@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows;
+using System.ComponentModel;
 
 namespace GrandMutus
 {
@@ -13,7 +14,7 @@ namespace GrandMutus
 	namespace Classic
 	{
 		// (0.3.2) WindowControllerクラスを導入．
-		public abstract class WindowController : Aldentea.Wpf.Application.BasicWindow
+		public abstract class WindowController : Aldentea.Wpf.Application.BasicWindow, INotifyPropertyChanged
 		{
 			// (0.3.2)コンストラクタを追加。
 			protected WindowController() : base()
@@ -152,6 +153,17 @@ namespace GrandMutus
 			protected override byte FileHistoryDisplayCount
 			{
 				get { return MySettings.FileHistoryDisplayCount; }
+			}
+
+			#endregion
+
+			// (0.3.2)
+			#region INotifyPropertyChanged実装
+			public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+			protected void NotifyPropertyChanged(string propertyName)
+			{
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 
 			#endregion

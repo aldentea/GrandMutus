@@ -5,6 +5,8 @@
         xmlns:util="clr-namespace:Aldentea.Wpf.Utility;assembly=AldenteaWpfUtility"
         xmlns:hypermutus="clr-namespace:HyperMutus;assembly=MutusBase"
         xmlns:classic="clr-namespace:GrandMutus.Classic"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:ud="clr-namespace:Aldentea.Wpf.Controls;assembly=UpDownControl"
         Height="500" Width="800"
         Closed="MainWindow_Closed">
     <Window.CommandBindings>
@@ -52,6 +54,7 @@
     </Window.InputBindings>
     <Window.Resources>
         <util:CaptionConverter x:Key="captionConverter" ApplicationName="GrandMutusClassic" />
+        <util:TimeSpanDoubleConverter x:Key="timeSpanDoubleConverter" />
     </Window.Resources>
     <Window.Title>
         <MultiBinding Converter="{StaticResource captionConverter}">
@@ -108,28 +111,42 @@
                     <Button Content="曲再生" HorizontalAlignment="Left" Margin="359,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75"
                     	RenderTransformOrigin="-0.28,0.667"
                     	Command="Play" CommandParameter="{Binding SelectedItem, ElementName=dataGridSongs}" />
-                    <Grid Grid.Row="2">
-                        <Button Content="Play" Height="30" Width="75"
-                                HorizontalAlignment="Left" VerticalAlignment="Top" Margin="32,10,0,0"
-                                Command="{x:Static hypermutus:Commands.SwitchPlayPauseCommand}" />
+                    <GroupBox Header="曲再生" Margin="0" Grid.Row="2"
+                              DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=CurrentSong}">
+                        <Grid>
+                            <Button Content="Play" Height="30" Width="75"
+                                    HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0"
+                                    Command="{x:Static hypermutus:Commands.SwitchPlayPauseCommand}" />
 
-                        <Button Content="サビ" Height="30" Width="75"
-                    	HorizontalAlignment="Left" VerticalAlignment="Top" Margin="133,10,0,0"
-                    	Command="{x:Static hypermutus:Commands.SeekSabiCommand}" />
-                        <Button Content="サビ設定" Height="30" Width="75"
-                    	HorizontalAlignment="Left" VerticalAlignment="Top" Margin="290,10,0,0"
-                    	Command="{x:Static classic:Commands.SetSabiPosCommand}" />
-                        <Slider HorizontalAlignment="Left" Margin="479,22,0,0" VerticalAlignment="Top" Width="256" ToolTip="音量"
+                            <Button Content="サビ" Height="30" Width="75"
+                    	        HorizontalAlignment="Left" VerticalAlignment="Top" Margin="99,10,0,0"
+                    	        Command="{x:Static hypermutus:Commands.SeekSabiCommand}" />
+                            <Button Content="サビ設定" Height="30" Width="75"
+                        	    HorizontalAlignment="Left" VerticalAlignment="Top" Margin="290,10,0,0"
+                        	    Command="{x:Static classic:Commands.SetSabiPosCommand}" />
+                            <TextBox HorizontalAlignment="Left" Height="30" Margin="385,10,0,0" Grid.Row="0"
+                                     TextWrapping="Wrap" Text="{Binding Path=SabiPos, StringFormat=m\\:ss\\.ff}"
+                                     VerticalAlignment="Top" Width="77" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                            <ud:UpDownControl Height="30" Width="36" Margin="462,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                              UpClick="UpDownControl_UpClick" DownClick="UpDownControl_DownClick" />
+                            <Slider HorizontalAlignment="Left" Margin="590,22,0,0" VerticalAlignment="Top" Width="166" ToolTip="音量"
                                 Value="{Binding RelativeSource={RelativeSource AncestorType=classic:MainWindow}, Path=SongPlayer.Volume}"
-                                Maximum="1" Minimum="0" />
-                    </Grid>
-                    <Label Name="labelCurrentPosition2"
-                           Content="{Binding RelativeSource={RelativeSource AncestorType=Window}, 
-                                Path=SongPlayer.CurrentPosition, Mode=OneWay}" ContentStringFormat="m\:ss"
-                           HorizontalAlignment="Left"
-                           Margin="521,73,0,0" Grid.Row="2" VerticalAlignment="Top"/>
-                    <Label Name="labelCurrentPosition" Content="Label" HorizontalAlignment="Left"
-                           Margin="661,73,0,0" Grid.Row="2" VerticalAlignment="Top"/>
+                                Maximum="1" Minimum="0" SmallChange="0.01" LargeChange="0.1" />
+                            <Slider HorizontalAlignment="Left" Height="41" Margin="31,57,0,0" VerticalAlignment="Top" Width="324"
+                                    TickFrequency="60" Maximum="100" Minimum="0" Name="sliderSeekSong" TickPlacement="BottomRight"
+                                    LargeChange="30" SmallChange="5"
+                                    Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, 
+                                        Path=SongPlayer.CurrentPosition, Mode=TwoWay, Converter={StaticResource timeSpanDoubleConverter}}"/>
+                            <Label Name="labelCurrentPosition2"
+                                   Content="{Binding RelativeSource={RelativeSource AncestorType=Window}, 
+                                        Path=SongPlayer.CurrentPosition, Mode=OneWay}" ContentStringFormat="m\:ss"
+                                   HorizontalAlignment="Left"
+                                   Margin="421,73,0,0" Grid.Row="0" VerticalAlignment="Top"/>
+                            <Label Name="labelDuration"
+                               HorizontalAlignment="Left"  ContentStringFormat="m\:ss" Content="{x:Static sys:TimeSpan.Zero}"
+                               Margin="521,73,0,0" Grid.Row="0" VerticalAlignment="Top"/>
+                       </Grid>
+                    </GroupBox>
                 </Grid>
             </TabItem>
             <TabItem Header="Questions">

@@ -36,7 +36,7 @@ namespace GrandMutus
 				InitializeComponent();
 
 				_songPlayer.Volume = App.Current.MySettings.SongPlayerVolume;
-				
+				_songPlayer.MediaOpened += SongPlayer_MediaOpened;
 
 				this.MyDocument.Initialized += MyDocument_Initialized;
 				// ↓この設定を忘れると，曲ファイル追加時に画面が固まるかも．
@@ -202,6 +202,7 @@ namespace GrandMutus
 
 			#region 曲再生関連
 
+			#region *SongPlayerプロパティ
 			public HyperMutus.SongPlayer SongPlayer
 			{
 				get
@@ -210,9 +211,37 @@ namespace GrandMutus
 				}
 			}
 			HyperMutus.SongPlayer _songPlayer = new SongPlayer();
-			Song _currentSong = null;
+			#endregion
 
-			DispatcherTimer _songPlayerTimer = null;
+			// (0.3.2)プロパティ化。
+			#region *CurrentSongプロパティ
+			public Song CurrentSong
+			{
+				get { return _currentSong; }
+				set
+				{
+					if (_currentSong != value)
+					{
+						_currentSong = value;
+						NotifyPropertyChanged("CurrentSong");
+					}
+				}
+			}
+			Song _currentSong = null;
+			#endregion
+
+
+			//DispatcherTimer _songPlayerTimer = null;
+
+			// (0.3.2)
+			void SongPlayer_MediaOpened(object sender, EventArgs e)
+			{
+				if (_songPlayer.Duration.HasValue)
+				{
+					this.labelDuration.Content = _songPlayer.Duration.Value;
+					this.sliderSeekSong.Maximum = _songPlayer.Duration.Value.TotalSeconds;
+				}
+			}
 
 
 			#region Playコマンド
@@ -223,12 +252,12 @@ namespace GrandMutus
 				{
 					Song song = (Song)e.Parameter;
 					_songPlayer.Open(song.FileName);
-
-					_songPlayerTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.25) };	// 可変にする？
-					_songPlayerTimer.Tick += SongPlayerTimer_Tick;
+					
+					//_songPlayerTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.25) };	// 可変にする？
+					//_songPlayerTimer.Tick += SongPlayerTimer_Tick;
 					//_songPlayerTimer.IsEnabled = true;
 
-					_currentSong = song;
+					this.CurrentSong = song;
 					_songPlayer.Play();
 				}
 			}
@@ -292,13 +321,25 @@ namespace GrandMutus
 
 			#endregion
 
+			private void UpDownControl_UpClick(object sender, RoutedEventArgs e)
+			{
+				if (CurrentSong != null)
+				{
+					CurrentSong.SabiPos += TimeSpan.FromSeconds(0.1);
+				}
+			}
+
+			private void UpDownControl_DownClick(object sender, RoutedEventArgs e)
+			{
+				if (CurrentSong != null)
+				{
+					CurrentSong.SabiPos += TimeSpan.FromSeconds(-0.1);
+				}
+
+			}
+
 			#endregion
 
-
-			private void SongPlayerTimer_Tick(object sender, EventArgs e)
-			{
-				labelCurrentPosition.Content = _songPlayer.CurrentPosition.ToString("m\\:ss");
-			}
 
 
 		}
