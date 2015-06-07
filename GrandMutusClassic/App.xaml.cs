@@ -17,6 +17,7 @@ namespace GrandMutus.Classic
 	public partial class App : Aldentea.Wpf.Application.Application
 	{
 
+		// (0.3.4)Upgrade処理を追加。
 		#region  2. お決まりの設定．(コピペでいいかも．)
 		// 06/18/2014 by aldentea 
 		protected App()
@@ -24,6 +25,12 @@ namespace GrandMutus.Classic
 		{
 			this.Document = new GrandMutus.Data.MutusDocument();
 			this.Exit += new ExitEventHandler(App_Exit);
+
+			if (MySettings.RequireUpgrade)
+			{
+				MySettings.Upgrade();
+				MySettings.RequireUpgrade = false;
+			}
 		}
 
 		void App_Exit(object sender, ExitEventArgs e)

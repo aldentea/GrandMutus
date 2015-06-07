@@ -29,5 +29,8 @@
     <Setting Name="WriterSettingsNewLineHandling" Type="System.Xml.NewLineHandling" Scope="User">
       <Value Profile="(Default)">Replace</Value>
     </Setting>
+    <Setting Name="RequireUpgrade" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

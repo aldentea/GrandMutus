@@ -129,5 +129,17 @@ namespace GrandMutus.Classic.Properties {
                 this["WriterSettingsNewLineHandling"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool RequireUpgrade {
+            get {
+                return ((bool)(this["RequireUpgrade"]));
+            }
+            set {
+                this["RequireUpgrade"] = value;
+            }
+        }
     }
 }
