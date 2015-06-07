@@ -176,7 +176,7 @@ namespace GrandMutus.Data
 
 		}
 
-
+		// (0.4.2.1)RootDirectoryと出力ディレクトリが同じならpath属性を出力しないように修正。
 		#region XML入出力関連
 
 		public const string ELEMENT_NAME = "songs";
@@ -190,6 +190,7 @@ namespace GrandMutus.Data
 		public XElement GenerateElement(string destinationDir)
 		{
 			XElement element = new XElement(ELEMENT_NAME);
+			// ※ロジックをもっと簡略化できそうだが…。
 			string songs_root = null;
 			if (!string.IsNullOrEmpty(RootDirectory))
 			{
@@ -201,7 +202,11 @@ namespace GrandMutus.Data
 				{
 					songs_root = RootDirectory;
 				}
-				element.Add(new XAttribute(PATH_ATTRIBUTE, songs_root));
+
+				if (!string.IsNullOrEmpty(songs_root))
+				{
+					element.Add(new XAttribute(PATH_ATTRIBUTE, songs_root));
+				}
 			}
 
 			foreach (Song song in this.Items)
