@@ -38,6 +38,9 @@
     <Reference Include="AldenteaBackgroundWorkerDialog">
       <HintPath>external\AldenteaBackgroundWorkerDialog.dll</HintPath>
     </Reference>
+    <Reference Include="AldenteaFolderTreeView">
+      <HintPath>external\AldenteaFolderTreeView.dll</HintPath>
+    </Reference>
     <Reference Include="AldenteaWpfApplication">
       <HintPath>external\AldenteaWpfApplication.dll</HintPath>
     </Reference>

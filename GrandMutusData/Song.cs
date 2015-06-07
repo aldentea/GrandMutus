@@ -140,6 +140,12 @@ namespace GrandMutus.Data
 		}
 		#endregion
 
+		// (0.4.3)
+		internal void UpdateRelativeFileName()
+		{
+			this.NotifyPropertyChanged("RelativeFileName");
+		}
+
 
 		// 問題2. 親要素への参照を設定できるか？
 

@@ -15,10 +15,38 @@ namespace GrandMutus.Data
 	#region SongsCollectionクラス
 	public class SongsCollection : ObservableCollection<Song>
 	{
+
+		// TODO: set時には、操作履歴に追加する！
+		// (0.4.3)実装を変更し、この変更を各Songに通知するように修正。
+		#region *RootDirectoryプロパティ
 		/// <summary>
 		/// 曲ファイルを格納するディレクトリのフルパスを取得／設定します．
 		/// </summary>
-		public string RootDirectory { get; set; }
+		public string RootDirectory {
+			get
+			{
+				return this._rootDirectory;
+			}
+			set
+			{
+				if (this._rootDirectory != value)
+				{
+					this._rootDirectory = value;
+					UpdateRelativeFileNames();
+				}
+			}
+		}
+		string _rootDirectory = string.Empty;
+
+		void UpdateRelativeFileNames()
+		{
+			foreach (Song song in this.Items)
+			{
+				song.UpdateRelativeFileName();
+			}
+		}
+		#endregion
+
 
 		#region *コンストラクタ(SongsCollection)
 		public SongsCollection()

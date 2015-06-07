@@ -83,6 +83,24 @@ namespace GrandMutus
 				}
 			}
 
+			// (0.3.3)
+			private void SetRootDirectory_Executed(object sender, ExecutedRoutedEventArgs e)
+			{
+				Aldentea.Wpf.Controls.FolderBrowserDialog dialog
+					= new Aldentea.Wpf.Controls.FolderBrowserDialog
+					{
+						AllowNew = false,
+						Description = "曲ファイルが格納されているフォルダを指定して下さい。",
+						DisplaySpecialFolders = Aldentea.Wpf.Controls.SpecialFoldersFlag.Personal | Aldentea.Wpf.Controls.SpecialFoldersFlag.MyMusic,
+						SelectedPath = MyDocument.Songs.RootDirectory
+					};
+
+				if (dialog.ShowDialog() == true)
+				{
+					MyDocument.Songs.RootDirectory = dialog.SelectedPath;
+				}
+
+			}
 			#endregion
 
 

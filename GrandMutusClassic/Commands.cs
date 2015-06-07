@@ -13,6 +13,10 @@ namespace GrandMutus.Classic
 		public static RoutedCommand AddQuestionsCommand = new RoutedCommand();
 
 		public static RoutedCommand SetSabiPosCommand = new RoutedCommand();
+
+		// (0.3.3)
+		public static RoutedCommand SetRootDirectoryCommand = new RoutedCommand();
+
 	}
 
 }

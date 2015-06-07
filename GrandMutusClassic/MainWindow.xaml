@@ -19,6 +19,10 @@
             Executed="AddSongs_Executed"
             CanExecute="Always_CanExecute" />
         <CommandBinding
+            Command="{x:Static classic:Commands.SetRootDirectoryCommand}"
+            Executed="SetRootDirectory_Executed"
+            CanExecute="Always_CanExecute" />
+        <CommandBinding
             Command="Undo"
             Executed="Undo_Executed"
             CanExecute="Undo_CanExecute" />
@@ -83,6 +87,7 @@
             </MenuItem>
             <MenuItem Header="曲リスト(_S)">
                 <MenuItem Header="曲追加(_A)" Command="{x:Static hypermutus:Commands.AddSongsCommand}" />
+                <MenuItem Header="曲フォルダ設定(_D)" Command="{x:Static classic:Commands.SetRootDirectoryCommand}" />
             </MenuItem>
         </Menu>
         <TabControl Margin="10" Grid.Row="1" TabStripPlacement="Bottom" >
