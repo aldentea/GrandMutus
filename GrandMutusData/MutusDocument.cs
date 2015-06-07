@@ -181,6 +181,7 @@ namespace GrandMutus.Data
 			AddOperationHistory(new SongsRemovedCache(this, e.Item));
 		}
 
+		// (0.4.3.1)サビ位置が読み込まれていなかったのを修正。
 		// HyperMutusからのパクリ．古いメソッドだけど，とりあえずそのまま使う．
 		// 場所も未定．とりあえずstatic化してここに置いておく．
 		#region *[static]ファイルからメタデータを読み込み(LoadInformation)
@@ -192,7 +193,7 @@ namespace GrandMutus.Data
 			SPP.Aldente.IID3Tag tag = SPP.Aldente.AldenteMP3TagAccessor.ReadFile(song.FileName);
 			song.Title = tag == null ? string.Empty : tag.Title;
 			song.Artist = tag == null ? string.Empty : tag.Artist;
-			//song.SabiPos = tag == null ? 0.0M : tag.SabiPos;
+			song.SabiPos = tag == null ? TimeSpan.Zero : TimeSpan.FromSeconds(Convert.ToDouble(tag.SabiPos));
 		}
 		#endregion
 
