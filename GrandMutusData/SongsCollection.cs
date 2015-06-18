@@ -110,7 +110,10 @@ namespace GrandMutus.Data
 					}
 					break;
 				case NotifyCollectionChangedAction.Remove:
-					//★IList<string> song_files = new List<string>();
+					// ☆☆複数曲まとめて削除した場合でも、1曲ずつについて呼び出される！
+					// →UIから複数曲をまとめて削除すると、それらをまとめてキャッシュする手段がない！？
+
+				//★IList<string> song_files = new List<string>();
 					IList<Song> songs = new List<Song>();
 					foreach (var song in e.OldItems.Cast<Song>())
 					{
