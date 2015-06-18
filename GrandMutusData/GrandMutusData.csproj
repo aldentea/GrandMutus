@@ -67,6 +67,7 @@
     <Compile Include="SongOperationCache.cs" />
     <Compile Include="SongsCache.cs" />
     <Compile Include="SongsCollection.cs" />
+    <Compile Include="ValueChangedEventArgs.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

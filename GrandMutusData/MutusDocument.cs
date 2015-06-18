@@ -39,6 +39,7 @@ namespace GrandMutus.Data
 			//_songs.CollectionChanged += Songs_CollectionChanged;
 			_songs.ItemChanged += Songs_ItemChanged;
 			_songs.SongsRemoved += Songs_SongsRemoved;
+			_songs.RootDirectoryChanged += Songs_RootDirectoryChanged;
 
 
 			// Questions関連処理
@@ -54,6 +55,12 @@ namespace GrandMutus.Data
 			};
 		}
 		#endregion
+
+		// (0.4.4)
+		void Songs_RootDirectoryChanged(object sender, ValueChangedEventArgs<string> e)
+		{
+			this.AddOperationHistory(new SongsRootDirectoryChangedCache(this.Songs, e.PreviousValue, e.CurrentValue));
+		}
 
 		// (0.2.0)Songs以外でも共通に使えるのではなかろうか？
 		void Songs_ItemChanged(object sender, ItemEventArgs<IOperationCache> e)

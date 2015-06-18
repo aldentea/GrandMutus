@@ -16,7 +16,8 @@ namespace GrandMutus.Data
 	public class SongsCollection : ObservableCollection<Song>
 	{
 
-		// TODO: set時には、操作履歴に追加する！
+
+		// (0.4.4)set時に操作履歴に追加。
 		// (0.4.3)実装を変更し、この変更を各Songに通知するように修正。
 		#region *RootDirectoryプロパティ
 		/// <summary>
@@ -31,13 +32,16 @@ namespace GrandMutus.Data
 			{
 				if (this._rootDirectory != value)
 				{
+					var previous_value = this._rootDirectory;
 					this._rootDirectory = value;
 					UpdateRelativeFileNames();
+					this.RootDirectoryChanged(this, new ValueChangedEventArgs<string>(previous_value, value));
 				}
 			}
 		}
 		string _rootDirectory = string.Empty;
 
+		// (0.4.3)
 		void UpdateRelativeFileNames()
 		{
 			foreach (Song song in this.Items)
@@ -46,6 +50,10 @@ namespace GrandMutus.Data
 			}
 		}
 		#endregion
+
+		// (0.4.4)RootDirecotyプロパティの値が変更されたときに発生します。
+		public event EventHandler<ValueChangedEventArgs<string>> RootDirectoryChanged = delegate { };
+
 
 
 		#region *コンストラクタ(SongsCollection)

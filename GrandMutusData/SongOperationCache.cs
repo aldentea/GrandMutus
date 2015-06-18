@@ -126,4 +126,41 @@ namespace GrandMutus.Data
 	}
 	#endregion
 
+
+
+	// for songs
+
+	// (0.4.4)
+	#region SongsRootDirectoryChangedCacheクラス
+	public class SongsRootDirectoryChangedCache : PropertyChangedCache<string>
+	{
+		readonly SongsCollection _songsCollection;
+
+		public SongsRootDirectoryChangedCache(SongsCollection songs, string from, string to) : base(from, to)
+		{
+			this._songsCollection = songs;
+		}
+
+		public override void Reverse()
+		{
+			_songsCollection.RootDirectory = this._previousValue;
+		}
+
+		public override bool CanCancelWith(IOperationCache other)
+		{
+			var other_cache = other as SongsRootDirectoryChangedCache;
+			if (other_cache == null)
+			{ return false; }
+			else
+			{
+				// other_cache._songsCollectionにアクセスできるんだね！
+				return other_cache._songsCollection == this._songsCollection &&
+					other_cache._previousValue == this._currentValue &&
+					other_cache._currentValue == this._previousValue;
+			}
+		}
+
+	}
+	#endregion
+
 }
