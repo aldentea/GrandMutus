@@ -60,6 +60,7 @@ namespace GrandMutus.Data
 		public SongsCollection()
 		{
 			this.CollectionChanged += SongsCollection_CollectionChanged;
+			
 		}
 		#endregion
 
@@ -71,13 +72,15 @@ namespace GrandMutus.Data
 		// これはこういう仕様でいいでしょうか？後から困ったことにならないかなぁ？
 
 
+		// (0.4.4.1)↓UIから曲を削除する場合もMutusDocumentを経由する方針になり，イベントの用途がなくなったので一旦削除．
 		// (0.3.1)
 		/// <summary>
 		/// 曲が削除された時に発生します．
 		/// </summary>
-		public event EventHandler<ItemEventArgs<IEnumerable<Song>>> SongsRemoved = delegate { };
+		//public event EventHandler<ItemEventArgs<IEnumerable<Song>>> SongsRemoved = delegate { };
 
 
+		// (0.4.4.1)↓SongsRemovedイベントの発生処理を削除．
 		// (0.3.1)曲の削除時にSongsRemovedイベントを発生． 
 		// (0.3.0)すでにある曲を追加したときの処理を追加．
 		void SongsCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -110,10 +113,10 @@ namespace GrandMutus.Data
 					}
 					break;
 				case NotifyCollectionChangedAction.Remove:
-					// ☆☆複数曲まとめて削除した場合でも、1曲ずつについて呼び出される！
-					// →UIから複数曲をまとめて削除すると、それらをまとめてキャッシュする手段がない！？
+					// →UIから複数曲をまとめて削除すると、既定では1曲ずつこのイベントが呼び出される．それらをまとめてキャッシュする手段がない！？
+					// →仕方がないので，UIの処理を修正し(0.3.4.1)，複数曲の削除をまとめて受け取るようにした．
 
-				//★IList<string> song_files = new List<string>();
+					//★IList<string> song_files = new List<string>();
 					IList<Song> songs = new List<Song>();
 					foreach (var song in e.OldItems.Cast<Song>())
 					{
@@ -125,12 +128,14 @@ namespace GrandMutus.Data
 						// どうにかする．
 						//song.OnAddedTo(null);
 					}
+
+					// (0.4.4.1)↓UIから曲を削除する場合もMutusDocumentを経由する方針になったので，この処理を削除．
 					// (MutusDocumentを経由せずに)UIから削除される場合もあるので，
 					// ここでOperationCacheの処理を行うことにした．
-					if (songs.Count > 0)
-					{
-						this.SongsRemoved(this, new ItemEventArgs<IEnumerable<Song>> { Item = songs });
-					}
+					//if (songs.Count > 0)
+					//{
+					//	this.SongsRemoved(this, new ItemEventArgs<IEnumerable<Song>> { Item = songs });
+					//}
 					break;
 				case NotifyCollectionChangedAction.Reset:
 					// ClearしたときにはResetが発生するのか？←そのようです．

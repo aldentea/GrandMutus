@@ -29,6 +29,7 @@ namespace GrandMutus.Data
 		XmlWriterSettings _xmlWriterSettings;
 		#endregion
 
+		// (0.4.4.1)_songs.SongRemovedのハンドルを一旦解除(というか，イベント自体を削除した)．
 		// (0.3.3)Questions関連処理を追加。
 		#region *コンストラクタ(MutusDocument)
 		public MutusDocument()
@@ -38,7 +39,7 @@ namespace GrandMutus.Data
 			_songs = new SongsCollection();
 			//_songs.CollectionChanged += Songs_CollectionChanged;
 			_songs.ItemChanged += Songs_ItemChanged;
-			_songs.SongsRemoved += Songs_SongsRemoved;
+			//_songs.SongsRemoved += Songs_SongsRemoved;
 			_songs.RootDirectoryChanged += Songs_RootDirectoryChanged;
 
 
@@ -166,27 +167,35 @@ namespace GrandMutus.Data
 			RemoveSongs(fileNames.Select(fileName => _songs.FirstOrDefault(s => s.FileName == fileName)).Where(s => s != null));
 		}
 
+		// (0.4.4.1)↓UIからの削除もこのメソッドを経由することにしたので，OperationCacheの処理をここで行う．
 		// (0.3.1)OperationCacheの追加はSongsRemovedイベントハンドラで行うことにする
 		// (曲の削除はUIから直接行われることが想定されるため)．
 		// (0.3.0)
 		public void RemoveSongs(IEnumerable<Song> songs)
 		{
-			IList<string> removed_song_files = new List<string>();
-			foreach (var song in songs)
+			IList<Song> removed_songs = new List<Song>();
+
+			// songsで直接foreachしたいが，songs自身が変更されるのでそれは不可！
+			var song_ids = songs.Select(song => song.ID).ToArray();
+			foreach (var song_id in song_ids)
 			{
-				if (_songs.Remove(song))
+				var song = _songs.First(s => s.ID == song_id);
+				if (song != null)
 				{
-					removed_song_files.Add(song.FileName);
+					_songs.Remove(song);
+					removed_songs.Add(song);
 				}
 			}
+			AddOperationHistory(new SongsRemovedCache(this, removed_songs));
 		}
 		#endregion
 
+		// (0.4.4.1)ここにあった処理をRemoveSongsメソッドに移動．
 		// (0.3.1)
-		void Songs_SongsRemoved(object sender, ItemEventArgs<IEnumerable<Song>> e)
-		{
-			AddOperationHistory(new SongsRemovedCache(this, e.Item));
-		}
+		//void Songs_SongsRemoved(object sender, ItemEventArgs<IEnumerable<Song>> e)
+		//{
+			//AddOperationHistory(new SongsRemovedCache(this, e.Item));
+		//}
 
 		// (0.4.3.1)サビ位置が読み込まれていなかったのを修正。
 		// HyperMutusからのパクリ．古いメソッドだけど，とりあえずそのまま使う．

@@ -108,6 +108,9 @@
                             <DataGridTextColumn Header="FileName" MinWidth="100" Binding="{Binding Path=RelativeFileName, Mode=OneWay}" />
                             <DataGridTextColumn Header="SabiPos" MinWidth="100" Binding="{Binding Path=SabiPos, StringFormat=m\\:ss\\.ff}" />
                         </DataGrid.Columns>
+                        <DataGrid.CommandBindings>
+                            <CommandBinding Command="Delete" Executed="DeleteSongs_Executed" />
+                        </DataGrid.CommandBindings>
                     </DataGrid>
                     <Button Content="問題に追加" HorizontalAlignment="Left" Margin="263,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75"
                             RenderTransformOrigin="-0.28,0.667"

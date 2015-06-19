@@ -358,6 +358,17 @@ namespace GrandMutus
 
 			#endregion
 
+			// (0.3.4.1)既定の動作をオーバーライドする．
+			private void DeleteSongs_Executed(object sender, ExecutedRoutedEventArgs e)
+			{
+				//var items = e.Parameter as IEnumerable<Song>;
+				var items = ((System.Collections.IList)((DataGrid)sender).SelectedItems).Cast<Song>();
+				if (items != null)
+				{
+					this.MyDocument.RemoveSongs(items);
+				}
+			}
+
 
 
 		}
