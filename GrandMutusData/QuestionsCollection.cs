@@ -43,6 +43,7 @@ namespace GrandMutus.Data
 		public event EventHandler<ItemEventArgs<IEnumerable<Question>>> QuestionsRemoved = delegate { };
 
 
+		// (0.4.5) NoChangedイベントハンドラの着脱を追加．
 		// (0.4.1) Remove時の処理を追加(ほとんどSongsCollectionのコピペ)．
 		private void QuestionsCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
@@ -62,6 +63,7 @@ namespace GrandMutus.Data
 						// ☆songのプロパティ変更をここで受け取る？MutusDocumentで行えばここでは不要？
 						//question.PropertyChanging += Question_PropertyChanging;
 						//question.PropertyChanged += Question_PropertyChanged;
+						question.NoChanged += Question_NoChanged;
 						question.OnAddedTo(this);
 					}
 					break;
@@ -74,6 +76,7 @@ namespace GrandMutus.Data
 						// 削除にあたって、変更通知機能を抑止。
 						//question.PropertyChanging -= Song_PropertyChanging;
 						//question.PropertyChanged -= Song_PropertyChanged;
+						question.NoChanged -= Question_NoChanged;
 
 						questions.Add(question);
 					}
@@ -86,6 +89,7 @@ namespace GrandMutus.Data
 					break;
 			}
 		}
+
 		#endregion
 
 		// (0.3.3)未使用。
@@ -98,7 +102,43 @@ namespace GrandMutus.Data
 
 		private void Question_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
-			throw new NotImplementedException();
+			var question = (Question)sender;
+			switch(e.PropertyName)
+			{
+				case "No":
+					break;
+			}
+		}
+
+		bool _noChangingFlag = false;
+
+		// (0.4.5.0)とりあえずN->nullの処理を記述．
+		void Question_NoChanged(object sender, ValueChangedEventArgs<int?> e)
+		{
+			if (_noChangingFlag)
+			{
+				return;
+			}
+			_noChangingFlag = true;
+
+			try
+			{
+				if (e.PreviousValue.HasValue && !e.CurrentValue.HasValue)
+				{
+					// N -> null
+					// Nより大きい番号を1ずつ減らす．
+					int n = e.PreviousValue.Value;
+
+					foreach (var question in Items.Where(q => { return q.No.HasValue && q.No > n; }))
+					{
+						question.No -= 1;
+					}
+				}
+			}
+			finally
+			{
+				_noChangingFlag = false;
+			}
 		}
 
 		#endregion
