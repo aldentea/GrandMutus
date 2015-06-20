@@ -56,7 +56,7 @@ namespace GrandMutus.Data
 		#endregion
 
 
-
+		// (0.4.5.2)Category変更前に、Noをnullにする。
 		#region *Categoryプロパティ
 		public string Category
 		{
@@ -68,6 +68,9 @@ namespace GrandMutus.Data
 			{
 				if (this.Category != value)
 				{
+					
+					this.No = null;
+
 					NotifyPropertyChanging("Category");
 					this._category = value;
 					NotifyPropertyChanged("Category");

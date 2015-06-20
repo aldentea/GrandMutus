@@ -64,6 +64,7 @@ namespace GrandMutus.Data
 						//question.PropertyChanging += Question_PropertyChanging;
 						//question.PropertyChanged += Question_PropertyChanged;
 						question.NoChanged += Question_NoChanged;
+
 						question.OnAddedTo(this);
 					}
 					break;
@@ -112,6 +113,7 @@ namespace GrandMutus.Data
 			}
 		}
 
+		// (0.4.5.2)で、カテゴリを考慮。
 		// (0.4.5.1)まずはカテゴリを考慮しない形で整番処理を記述．
 		#region 整番処理関連
 
@@ -132,7 +134,7 @@ namespace GrandMutus.Data
 				int? new_no = e.CurrentValue;
 				if (new_no.HasValue)
 				{
-					int n = Items.Count(q => { return q.No.HasValue; });
+					int n = Items.Count(q => { return q.Category == self.Category && q.No.HasValue; });
 					if (new_no.Value > n)
 					{
 						self.No = new_no = n;
@@ -155,7 +157,7 @@ namespace GrandMutus.Data
 						{
 							// M < N
 							// (M+1)からNを1つずつ減らす。
-							foreach (var question in Items.Where(q => { return q.No.HasValue && q.No > m && q.No <= n && q != self; }))
+							foreach (var question in Items.Where(q => { return q.Category == self.Category && q.No.HasValue && q.No > m && q.No <= n && q != self; }))
 							{
 								question.No -= 1;
 							}
@@ -164,7 +166,7 @@ namespace GrandMutus.Data
 						{
 							// M > N
 							// Nから(M-1)を1つずつ増やす。
-							foreach (var question in Items.Where(q => { return q.No.HasValue && q.No < m && q.No >= n && q != self; }))
+							foreach (var question in Items.Where(q => { return q.Category == self.Category && q.No.HasValue && q.No < m && q.No >= n && q != self; }))
 							{
 								question.No += 1;
 							}
@@ -176,7 +178,7 @@ namespace GrandMutus.Data
 						// Nより大きい番号を1ずつ減らす．
 						int n = old_no.Value;
 
-						foreach (var question in Items.Where(q => { return q.No.HasValue && q.No > n; }))
+						foreach (var question in Items.Where(q => { return q.Category == self.Category && q.No.HasValue && q.No > n; }))
 						{
 							question.No -= 1;
 						}
@@ -189,7 +191,7 @@ namespace GrandMutus.Data
 
 					// null -> N
 					// N以上の番号を1つずつ増やす。
-					foreach (var question in Items.Where(q => { return q.No.HasValue && q.No >= n && q != self; }))
+					foreach (var question in Items.Where(q => { return q.Category == self.Category && q.No.HasValue && q.No >= n && q != self; }))
 					{
 						question.No += 1;
 					}
