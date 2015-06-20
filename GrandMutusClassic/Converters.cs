@@ -6,20 +6,38 @@ using System.Threading.Tasks;
 
 namespace GrandMutus.Classic
 {
-	// (0.3.2)作りかけたけど、使わなくて済んだので放置。
-/*	public class DurationConverter : System.Windows.Data.IValueConverter
+
+	// (0.3.4.2)QuestionsのNo列にはこれを使わないと、nullを設定することができない。
+	#region NullableIntConverterクラス
+	public class NullableIntConverter : System.Windows.Data.IValueConverter
 	{
+
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			if (value is TimeSpan)
-			{
-				string format = "m\\::";
-			}
+			return value == null ? string.Empty : value.ToString();
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			throw new NotImplementedException();
+			if (value is string)
+			{
+				string v = (string)value;
+				if (string.IsNullOrEmpty(v))
+				{
+					return null;
+				}
+				else
+				{
+					int n;
+					if (int.TryParse(v, out n))
+					{
+						return n;
+					}
+				}
+			}
+			throw new ArgumentException();
 		}
-	}*/
+	}
+	#endregion
+
 }

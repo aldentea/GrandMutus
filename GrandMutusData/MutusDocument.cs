@@ -47,6 +47,7 @@ namespace GrandMutus.Data
 			_questions = new QuestionsCollection(this);
 
 			_questions.QuestionsRemoved += Questions_QuestionsRemoved;
+			_questions.QuestionNoChanged += Questions_QuestionNoChanged;
 
 			// XML出力関連処理
 			_xmlWriterSettings = new XmlWriterSettings
@@ -55,6 +56,7 @@ namespace GrandMutus.Data
 				NewLineHandling = NewLineHandling.Entitize
 			};
 		}
+
 		#endregion
 
 		// (0.4.4)
@@ -295,6 +297,13 @@ namespace GrandMutus.Data
 		}
 
 		#endregion
+
+		// (0.4.5.1)
+		void Questions_QuestionNoChanged(object sender, ValueChangedEventArgs<int?> e)
+		{
+			var question = (Question)sender;
+			AddOperationHistory(new QuestionNoChangedCache(question, e.PreviousValue, e.CurrentValue));
+		}
 
 
 		#endregion

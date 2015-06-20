@@ -92,4 +92,38 @@ namespace GrandMutus.Data
 	}
 	#endregion
 
+
+	// (0.4.5.1)
+	#region QuestionNoChangedCacheクラス
+	public class QuestionNoChangedCache : PropertyChangedCache<int?>
+	{
+		readonly Question _question;
+
+		public QuestionNoChangedCache(Question question, int? from, int? to) : base(from, to)
+		{
+			this._question = question;
+		}
+
+		public override void Reverse()
+		{
+			_question.No = this._previousValue;
+		}
+
+		public override bool CanCancelWith(IOperationCache other)
+		{
+			if (other is QuestionNoChangedCache)
+			{
+				var other_cache = ((QuestionNoChangedCache)other);
+				return (other_cache._question == this._question)
+					&& (other_cache._previousValue == this._currentValue)
+					&& (other_cache._currentValue == this._previousValue);
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
+	#endregion
+
 }

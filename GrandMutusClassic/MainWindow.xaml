@@ -59,6 +59,7 @@
     <Window.Resources>
         <util:CaptionConverter x:Key="captionConverter" ApplicationName="GrandMutusClassic" />
         <util:TimeSpanDoubleConverter x:Key="timeSpanDoubleConverter" />
+        <classic:NullableIntConverter x:Key="nullableIntConverter" />
     </Window.Resources>
     <Window.Title>
         <MultiBinding Converter="{StaticResource captionConverter}">
@@ -163,7 +164,7 @@
                               ItemsSource="{Binding Path=Questions}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="#" Binding="{Binding Path=ID, Mode=OneWay}" />
-                            <DataGridTextColumn Header="No" Binding="{Binding Path=No, Mode=TwoWay}" />
+                            <DataGridTextColumn Header="No" Binding="{Binding Path=No, Mode=TwoWay, Converter={StaticResource nullableIntConverter}}" />
                             <DataGridTextColumn Header="Category" Binding="{Binding Path=Category, Mode=TwoWay}" />
                             <DataGridTextColumn Header="問題" Binding="{Binding Path=Answer, Mode=OneWay}"
                                                 MinWidth="200" />

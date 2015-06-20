@@ -93,6 +93,7 @@ namespace GrandMutus.Data
 		const string CATEGORY_ATTRIBUTE = "category";
 		const string PLAY_POS_ATTRIBUTE = "play_pos";
 
+		// (0.4.5.1)new XAttributeで値がnullの値を出力しないように修正。
 		// (0.3.3)
 		#region *XML要素を生成(GenerateElement)
 		/// <summary>
@@ -103,8 +104,14 @@ namespace GrandMutus.Data
 		{
 			var element = new XElement(ELEMENT_NAME);
 			element.Add(new XAttribute(ID_ATTRIBUTE, this.ID));
-			element.Add(new XAttribute(NO_ATTRIBUTE, this.No));
-			element.Add(new XAttribute(CATEGORY_ATTRIBUTE, this.Category));
+			if (this.No.HasValue)
+			{
+				element.Add(new XAttribute(NO_ATTRIBUTE, this.No));
+			}
+			if (string.IsNullOrEmpty(this.Category))
+			{
+				element.Add(new XAttribute(CATEGORY_ATTRIBUTE, this.Category));
+			}
 			element.Add(new XAttribute(SONG_ID_ATTRIBUTE, this.SongID));
 			// (0.3.3)とりあえず従前のように秒数を出力しておく．
 			element.Add(new XAttribute(PLAY_POS_ATTRIBUTE, this.PlayPos.TotalSeconds));
