@@ -8,7 +8,8 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:ud="clr-namespace:Aldentea.Wpf.Controls;assembly=UpDownControl"
         Height="500" Width="800"
-        Closed="MainWindow_Closed">
+        Closed="MainWindow_Closed"
+        >
     <Window.CommandBindings>
         <CommandBinding
             Command="Close"
@@ -60,6 +61,11 @@
         <util:CaptionConverter x:Key="captionConverter" ApplicationName="GrandMutusClassic" />
         <util:TimeSpanDoubleConverter x:Key="timeSpanDoubleConverter" />
         <classic:NullableIntConverter x:Key="nullableIntConverter" />
+        <classic:VisibilityConverter x:Key="visibilityConverter" />
+        <classic:VisibilityConverter x:Key="visibilityConverter2" />
+        <Style x:Key="numericColumnStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
     </Window.Resources>
     <Window.Title>
         <MultiBinding Converter="{StaticResource captionConverter}">
@@ -90,6 +96,14 @@
                 <MenuItem Header="曲追加(_A)" Command="{x:Static hypermutus:Commands.AddSongsCommand}" />
                 <MenuItem Header="曲フォルダ設定(_D)" Command="{x:Static classic:Commands.SetRootDirectoryCommand}" />
             </MenuItem>
+            <MenuItem Header="表示(_V)">
+                <MenuItem Header="ファイル名列(_F)" IsCheckable="True"
+                          IsChecked="{Binding RelativeSource={RelativeSource AncestorType=classic:MainWindow}, Path=FileNameColumnVisible}" />
+                <MenuItem Header="サビ位置列(_F)" IsCheckable="True"
+                          IsChecked="{Binding RelativeSource={RelativeSource AncestorType=classic:MainWindow}, Path=SabiPosColumnVisible}" />
+                <MenuItem Header="曲プレイヤー(_P)" IsCheckable="True"
+                          IsChecked="{Binding RelativeSource={RelativeSource AncestorType=classic:MainWindow}, Path=SongPlayerVisible}" />
+            </MenuItem>
         </Menu>
         <TabControl Margin="10" Grid.Row="1" TabStripPlacement="Bottom" >
             <TabItem Header="Songs">
@@ -97,17 +111,21 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" MinHeight="50" />
-                        <RowDefinition Name="gridRowSongPlayer" Height="120" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <DataGrid HorizontalAlignment="Stretch" Grid.Row="0" Margin="20,0" VerticalAlignment="Stretch"
                   ItemsSource="{Binding Path=Songs}" CanUserAddRows="False" AutoGenerateColumns="False"
                               Name="dataGridSongs">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="#" Binding="{Binding Path=ID, Mode=OneWay}" />
+                            <DataGridTextColumn Header="#" Binding="{Binding Path=ID, Mode=OneWay}" ElementStyle="{StaticResource numericColumnStyle}" />
                             <DataGridTextColumn Header="Title" MinWidth="100" Binding="{Binding Path=Title}" />
                             <DataGridTextColumn Header="Artist" MinWidth="100" Binding="{Binding Path=Artist}" />
-                            <DataGridTextColumn Header="FileName" MinWidth="100" Binding="{Binding Path=RelativeFileName, Mode=OneWay}" />
-                            <DataGridTextColumn Header="SabiPos" MinWidth="100" Binding="{Binding Path=SabiPos, StringFormat=m\\:ss\\.ff}" />
+                            <DataGridTextColumn Header="FileName" x:Name="FileNameColumn" MinWidth="100" Binding="{Binding Path=RelativeFileName, Mode=OneWay}" />
+                            <!-- Visibility="{Binding RelativeSource={RelativeSource AncestorType=classic:MainWindow},
+                                 Path=FileNameColumnVisible, Converter={StaticResource visibilityConverter}}" としても、なぜか機能しない。 -->
+                            <DataGridTextColumn Header="SabiPos" x:Name="SabiPosColumn" MinWidth="50"
+                                                ElementStyle="{StaticResource numericColumnStyle}"
+                                                Binding="{Binding Path=SabiPos, StringFormat=m\\:ss\\.ff}" />
                         </DataGrid.Columns>
                         <DataGrid.CommandBindings>
                             <CommandBinding Command="Delete" Executed="DeleteSongs_Executed" />
@@ -120,7 +138,9 @@
                     <Button Content="曲再生" HorizontalAlignment="Left" Margin="359,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75"
                     	RenderTransformOrigin="-0.28,0.667"
                     	Command="Play" CommandParameter="{Binding SelectedItem, ElementName=dataGridSongs}" />
-                    <GroupBox Header="曲再生" Margin="0" Grid.Row="2"
+                    <GroupBox Header="曲再生" Margin="0" Grid.Row="2" Height="120" Name="groupBoxSongPlayer"
+                              Visibility="{Binding RelativeSource={RelativeSource AncestorType=classic:MainWindow},
+                                            Path=SongPlayerVisible,Converter={StaticResource visibilityConverter}}"
                               DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=CurrentSong}">
                         <Grid>
                             <Button Content="Play" Height="30" Width="75"
@@ -163,9 +183,10 @@
                     <DataGrid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CanUserAddRows="False" AutoGenerateColumns="False"
                               ItemsSource="{Binding Path=Questions}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="#" Binding="{Binding Path=ID, Mode=OneWay}" />
-                            <DataGridTextColumn Header="No" Binding="{Binding Path=No, Mode=TwoWay, Converter={StaticResource nullableIntConverter}}" />
-                            <DataGridTextColumn Header="Category" Binding="{Binding Path=Category, Mode=TwoWay}" />
+                            <DataGridTextColumn Header="#" Binding="{Binding Path=ID, Mode=OneWay}" ElementStyle="{StaticResource numericColumnStyle}"/>
+                            <DataGridTextColumn Header="No" Binding="{Binding Path=No, Mode=TwoWay, Converter={StaticResource nullableIntConverter}}"
+                                                ElementStyle="{StaticResource numericColumnStyle}" />
+                            <DataGridTextColumn Header="カテゴリ" Binding="{Binding Path=Category, Mode=TwoWay}" />
                             <DataGridTextColumn Header="問題" Binding="{Binding Path=Answer, Mode=OneWay}"
                                                 MinWidth="200" />
                         </DataGrid.Columns>

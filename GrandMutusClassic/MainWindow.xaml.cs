@@ -45,6 +45,7 @@ namespace GrandMutus
 				
 				// ファイル履歴ショートカットの作成位置を指定する．
 				this.FileHistoryShortcutParent = menuItemHistory;
+
 			}
 
 			// (0.3.1)起動時、「新規作成」時に呼び出されるはず。
@@ -60,6 +61,65 @@ namespace GrandMutus
 				App.Current.MySettings.SongPlayerVolume = _songPlayer.Volume;
 			}
 
+			// (0.3.5)未使用。
+			private void MainWindow_Initialized(object sender, EventArgs e)
+			{
+				// ↓ここでやっても効果なし。
+				//this.SongPlayerVisible = false;
+			}
+
+			#region 表示関連
+
+			// (0.3.5)
+			#region *[dependency]SongPlayerVisibleプロパティ
+
+			// gridRowSongPlayerというデザインに関する値をこんなところに書くのはどうなんだろうか？
+			// デザインとプログラムの分離という観点からは、120.0みたいな値はXAML側に書きたいが、その方法はあるのか？
+			// →Grid.RowのHeightではなく、Gridを覆うコンテナ(GroupBoxなど)のVisibilityプロパティを調整すればいい！
+			// Grid.RowのHeightがautoに設定しておくと、コンテナのVisibilityがCollapsedになればそのRowがたたまれる。
+
+			//public static readonly DependencyProperty SongPlayerVisibleProperty
+			//	= DependencyProperty.Register("SongPlayerVisible", typeof(bool), typeof(MainWindow),
+			//	new PropertyMetadata(false, (d, e) => { ((MainWindow)d).groupBoxSongPlayer.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed; }));
+			public static readonly DependencyProperty SongPlayerVisibleProperty
+				= DependencyProperty.Register("SongPlayerVisible", typeof(bool), typeof(MainWindow),
+					new PropertyMetadata(false));
+			
+			public bool SongPlayerVisible
+			{
+				get { return (bool)GetValue(SongPlayerVisibleProperty); }
+				set { SetValue(SongPlayerVisibleProperty, value); }
+			}
+			#endregion
+
+			// (0.3.5)データバインディングしたかったが、諦める。
+			#region *[dependency]FileNameColumnVisibleプロパティ
+			public static readonly DependencyProperty FileNameColumnVisibleProperty
+				= DependencyProperty.Register("FileNameColumnVisible", typeof(bool), typeof(MainWindow),
+						new PropertyMetadata(true, (d, e) => { ((MainWindow)d).FileNameColumn.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed; }));
+
+			public bool FileNameColumnVisible
+			{
+				get { return (bool)GetValue(FileNameColumnVisibleProperty); }
+				set { SetValue(FileNameColumnVisibleProperty, value); }
+			}
+			#endregion
+
+			// (0.3.5)データバインディングしたかったが、諦める。
+			#region *[dependency]SabiPosColumnVisibleプロパティ
+			public static readonly DependencyProperty SabiPosColumnVisibleProperty
+				= DependencyProperty.Register("SabiPosColumnVisible", typeof(bool), typeof(MainWindow),
+						new PropertyMetadata(true, (d, e) => { ((MainWindow)d).SabiPosColumn.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed; }));
+
+
+			public bool SabiPosColumnVisible
+			{
+				get { return (bool)GetValue(SabiPosColumnVisibleProperty); }
+				set { SetValue(SabiPosColumnVisibleProperty, value); }
+			}
+			#endregion
+
+			#endregion
 
 			// 6. XAML側では，Titleの設定をしましょう．(これはAldenteaWpfUtility.dllが必要になる．)
 
@@ -264,10 +324,13 @@ namespace GrandMutus
 
 			#region Playコマンド
 
+			// (0.3.5)SongPlayerVisibleプロパティの制御を追加。
 			void Play_Executed(object sender, ExecutedRoutedEventArgs e)
 			{
 				if (e.Parameter is Song)
 				{
+					this.SongPlayerVisible = true;
+
 					Song song = (Song)e.Parameter;
 					_songPlayer.Open(song.FileName);
 					
@@ -368,6 +431,7 @@ namespace GrandMutus
 					this.MyDocument.RemoveSongs(items);
 				}
 			}
+
 
 
 
