@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrandMutusData", "GrandMutusData\GrandMutusData.csproj", "{206B085B-F3C5-4CCB-AA5E-4111A1026A60}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrandMutusClassic", "GrandMutusClassic\GrandMutusClassic.csproj", "{F01D5DCA-4EFC-4C5D-A31C-F8D5DA8C9171}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrandMutusDataTest", "SongsTest\GrandMutusDataTest.csproj", "{5B9B0099-A5D8-4293-9A5B-A43B78044F1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrandMutusBase", "GrandMutusBase\GrandMutusBase.csproj", "{023E769A-F9CC-45C9-B418-687C9959F41C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{5B9B0099-A5D8-4293-9A5B-A43B78044F1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B9B0099-A5D8-4293-9A5B-A43B78044F1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B9B0099-A5D8-4293-9A5B-A43B78044F1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{023E769A-F9CC-45C9-B418-687C9959F41C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{023E769A-F9CC-45C9-B418-687C9959F41C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{023E769A-F9CC-45C9-B418-687C9959F41C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{023E769A-F9CC-45C9-B418-687C9959F41C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

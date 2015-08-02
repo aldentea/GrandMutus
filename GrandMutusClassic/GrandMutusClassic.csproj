@@ -119,6 +119,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GrandMutusBase\GrandMutusBase.csproj">
+      <Project>{023e769a-f9cc-45c9-b418-687c9959f41c}</Project>
+      <Name>GrandMutusBase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GrandMutusData\GrandMutusData.csproj">
       <Project>{206b085b-f3c5-4ccb-aa5e-4111a1026a60}</Project>
       <Name>GrandMutusData</Name>

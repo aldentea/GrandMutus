@@ -13,11 +13,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using HyperMutus;
+// このファイルでは、HyperMutus.Helpersを2カ所で使っているだけ。
+// XAMLではコンバータなどをいくつか使っている。
+//using HyperMutus;
+
 using System.Windows.Threading;	// for DispatcherTimer.
 
 namespace GrandMutus
 {
+	using Base;
 	using Data;
 
 	namespace Classic
@@ -31,12 +35,16 @@ namespace GrandMutus
 		/// </summary>
 		public partial class MainWindow : WindowController
 		{
+
+			#region コンストラクタ(MainWindow)
 			public MainWindow()
 			{
 				InitializeComponent();
 
 				_songPlayer.Volume = App.Current.MySettings.SongPlayerVolume;
 				_songPlayer.MediaOpened += SongPlayer_MediaOpened;
+				_songPlayer.MediaEnded += SongPlayer_MediaEnded;
+				
 
 				this.MyDocument.Initialized += MyDocument_Initialized;
 				// ↓この設定を忘れると，曲ファイル追加時に画面が固まるかも．
@@ -47,6 +55,8 @@ namespace GrandMutus
 				this.FileHistoryShortcutParent = menuItemHistory;
 
 			}
+			#endregion
+
 
 			// (0.3.1)起動時、「新規作成」時に呼び出されるはず。
 			void MyDocument_Initialized(object sender, EventArgs e)
@@ -135,7 +145,7 @@ namespace GrandMutus
 			// (0.2.1)
 			private void AddSongs_Executed(object sender, ExecutedRoutedEventArgs e)
 			{
-				var fileNames = Helpers.SelectSongFiles();
+				var fileNames = HyperMutus.Helpers.SelectSongFiles();
 				if (fileNames != null)
 				{
 					AddSongs(fileNames);
@@ -210,7 +220,7 @@ namespace GrandMutus
 							// 何か知らせる？
 						}
 					};
-					Helpers.WorkBackgroundParallel<string>(fileNames, action);
+					HyperMutus.Helpers.WorkBackgroundParallel<string>(fileNames, action);
 					//this.MyDocument.AddOperationHistory(
 					//	new AddSongsOperationCache(this.MyDocument, fileDictionary)
 					//);
@@ -280,15 +290,16 @@ namespace GrandMutus
 
 			#region 曲再生関連
 
+			// (0.3.6)HyperMutus.SongPlayerをGrandMutus.Base.SongPlayerに変更。
 			#region *SongPlayerプロパティ
-			public HyperMutus.SongPlayer SongPlayer
+			public SongPlayer SongPlayer
 			{
 				get
 				{
 					return _songPlayer;
 				}
 			}
-			HyperMutus.SongPlayer _songPlayer = new SongPlayer();
+			SongPlayer _songPlayer = new SongPlayer();
 			#endregion
 
 			// (0.3.2)プロパティ化。
@@ -311,6 +322,7 @@ namespace GrandMutus
 
 			//DispatcherTimer _songPlayerTimer = null;
 
+			// (0.3.6) 再生ボタンラベルの変更を追加。
 			// (0.3.2)
 			void SongPlayer_MediaOpened(object sender, EventArgs e)
 			{
@@ -319,6 +331,27 @@ namespace GrandMutus
 					this.labelDuration.Content = _songPlayer.Duration.Value;
 					this.sliderSeekSong.Maximum = _songPlayer.Duration.Value.TotalSeconds;
 				}
+				UpdateButtonSongPlayerContent();
+
+			}
+
+			// (0.3.6)
+			void UpdateButtonSongPlayerContent()
+			{
+				if (_songPlayer.CurrentState == SongPlayer.State.Playing)
+				{
+					buttonSongPlayer.Content = "停止";
+				}
+				else
+				{
+					buttonSongPlayer.Content = "再生";
+				}
+			}
+
+			// (0.3.6)
+			void SongPlayer_MediaEnded(object sender, EventArgs e)
+			{
+				UpdateButtonSongPlayerContent();
 			}
 
 
@@ -350,6 +383,7 @@ namespace GrandMutus
 
 			#endregion
 
+			// (0.3.6) 再生ボタンラベルの変更を追加。
 			#region SwitchPlayPauseコマンド
 
 			void SwitchPlayPause_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -357,6 +391,7 @@ namespace GrandMutus
 				if (_songPlayer.CurrentState != SongPlayer.State.Inactive)
 				{
 					_songPlayer.TogglePlayPause();
+					UpdateButtonSongPlayerContent();
 				}
 			}
 
@@ -365,7 +400,7 @@ namespace GrandMutus
 
 			void SeekRelative_executed(object sender, ExecutedRoutedEventArgs e)
 			{
- 				if (_songPlayer.CurrentState != HyperMutus.SongPlayer.State.Inactive)
+ 				if (_songPlayer.CurrentState != SongPlayer.State.Inactive)
 				{
 					double sec;
 					if (Double.TryParse(e.Parameter.ToString(), out sec))

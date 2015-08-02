@@ -144,8 +144,9 @@
                                             Path=SongPlayerVisible,Converter={StaticResource visibilityConverter}}"
                               DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=CurrentSong}">
                         <Grid>
-                            <Button Content="Play" Height="30" Width="75"
+                            <Button Height="30" Width="75" Name="buttonSongPlayer"
                                     HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0"
+                                    Content="再生"
                                     Command="{x:Static hypermutus:Commands.SwitchPlayPauseCommand}" />
 
                             <Button Content="サビ" Height="30" Width="75"
