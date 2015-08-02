@@ -63,6 +63,7 @@
         <classic:NullableIntConverter x:Key="nullableIntConverter" />
         <classic:VisibilityConverter x:Key="visibilityConverter" />
         <classic:VisibilityConverter x:Key="visibilityConverter2" />
+        <classic:SabiPosConverter x:Key="sabiPosConverter" />
         <Style x:Key="numericColumnStyle" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Right" />
         </Style>
@@ -154,7 +155,8 @@
                         	    HorizontalAlignment="Left" VerticalAlignment="Top" Margin="290,10,0,0"
                         	    Command="{x:Static classic:Commands.SetSabiPosCommand}" />
                             <TextBox HorizontalAlignment="Left" Height="30" Margin="385,10,0,0" Grid.Row="0"
-                                     TextWrapping="Wrap" Text="{Binding Path=SabiPos, StringFormat=m\\:ss\\.ff}"
+                                     TextWrapping="Wrap"
+                                     Text="{Binding Path=SabiPos, Converter={StaticResource sabiPosConverter}, ConverterParameter=m\\:ss\\.ff}"
                                      VerticalAlignment="Top" Width="77" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
                             <ud:UpDownControl Height="30" Width="36" Margin="462,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                               UpClick="UpDownControl_UpClick" DownClick="UpDownControl_DownClick" />

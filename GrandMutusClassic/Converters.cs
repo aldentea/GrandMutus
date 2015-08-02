@@ -43,6 +43,7 @@ namespace GrandMutus.Classic
 	#endregion
 
 	// (0.3.5)
+	#region VisivilityConverterクラス
 	public class VisibilityConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -63,5 +64,46 @@ namespace GrandMutus.Classic
 			return value is System.Windows.Visibility && ((System.Windows.Visibility)value) == System.Windows.Visibility.Visible;
 		}
 	}
+	#endregion
+
+	// (0.3.6)
+	#region SabiPosConverterクラス
+	public class SabiPosConverter : IValueConverter
+	{
+
+		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			if (value is TimeSpan)
+			{
+				if (parameter is string && !string.IsNullOrEmpty((string)parameter))
+				{
+					//return ((TimeSpan)value).ToString(@"m\:ss\.ff");
+					return ((TimeSpan)value).ToString((string)parameter);
+				}
+				else
+				{
+					return ((TimeSpan)value).ToString();
+				}
+			}
+			else
+			{
+				throw new ArgumentException("TimeSpan型の値を渡して下さい。");
+			}
+
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			if (value is string)
+			{
+				return TimeSpan.Parse("0:" + (string)value);	// ※Converterのparameterと対応しないなぁ。
+			}
+			else
+			{
+				throw new ArgumentException("string型の値を渡して下さい。");
+			}
+		}
+	}
+	#endregion
 
 }
