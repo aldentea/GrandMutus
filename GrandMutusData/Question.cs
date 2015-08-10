@@ -22,6 +22,7 @@ namespace GrandMutus.Data
 		int _id = -1;	// (0.1.2)-1は未設定であることを示す．
 		#endregion
 
+		// (0.4.5)変更時にNoChangedイベントを発生します．
 		#region *Noプロパティ
 		/// <summary>
 		/// プリセットされた出題順を取得／設定します。
@@ -40,15 +41,21 @@ namespace GrandMutus.Data
 					}
 					else
 					{
+						var previousValue = this.No;
 						NotifyPropertyChanging("No");
 						this._no = value;
 						NotifyPropertyChanged("No");
+
+						this.NoChanged(this, new ValueChangedEventArgs<int?>(previousValue, this.No));
+						
 					}
 				}
 			}
 		}
 		int? _no = null;
 		#endregion
+
+
 
 		#region *Categoryプロパティ
 		public string Category
@@ -71,7 +78,11 @@ namespace GrandMutus.Data
 		#endregion
 
 
-
+		// (0.4.5)Noについては処理が複雑なので，専用のイベントを使った方がいいのでは？ということで用意．
+		/// <summary>
+		/// Noが変更になったときに発生します．
+		/// </summary>
+		public event EventHandler<ValueChangedEventArgs<int?>> NoChanged = delegate { };
 
 
 		#region Parentとの関係
