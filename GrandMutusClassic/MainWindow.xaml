@@ -67,6 +67,7 @@
         <Style x:Key="numericColumnStyle" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Right" />
         </Style>
+        <classic:IntroQuestionConverter x:Key="questionConverter" />
     </Window.Resources>
     <Window.Title>
         <MultiBinding Converter="{StaticResource captionConverter}">
@@ -194,6 +195,66 @@
                                                 MinWidth="200" />
                         </DataGrid.Columns>
                     </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Categories">
+                <TabItem.Resources>
+                    <Style TargetType="ListBox" x:Key="numberedQuestionItemStyle">
+                        <Setter Property="Margin" Value="4,4,4,20" />
+                        <Setter Property="ItemTemplate">
+                            <Setter.Value>
+                                <DataTemplate>
+                                    <Label>
+                                        <Label.Content>
+                                            <Binding>
+                                                <Binding.Converter>
+                                                    <StaticResource ResourceKey="questionConverter" />
+                                                </Binding.Converter>
+                                                <Binding.ConverterParameter>
+                                                    <sys:Boolean>True</sys:Boolean>
+                                                </Binding.ConverterParameter>
+                                            </Binding>
+                                        </Label.Content>
+                                    </Label>
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                    <Style TargetType="ListBox" x:Key="unnumberedQuestionItemStyle">
+                        <Setter Property="Margin" Value="4,4,4,20" />
+                        <Setter Property="ItemTemplate">
+                            <Setter.Value>
+                                <DataTemplate>
+                                    <Label Content="{Binding Converter={StaticResource questionConverter}}" />
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabItem.Resources>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ListBox Grid.Row="1" Grid.Column="0" Name="ListBoxNumberedQuestions"
+                             
+                             Style="{StaticResource numberedQuestionItemStyle}"
+                             >
+                        <ListBox.ItemsSource>
+                            <Binding Path="CurrentNumberedQuestions" />
+                        </ListBox.ItemsSource>
+                    </ListBox>
+                    <Button Grid.Row="1" Grid.Column="1" Content="→" Padding="10" Margin="5"
+                            VerticalAlignment="Center"/>
+                    <ListBox Grid.Row="1" Grid.Column="2" Name="ListBoxUnnumberedQuestions"
+                             ItemsSource="{Binding Path=CurrentUnnumberedQuestions}"
+                             Style="{StaticResource unnumberedQuestionItemStyle}"
+                            />
                 </Grid>
             </TabItem>
         </TabControl>

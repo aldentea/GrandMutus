@@ -16,14 +16,14 @@ namespace GrandMutus.Classic
 	/// </summary>
 	public partial class App : Aldentea.Wpf.Application.Application
 	{
-
-		// (0.3.4)Upgrade処理を追加。
+		// (0.3.7) DocumentのクラスをGrandMutusClassicDocumentに変更．
+		// (0.3.4) Upgrade処理を追加。
 		#region  2. お決まりの設定．(コピペでいいかも．)
 		// 06/18/2014 by aldentea 
 		protected App()
 			: base()
 		{
-			this.Document = new GrandMutus.Data.MutusDocument();
+			this.Document = new Data.GrandMutusClassicDocument();
 			this.Exit += new ExitEventHandler(App_Exit);
 
 			if (MySettings.RequireUpgrade)
