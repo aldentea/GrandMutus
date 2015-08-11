@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrandMutusDataTest", "Songs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrandMutusBase", "GrandMutusBase\GrandMutusBase.csproj", "{023E769A-F9CC-45C9-B418-687C9959F41C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrandMutusClassicData", "GrandMutusClassicData\GrandMutusClassicData.csproj", "{FEE6690A-FD95-4F2A-96D7-6A95C1F7AED4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{023E769A-F9CC-45C9-B418-687C9959F41C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{023E769A-F9CC-45C9-B418-687C9959F41C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{023E769A-F9CC-45C9-B418-687C9959F41C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEE6690A-FD95-4F2A-96D7-6A95C1F7AED4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEE6690A-FD95-4F2A-96D7-6A95C1F7AED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEE6690A-FD95-4F2A-96D7-6A95C1F7AED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEE6690A-FD95-4F2A-96D7-6A95C1F7AED4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
