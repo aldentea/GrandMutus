@@ -64,6 +64,7 @@ namespace GrandMutus.Data
 						//question.PropertyChanging += Question_PropertyChanging;
 						//question.PropertyChanged += Question_PropertyChanged;
 						question.NoChanged += Question_NoChanged;
+
 						question.OnAddedTo(this);
 					}
 					break;
@@ -92,6 +93,7 @@ namespace GrandMutus.Data
 
 		#endregion
 
+		// (0.4.5)整番処理に着手。
 		// (0.3.3)未使用。
 		#region アイテム変更関連
 
@@ -106,13 +108,17 @@ namespace GrandMutus.Data
 			switch(e.PropertyName)
 			{
 				case "No":
+					// 整番処理は複雑なのでここでは行わない(Question_NoChangedで行う)。
 					break;
 			}
 		}
 
+		// (0.4.5.2)で、カテゴリを考慮。
+		// (0.4.5.1)まずはカテゴリを考慮しない形で整番処理を記述．
+		#region 整番処理関連
+
 		bool _noChangingFlag = false;
 
-		// (0.4.5.0)とりあえずN->nullの処理を記述．
 		void Question_NoChanged(object sender, ValueChangedEventArgs<int?> e)
 		{
 			if (_noChangingFlag)
@@ -123,16 +129,73 @@ namespace GrandMutus.Data
 
 			try
 			{
-				if (e.PreviousValue.HasValue && !e.CurrentValue.HasValue)
+				var self = (Question)sender;
+				int? old_no = e.PreviousValue;
+				int? new_no = e.CurrentValue;
+				if (new_no.HasValue)
 				{
-					// N -> null
-					// Nより大きい番号を1ずつ減らす．
-					int n = e.PreviousValue.Value;
-
-					foreach (var question in Items.Where(q => { return q.No.HasValue && q.No > n; }))
+					int n = Items.Count(q => { return q.Category == self.Category && q.No.HasValue; });
+					if (new_no.Value > n)
 					{
-						question.No -= 1;
+						self.No = new_no = n;
 					}
+				}
+
+				// このあたりで操作履歴に加えておく。
+				// (ここまでの処理で変更になる可能性があるので、Questionから直接MutusDocumentに通知することはしない。)
+				this.QuestionNoChanged(self, new ValueChangedEventArgs<int?>(old_no, new_no));
+
+				if (old_no.HasValue)
+				{
+					if (new_no.HasValue)
+					{
+						// M -> N
+						int m = old_no.Value;
+						int n = new_no.Value;
+
+						if (m < n)
+						{
+							// M < N
+							// (M+1)からNを1つずつ減らす。
+							foreach (var question in Items.Where(q => { return q.Category == self.Category && q.No.HasValue && q.No > m && q.No <= n && q != self; }))
+							{
+								question.No -= 1;
+							}
+						}
+						else
+						{
+							// M > N
+							// Nから(M-1)を1つずつ増やす。
+							foreach (var question in Items.Where(q => { return q.Category == self.Category && q.No.HasValue && q.No < m && q.No >= n && q != self; }))
+							{
+								question.No += 1;
+							}
+						}
+					}
+					else
+					{
+						// N -> null
+						// Nより大きい番号を1ずつ減らす．
+						int n = old_no.Value;
+
+						foreach (var question in Items.Where(q => { return q.Category == self.Category && q.No.HasValue && q.No > n; }))
+						{
+							question.No -= 1;
+						}
+					}
+				}
+				else
+				{
+					// new_no should has value.
+					int n = new_no.Value;
+
+					// null -> N
+					// N以上の番号を1つずつ増やす。
+					foreach (var question in Items.Where(q => { return q.Category == self.Category && q.No.HasValue && q.No >= n && q != self; }))
+					{
+						question.No += 1;
+					}
+					
 				}
 			}
 			finally
@@ -140,6 +203,15 @@ namespace GrandMutus.Data
 				_noChangingFlag = false;
 			}
 		}
+
+		// (0.4.5.1)
+		/// <summary>
+		/// 問題の番号が変更になったときに発生します。(操作履歴管理用かな？)
+		/// senderはQuestionsCollectionではなくQuestionであることに一応注意。
+		/// </summary>
+		public event EventHandler<ValueChangedEventArgs<int?>> QuestionNoChanged = delegate{};
+
+		#endregion
 
 		#endregion
 

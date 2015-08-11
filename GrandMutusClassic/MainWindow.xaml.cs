@@ -13,11 +13,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using HyperMutus;
+// このファイルでは、HyperMutus.Helpersを2カ所で使っているだけ。
+// XAMLではコンバータなどをいくつか使っている。
+//using HyperMutus;
+
 using System.Windows.Threading;	// for DispatcherTimer.
 
 namespace GrandMutus
 {
+	using Base;
 	using Data;
 
 	namespace Classic
@@ -31,12 +35,16 @@ namespace GrandMutus
 		/// </summary>
 		public partial class MainWindow : WindowController
 		{
+
+			#region コンストラクタ(MainWindow)
 			public MainWindow()
 			{
 				InitializeComponent();
 
 				_songPlayer.Volume = App.Current.MySettings.SongPlayerVolume;
 				_songPlayer.MediaOpened += SongPlayer_MediaOpened;
+				_songPlayer.MediaEnded += SongPlayer_MediaEnded;
+				
 
 				this.MyDocument.Initialized += MyDocument_Initialized;
 				// ↓この設定を忘れると，曲ファイル追加時に画面が固まるかも．
@@ -45,7 +53,10 @@ namespace GrandMutus
 				
 				// ファイル履歴ショートカットの作成位置を指定する．
 				this.FileHistoryShortcutParent = menuItemHistory;
+
 			}
+			#endregion
+
 
 			// (0.3.1)起動時、「新規作成」時に呼び出されるはず。
 			void MyDocument_Initialized(object sender, EventArgs e)
@@ -60,6 +71,65 @@ namespace GrandMutus
 				App.Current.MySettings.SongPlayerVolume = _songPlayer.Volume;
 			}
 
+			// (0.3.5)未使用。
+			private void MainWindow_Initialized(object sender, EventArgs e)
+			{
+				// ↓ここでやっても効果なし。
+				//this.SongPlayerVisible = false;
+			}
+
+			#region 表示関連
+
+			// (0.3.5)
+			#region *[dependency]SongPlayerVisibleプロパティ
+
+			// gridRowSongPlayerというデザインに関する値をこんなところに書くのはどうなんだろうか？
+			// デザインとプログラムの分離という観点からは、120.0みたいな値はXAML側に書きたいが、その方法はあるのか？
+			// →Grid.RowのHeightではなく、Gridを覆うコンテナ(GroupBoxなど)のVisibilityプロパティを調整すればいい！
+			// Grid.RowのHeightがautoに設定しておくと、コンテナのVisibilityがCollapsedになればそのRowがたたまれる。
+
+			//public static readonly DependencyProperty SongPlayerVisibleProperty
+			//	= DependencyProperty.Register("SongPlayerVisible", typeof(bool), typeof(MainWindow),
+			//	new PropertyMetadata(false, (d, e) => { ((MainWindow)d).groupBoxSongPlayer.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed; }));
+			public static readonly DependencyProperty SongPlayerVisibleProperty
+				= DependencyProperty.Register("SongPlayerVisible", typeof(bool), typeof(MainWindow),
+					new PropertyMetadata(false));
+			
+			public bool SongPlayerVisible
+			{
+				get { return (bool)GetValue(SongPlayerVisibleProperty); }
+				set { SetValue(SongPlayerVisibleProperty, value); }
+			}
+			#endregion
+
+			// (0.3.5)データバインディングしたかったが、諦める。
+			#region *[dependency]FileNameColumnVisibleプロパティ
+			public static readonly DependencyProperty FileNameColumnVisibleProperty
+				= DependencyProperty.Register("FileNameColumnVisible", typeof(bool), typeof(MainWindow),
+						new PropertyMetadata(true, (d, e) => { ((MainWindow)d).FileNameColumn.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed; }));
+
+			public bool FileNameColumnVisible
+			{
+				get { return (bool)GetValue(FileNameColumnVisibleProperty); }
+				set { SetValue(FileNameColumnVisibleProperty, value); }
+			}
+			#endregion
+
+			// (0.3.5)データバインディングしたかったが、諦める。
+			#region *[dependency]SabiPosColumnVisibleプロパティ
+			public static readonly DependencyProperty SabiPosColumnVisibleProperty
+				= DependencyProperty.Register("SabiPosColumnVisible", typeof(bool), typeof(MainWindow),
+						new PropertyMetadata(true, (d, e) => { ((MainWindow)d).SabiPosColumn.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed; }));
+
+
+			public bool SabiPosColumnVisible
+			{
+				get { return (bool)GetValue(SabiPosColumnVisibleProperty); }
+				set { SetValue(SabiPosColumnVisibleProperty, value); }
+			}
+			#endregion
+
+			#endregion
 
 			// 6. XAML側では，Titleの設定をしましょう．(これはAldenteaWpfUtility.dllが必要になる．)
 
@@ -75,7 +145,7 @@ namespace GrandMutus
 			// (0.2.1)
 			private void AddSongs_Executed(object sender, ExecutedRoutedEventArgs e)
 			{
-				var fileNames = Helpers.SelectSongFiles();
+				var fileNames = HyperMutus.Helpers.SelectSongFiles();
 				if (fileNames != null)
 				{
 					AddSongs(fileNames);
@@ -150,7 +220,7 @@ namespace GrandMutus
 							// 何か知らせる？
 						}
 					};
-					Helpers.WorkBackgroundParallel<string>(fileNames, action);
+					HyperMutus.Helpers.WorkBackgroundParallel<string>(fileNames, action);
 					//this.MyDocument.AddOperationHistory(
 					//	new AddSongsOperationCache(this.MyDocument, fileDictionary)
 					//);
@@ -220,15 +290,16 @@ namespace GrandMutus
 
 			#region 曲再生関連
 
+			// (0.3.6)HyperMutus.SongPlayerをGrandMutus.Base.SongPlayerに変更。
 			#region *SongPlayerプロパティ
-			public HyperMutus.SongPlayer SongPlayer
+			public SongPlayer SongPlayer
 			{
 				get
 				{
 					return _songPlayer;
 				}
 			}
-			HyperMutus.SongPlayer _songPlayer = new SongPlayer();
+			SongPlayer _songPlayer = new SongPlayer();
 			#endregion
 
 			// (0.3.2)プロパティ化。
@@ -251,6 +322,7 @@ namespace GrandMutus
 
 			//DispatcherTimer _songPlayerTimer = null;
 
+			// (0.3.6) 再生ボタンラベルの変更を追加。
 			// (0.3.2)
 			void SongPlayer_MediaOpened(object sender, EventArgs e)
 			{
@@ -259,15 +331,39 @@ namespace GrandMutus
 					this.labelDuration.Content = _songPlayer.Duration.Value;
 					this.sliderSeekSong.Maximum = _songPlayer.Duration.Value.TotalSeconds;
 				}
+				UpdateButtonSongPlayerContent();
+
+			}
+
+			// (0.3.6)
+			void UpdateButtonSongPlayerContent()
+			{
+				if (_songPlayer.CurrentState == SongPlayer.State.Playing)
+				{
+					buttonSongPlayer.Content = "停止";
+				}
+				else
+				{
+					buttonSongPlayer.Content = "再生";
+				}
+			}
+
+			// (0.3.6)
+			void SongPlayer_MediaEnded(object sender, EventArgs e)
+			{
+				UpdateButtonSongPlayerContent();
 			}
 
 
 			#region Playコマンド
 
+			// (0.3.5)SongPlayerVisibleプロパティの制御を追加。
 			void Play_Executed(object sender, ExecutedRoutedEventArgs e)
 			{
 				if (e.Parameter is Song)
 				{
+					this.SongPlayerVisible = true;
+
 					Song song = (Song)e.Parameter;
 					_songPlayer.Open(song.FileName);
 					
@@ -287,6 +383,7 @@ namespace GrandMutus
 
 			#endregion
 
+			// (0.3.6) 再生ボタンラベルの変更を追加。
 			#region SwitchPlayPauseコマンド
 
 			void SwitchPlayPause_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -294,6 +391,7 @@ namespace GrandMutus
 				if (_songPlayer.CurrentState != SongPlayer.State.Inactive)
 				{
 					_songPlayer.TogglePlayPause();
+					UpdateButtonSongPlayerContent();
 				}
 			}
 
@@ -302,7 +400,7 @@ namespace GrandMutus
 
 			void SeekRelative_executed(object sender, ExecutedRoutedEventArgs e)
 			{
- 				if (_songPlayer.CurrentState != HyperMutus.SongPlayer.State.Inactive)
+ 				if (_songPlayer.CurrentState != SongPlayer.State.Inactive)
 				{
 					double sec;
 					if (Double.TryParse(e.Parameter.ToString(), out sec))
@@ -368,6 +466,7 @@ namespace GrandMutus
 					this.MyDocument.RemoveSongs(items);
 				}
 			}
+
 
 
 
