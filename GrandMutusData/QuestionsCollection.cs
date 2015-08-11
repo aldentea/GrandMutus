@@ -113,6 +113,7 @@ namespace GrandMutus.Data
 			}
 		}
 
+		// (0.4.6.0)QuestionNoChangeCompletedイベントの発生を追加．
 		// (0.4.5.2)で、カテゴリを考慮。
 		// (0.4.5.1)まずはカテゴリを考慮しない形で整番処理を記述．
 		#region 整番処理関連
@@ -197,6 +198,9 @@ namespace GrandMutus.Data
 					}
 					
 				}
+
+				this.QuestionNoChangeCompleted(self, new ValueChangedEventArgs<int?>(old_no, new_no));
+
 			}
 			finally
 			{
@@ -210,6 +214,15 @@ namespace GrandMutus.Data
 		/// senderはQuestionsCollectionではなくQuestionであることに一応注意。
 		/// </summary>
 		public event EventHandler<ValueChangedEventArgs<int?>> QuestionNoChanged = delegate{};
+
+		// 新しいNoの決定→変更→QuestionNoChanged→他の問題のNoの処理→QuestionNoChangeCompletedの順．
+
+		// (0.4.6.0)
+		/// <summary>
+		/// 問題番号の変更処理が完了したときに発生します（他の問題の番号スライド処理の完了後）。
+		/// senderはQuestionsCollectionではなくQuestionであることに一応注意。
+		/// </summary>
+		public event EventHandler<ValueChangedEventArgs<int?>> QuestionNoChangeCompleted = delegate { };
 
 		#endregion
 
