@@ -51,7 +51,7 @@ namespace GrandMutus
 
 			// 07/09/2014 by aldentea : Appを用いた実装に変更．これを各windowで実装すればよい？
 			#region *MySettingsプロパティ
-			Properties.Settings MySettings
+			internal Properties.Settings MySettings
 			{
 				get
 				{
