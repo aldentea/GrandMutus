@@ -16,6 +16,7 @@ namespace GrandMutus.Classic
 	/// </summary>
 	public partial class App : Aldentea.Wpf.Application.Application
 	{
+		// (0.4.0) StartupUriプロパティの設定を，XAMLからこちらに移す．
 		// (0.3.7) DocumentのクラスをGrandMutusClassicDocumentに変更．
 		// (0.3.4) Upgrade処理を追加。
 		#region  2. お決まりの設定．(コピペでいいかも．)
@@ -31,6 +32,8 @@ namespace GrandMutus.Classic
 				MySettings.Upgrade();
 				MySettings.RequireUpgrade = false;
 			}
+
+			this.StartupUri = new Uri("MainWindow.xaml", UriKind.Relative);
 		}
 
 		void App_Exit(object sender, ExitEventArgs e)
