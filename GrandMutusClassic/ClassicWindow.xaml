@@ -1,0 +1,9 @@
+﻿<classic:WindowController x:Class="GrandMutus.Classic.ClassicWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:classic="clr-namespace:GrandMutus.Classic"
+        Title="ClassicWindow" Height="300" Width="300">
+    <Grid>
+        
+    </Grid>
+</classic:WindowController>
