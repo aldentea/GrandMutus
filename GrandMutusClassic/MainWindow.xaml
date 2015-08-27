@@ -13,10 +13,6 @@
         >
     <Window.CommandBindings>
         <CommandBinding
-            Command="Close"
-            Executed="Close_Executed"
-            CanExecute="Always_CanExecute" />
-        <CommandBinding
             Command="{x:Static hypermutus:Commands.AddSongsCommand}"
             Executed="AddSongs_Executed"
             CanExecute="Always_CanExecute" />

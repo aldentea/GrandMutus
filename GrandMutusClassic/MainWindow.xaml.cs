@@ -138,11 +138,6 @@ namespace GrandMutus
 
 			#region コマンドハンドラ
 
-			// (0.2.0)
-			private void Close_Executed(object sender, ExecutedRoutedEventArgs e)
-			{
-				this.Close();
-			}
 
 			// (0.2.1)
 			private void AddSongs_Executed(object sender, ExecutedRoutedEventArgs e)
