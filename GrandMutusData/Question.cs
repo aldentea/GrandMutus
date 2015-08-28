@@ -8,16 +8,28 @@ using System.ComponentModel;
 
 namespace GrandMutus.Data
 {
-
+	// (0.4.7)QuestionBaseと分離する．
 	// (0.4.2)
-	public class Question : INotifyPropertyChanged, INotifyPropertyChanging
+	public class Question : QuestionBase<QuestionsCollection>
 	{
+	}
 
+	// (0.4.7.2)やっぱやめた．
+	// (0.4.7.1)abstract化．
+	public class QuestionBase<T> : INotifyPropertyChanged, INotifyPropertyChanging
+		where T : class
+	{
+		// (0.4.7.2)やっぱやめた．苦肉の策で，setterをpublicにする．
+		// (0.4.7.1)abstract化．
 		#region *IDプロパティ
+		/// <summary>
+		/// IDを取得します．
+		/// 設定することもできますが，所定の場所以外で行った場合の動作は保証されません．
+		/// </summary>
 		public int ID
 		{
 			get { return _id; }
-			internal set { _id = value; }
+			set { _id = value; }
 		}
 		int _id = -1;	// (0.1.2)-1は未設定であることを示す．
 		#endregion
@@ -47,7 +59,7 @@ namespace GrandMutus.Data
 						NotifyPropertyChanged("No");
 
 						this.NoChanged(this, new ValueChangedEventArgs<int?>(previousValue, this.No));
-						
+
 					}
 				}
 			}
@@ -55,7 +67,7 @@ namespace GrandMutus.Data
 		int? _no = null;
 		#endregion
 
-
+		// (0.4.8)setterにnullが与えられたときにstring.Emptyをsetする．
 		// (0.4.5.2)Category変更前に、Noをnullにする。
 		#region *Categoryプロパティ
 		public string Category
@@ -66,13 +78,14 @@ namespace GrandMutus.Data
 			}
 			set
 			{
-				if (this.Category != value)
+				string new_value = string.IsNullOrEmpty(value) ? string.Empty : value;
+				if (this.Category != new_value)
 				{
-					
+
 					this.No = null;
 
 					NotifyPropertyChanging("Category");
-					this._category = value;
+					this._category = new_value;
 					NotifyPropertyChanged("Category");
 				}
 			}
@@ -92,7 +105,7 @@ namespace GrandMutus.Data
 
 		// (0.4.1.1) privateからprotectedに変更．
 		#region *Parentプロパティ
-		protected QuestionsCollection Parent
+		protected T Parent
 		{
 			get { return _parent; }
 			set
@@ -105,7 +118,7 @@ namespace GrandMutus.Data
 				}
 			}
 		}
-		QuestionsCollection _parent = null;
+		T _parent = null;
 		#endregion
 
 		// こういうプロパティを用意して，いつ設定するのか？
@@ -118,7 +131,7 @@ namespace GrandMutus.Data
 		/// 除外されたときは引数をnullにして呼び出せばいいのかな？
 		/// </summary>
 		/// <param name="parent"></param>
-		public virtual void OnAddedTo(QuestionsCollection parent)
+		public virtual void OnAddedTo(T parent)
 		{
 			this.Parent = parent;
 		}
@@ -126,11 +139,6 @@ namespace GrandMutus.Data
 		// で，QuestionsCollectionのCollectionChangedから呼び出す，と．
 
 		#endregion
-
-
-
-
-
 
 		// (0.3.3)Songからのコピペ。共通実装にしますか？
 		#region INotifyPropertyChanged実装
@@ -153,7 +161,7 @@ namespace GrandMutus.Data
 		}
 		#endregion
 
-
 	}
+
 
 }
