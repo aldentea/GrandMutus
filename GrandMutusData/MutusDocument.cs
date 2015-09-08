@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml;
 using System.IO;
+using Aldentea.Wpf.Document;
 
 namespace GrandMutus.Data
 {
@@ -329,7 +330,8 @@ namespace GrandMutus.Data
 
 		#region DocumentBase実装
 
-		protected override void Initialize()
+		// (0.6.0)基底クラスのメソッド名の変更を反映．
+		protected override void InitializeDocument()
 		{
 			Songs.Initialize();
 		}
