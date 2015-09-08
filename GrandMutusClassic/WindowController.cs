@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.ComponentModel;
 
+using System.Windows.Input;
+
 namespace GrandMutus
 {
 	using Data;
@@ -16,11 +18,16 @@ namespace GrandMutus
 		// (0.3.2) WindowControllerクラスを導入．
 		public abstract class WindowController : Aldentea.Wpf.Application.BasicWindow, INotifyPropertyChanged
 		{
+			// (0.4.0)コマンドバインディングを追加．(Close)
 			// (0.3.2)コンストラクタを追加。
 			protected WindowController() : base()
 			{
 				this.Initialized += Window_Initialized;
 				this.Closed += Window_Closed;
+
+				this.CommandBindings.Add(
+					new CommandBinding(System.Windows.Input.ApplicationCommands.Close, Close_Executed, Always_CanExecute)
+				);
 			}
 
 			// (0.3.2)現在未使用。
@@ -51,7 +58,7 @@ namespace GrandMutus
 
 			// 07/09/2014 by aldentea : Appを用いた実装に変更．これを各windowで実装すればよい？
 			#region *MySettingsプロパティ
-			Properties.Settings MySettings
+			internal Properties.Settings MySettings
 			{
 				get
 				{
@@ -124,6 +131,18 @@ namespace GrandMutus
 				// 設定を保存
 				//MySettings.Save();
 			}
+
+
+			// コマンド実装
+
+			// (0.4.0)MainWindowからWindowsControllerに移動．
+			// (0.2.0)
+			void Close_Executed(object sender, ExecutedRoutedEventArgs e)
+			{
+				this.Close();
+			}
+
+
 
 
 			// 4. 抽象メンバを実装する．

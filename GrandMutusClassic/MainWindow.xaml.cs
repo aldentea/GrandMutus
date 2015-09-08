@@ -36,12 +36,13 @@ namespace GrandMutus
 		public partial class MainWindow : WindowController
 		{
 
+			// (0.4.0)MySettingsプロパティ経由でアクセスするように変更．
 			#region コンストラクタ(MainWindow)
 			public MainWindow()
 			{
 				InitializeComponent();
 
-				_songPlayer.Volume = App.Current.MySettings.SongPlayerVolume;
+				_songPlayer.Volume = MySettings.SongPlayerVolume;
 				_songPlayer.MediaOpened += SongPlayer_MediaOpened;
 				_songPlayer.MediaEnded += SongPlayer_MediaEnded;
 				
@@ -65,10 +66,11 @@ namespace GrandMutus
 				_currentSong = null;
 			}
 
+			// (0.4.0)MySettings経由で呼び出すように変更．
 			// (0.3.1)
 			private void MainWindow_Closed(object sender, EventArgs e)
 			{
-				App.Current.MySettings.SongPlayerVolume = _songPlayer.Volume;
+				MySettings.SongPlayerVolume = _songPlayer.Volume;
 			}
 
 			// (0.3.5)未使用。
@@ -136,11 +138,6 @@ namespace GrandMutus
 
 			#region コマンドハンドラ
 
-			// (0.2.0)
-			private void Close_Executed(object sender, ExecutedRoutedEventArgs e)
-			{
-				this.Close();
-			}
 
 			// (0.2.1)
 			private void AddSongs_Executed(object sender, ExecutedRoutedEventArgs e)

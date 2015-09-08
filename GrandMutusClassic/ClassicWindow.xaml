@@ -1,0 +1,30 @@
+﻿<classic:WindowController x:Class="GrandMutus.Classic.ClassicWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:classic="clr-namespace:GrandMutus.Classic"
+		xmlns:doc="clr-namespace:Aldentea.Wpf.Document;assembly=AldenteaWpfDocument"
+		Title="ClassicWindow" Height="600" Width="800">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		
+		<Menu Grid.Row="0">
+			<MenuItem Header="ファイル(_F)">
+				<MenuItem Header="新規作成(_N)" Command="New" />
+				<MenuItem Header="開く(_O)" Command="Open">
+					<MenuItem.CommandParameter>
+						<doc:OpenDocumentParameter EnableReadOnly="True" />
+					</MenuItem.CommandParameter>
+				</MenuItem>
+				<MenuItem Header="履歴から開く(_H)" Name="menuItemHistory" />
+				<MenuItem Header="保存(_S)" Command="Save" />
+				<MenuItem Header="名前をつけて保存(_A)" Command="SaveAs" />
+				<MenuItem Header="終了(_X)" Command="Close" />
+			</MenuItem>
+		</Menu>
+		
+	</Grid>
+</classic:WindowController>

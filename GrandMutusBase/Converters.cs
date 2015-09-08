@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 using System.Windows.Data;
 
-namespace GrandMutus.Classic
+// (0.2.0)GrandMutusBaseに移動．
+namespace GrandMutus.Base
 {
 
 	// (0.3.4.2)QuestionsのNo列にはこれを使わないと、nullを設定することができない。

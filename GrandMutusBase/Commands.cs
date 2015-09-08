@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace GrandMutus.Classic
+namespace GrandMutus.Base
 {
 	// (0.2.6)
 	public static class Commands
