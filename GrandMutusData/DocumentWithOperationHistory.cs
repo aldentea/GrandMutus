@@ -28,9 +28,10 @@ namespace GrandMutus.Data
 			ClearOperationHistory();
 		}
 
+		// (0.5.0)メソッド名変更に対応．
 		// 07/13/2014 by aldentea : virtual→abstractとなったのに対応。
-		#region *[override]初期化(Initialize)
-		protected override void Initialize()
+		#region *[override]初期化(InitializeDocument)
+		protected override void InitializeDocument()
 		{
 			ClearOperationHistory();
 		}

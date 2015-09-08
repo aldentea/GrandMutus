@@ -8,8 +8,11 @@ using System.Xml.Linq;
 using System.Xml;
 using System.IO;
 
+using Aldentea.Wpf.Document;
+
 namespace GrandMutus.Data
 {
+	// (0.5.0)継承元をAldentea.Wpf.Document.DocumentWIthOperationHistory(バージョン3の実装)に変更．
 	// (0.2.0)継承元をDocumentWithOperationHistoryに変更．
 	public class MutusDocument : DocumentWithOperationHistory
 	{
@@ -329,7 +332,8 @@ namespace GrandMutus.Data
 
 		#region DocumentBase実装
 
-		protected override void Initialize()
+		// (0.5.0)継承元のメソッド名変更に対応．
+		protected override void InitializeDocument()
 		{
 			Songs.Initialize();
 		}
