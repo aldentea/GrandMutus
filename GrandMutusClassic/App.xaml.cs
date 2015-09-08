@@ -8,6 +8,7 @@ using System.Windows;
 
 namespace GrandMutus.Classic
 {
+	// (0.6.0)ClassicWindowを削除(SweetMutusプロジェクトに移行)．
 
 	// 1. Appの継承元を変更する(XAMLも忘れずに！)．
 

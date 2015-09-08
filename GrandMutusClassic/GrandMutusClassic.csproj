@@ -75,15 +75,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ClassicWindow.xaml.cs">
-      <DependentUpon>ClassicWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="IntroQuestionConverter.cs" />
     <Compile Include="WindowController.cs" />
-    <Page Include="ClassicWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
