@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IntroQuestion.cs" />
+    <Compile Include="DocumentWithOperationHistory.cs" />
     <Compile Include="ItemEventArgs.cs" />
     <Compile Include="MutusDocument.cs" />
     <Compile Include="OperationCache.cs" />

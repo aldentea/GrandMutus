@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Xml.Linq;
 //using System.Diagnostics;
-using Aldentea.Wpf.Document;
 
 namespace GrandMutus.Data
 {

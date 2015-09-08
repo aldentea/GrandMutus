@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Aldentea.Wpf.Document;
-
 namespace GrandMutus.Data
 {
 	// (0.2.0)
