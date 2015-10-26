@@ -43,6 +43,30 @@ namespace GrandMutus.Base
 	}
 	#endregion
 
+	// (0.2.1)
+	#region NullableIntvalidationRuleクラス
+	public class NullableIntValidationRule : System.Windows.Controls.ValidationRule
+	{
+		public override System.Windows.Controls.ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
+		{
+			if (value is string)
+			{
+				string v = (string)value;
+				int n;
+				if (string.IsNullOrEmpty(v) || int.TryParse(v, out n))
+				{
+					return new System.Windows.Controls.ValidationResult(true, null);
+				}
+				else
+				{
+					return new System.Windows.Controls.ValidationResult(false, "整数値(あるいはnull)を入力して下さい．");
+				}
+			}
+			return new System.Windows.Controls.ValidationResult(false, "こんなん文字列に決まってるやろ！");
+		}
+	}
+	#endregion
+
 	// (0.3.5)
 	#region VisivilityConverterクラス
 	public class VisibilityConverter : IValueConverter
@@ -103,6 +127,29 @@ namespace GrandMutus.Base
 			{
 				throw new ArgumentException("string型の値を渡して下さい。");
 			}
+		}
+	}
+	#endregion
+
+	// (0.2.1)
+	#region SabiPosValidationRuleクラス
+	public class SabiPosValidationRule : System.Windows.Controls.ValidationRule
+	{
+		public override System.Windows.Controls.ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
+		{
+			if (value is string)
+			{
+				TimeSpan result;
+				if (TimeSpan.TryParse("0:" + (string)value, out result))
+				{
+					return new System.Windows.Controls.ValidationResult(true, null);
+				}
+				else
+				{
+					return new System.Windows.Controls.ValidationResult(false, "時刻に変換できる文字列('m:ss.xxx'のようなもの)を入れて下さい．");
+				}
+			}
+			return new System.Windows.Controls.ValidationResult(false, "こんなん文字列に決まってるやろ！");
 		}
 	}
 	#endregion
