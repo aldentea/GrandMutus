@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Xml.Linq;
+using System.ComponentModel;
 
 namespace GrandMutus.Data
 {
@@ -24,7 +25,21 @@ namespace GrandMutus.Data
 		}
 		#endregion
 
+		// (0.6.1)
+		#region *Categoriesプロパティ
 
+		/// <summary>
+		/// 使われているカテゴリの一覧を取得します．
+		/// </summary>
+		public IEnumerable<string> Categories
+		{
+			get
+			{
+				return Items.Select(q => q.Category).Distinct();
+			}
+		}
+
+		#endregion
 
 		#region Documentとの関係
 
@@ -42,11 +57,13 @@ namespace GrandMutus.Data
 		/// </summary>
 		public event EventHandler<ItemEventArgs<IEnumerable<Question>>> QuestionsRemoved = delegate { };
 
-
+		// (0.6.1) Categoriesプロパティ変更通知のイベントを発生．
 		// (0.4.5) NoChangedイベントハンドラの着脱を追加．
 		// (0.4.1) Remove時の処理を追加(ほとんどSongsCollectionのコピペ)．
 		private void QuestionsCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
+			OnPropertyChanged(new PropertyChangedEventArgs("Categories"));
+
 			switch (e.Action)
 			{
 				case NotifyCollectionChangedAction.Add:
@@ -93,6 +110,7 @@ namespace GrandMutus.Data
 
 		#endregion
 
+		// (0.6.1)Category変更時に，Categoriesプロパティ変更通知のイベントを発生．
 		// (0.4.5)整番処理に着手。
 		// (0.3.3)未使用。
 		#region アイテム変更関連
@@ -109,6 +127,9 @@ namespace GrandMutus.Data
 			{
 				case "No":
 					// 整番処理は複雑なのでここでは行わない(Question_NoChangedで行う)。
+					break;
+				case "Category":
+					OnPropertyChanged(new PropertyChangedEventArgs("Categories"));
 					break;
 			}
 		}
