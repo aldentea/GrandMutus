@@ -67,15 +67,22 @@ namespace GrandMutus.Base
 	}
 	#endregion
 
-	// (0.3.5)
+	// (0.2.2)リバーシブルにしてみる？
+	// (*0.3.5)
 	#region VisivilityConverterクラス
 	public class VisibilityConverter : IValueConverter
 	{
+		// bool→VisibilityでもVisibility→boolでも同じように使うことができる．
+
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			if (value is bool)
+			if (value is bool && targetType == typeof(System.Windows.Visibility))
 			{
 				return (bool)value ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+			}
+			else if (value is System.Windows.Visibility && targetType == typeof(bool))
+			{
+				return ((System.Windows.Visibility)value) == System.Windows.Visibility.Visible;
 			}
 			else
 			{
@@ -86,7 +93,8 @@ namespace GrandMutus.Base
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			return value is System.Windows.Visibility && ((System.Windows.Visibility)value) == System.Windows.Visibility.Visible;
+			//return value is System.Windows.Visibility && ((System.Windows.Visibility)value) == System.Windows.Visibility.Visible;
+			return Convert(value, targetType, parameter, culture);
 		}
 	}
 	#endregion
