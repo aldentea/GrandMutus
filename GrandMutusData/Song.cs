@@ -10,8 +10,9 @@ using System.IO;
 
 namespace GrandMutus.Data
 {
-
-	public class Song : INotifyPropertyChanged, INotifyPropertyChanging
+	// (0.6.2) ISongインターフェイスを実装．
+	#region Songクラス
+	public class Song : ISong, INotifyPropertyChanged, INotifyPropertyChanging
 	{
 		// 問題1. IDをどうやって付与しようか？
 		// →コンストラクタをinternalにする．
@@ -184,10 +185,6 @@ namespace GrandMutus.Data
 		// で，SongsCollectionのCollectionChangedから呼び出す，と．
 
 
-
-
-
-
 		#region XML入出力関連
 
 		// どこに置くかは未定．
@@ -295,5 +292,21 @@ namespace GrandMutus.Data
 
 
 	}
+	#endregion
+
+
+	// (0.6.2)
+	#region *ISongインターフェイス
+	/// <summary>
+	/// インポートするときのため？に用意しておきます．
+	/// </summary>
+	public interface ISong
+	{
+		string Title { get; }
+		string Artist { get; }
+		string FileName { get; }
+		TimeSpan SabiPos { get; }
+	}
+	#endregion
 
 }
