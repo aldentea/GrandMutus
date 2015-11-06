@@ -121,7 +121,7 @@ namespace GrandMutus.Data
 		#endregion
 
 
-
+		// (0.6.4.2)CategoryプロパティをNoプロパティより先にsetするように修正．
 		// (0.3.3)
 		#region *[static]XML要素からオブジェクトを生成(Generate)
 		public static IntroQuestion Generate(XElement questionElement)
@@ -138,8 +138,10 @@ namespace GrandMutus.Data
 				question.ID = (int)id_attribute;
 			}
 
-			question.No = (int?)questionElement.Attribute(NO_ATTRIBUTE);
 			question.Category = (string)questionElement.Attribute(CATEGORY_ATTRIBUTE);
+			question.No = (int?)questionElement.Attribute(NO_ATTRIBUTE);
+			// Noの後にCategoryをsetすると，Noがnullになってしまうのであった！
+			// この挙動はQuestionオブジェクトだけで完結する(はず)なので，NowLoadingかどうかは関係ない．
 
 			var play_pos = (double?)questionElement.Attribute(PLAY_POS_ATTRIBUTE);
 			if (play_pos.HasValue)
