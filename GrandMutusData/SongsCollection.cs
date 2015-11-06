@@ -262,18 +262,40 @@ namespace GrandMutus.Data
 			return element;
 		}
 
+		// (0.6.4)RootDirectoryの処理を変更(SweetMutusDocumentと同様に...)．
+		// path="."とpath属性がない場合を区別．
 		// (0.4.0.2)RootDirectoryが指定されていなければここでオーバーライドしないように修正。
 		// (0.1.2)
-		public void LoadElement(XElement songsElement)
+		public void LoadElement(XElement songsElement, string source_directory)
 		{
-			if (songsElement.Attribute(PATH_ATTRIBUTE) != null)
+			var path = (string)songsElement.Attribute(PATH_ATTRIBUTE);
+			string songs_root;
+			if (string.IsNullOrEmpty(path))
 			{
-				this.RootDirectory = (string)songsElement.Attribute(PATH_ATTRIBUTE);
+				// RootDirectoryプロパティは設定されない．
+				songs_root = source_directory;	// ロードするファイルのあるディレクトリが入っているはずである．
+			}
+			else
+			{
+				// 何らかの形でRootDirectoryプロパティが設定される．
+				if (System.IO.Path.IsPathRooted(path))
+				{
+					this.RootDirectory = path;
+				}
+				else if (path == ".")
+				{
+					this.RootDirectory = source_directory;
+				}
+				else
+				{
+					this.RootDirectory = System.IO.Path.Combine(source_directory, path);
+				}
+				songs_root = this.RootDirectory;
 			}
 
 			foreach (var song_element in songsElement.Elements(Song.ELEMENT_NAME))
 			{
-				this.Add(Song.Generate(song_element, this.RootDirectory));
+				this.Add(Song.Generate(song_element, songs_root));
 			}
 		}
 

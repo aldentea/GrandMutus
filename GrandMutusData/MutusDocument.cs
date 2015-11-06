@@ -352,19 +352,35 @@ namespace GrandMutus.Data
 					{
 						if (version >= 3.0M)
 						{
-							this.Songs.RootDirectory = Path.GetDirectoryName(fileName);	// RootDirectoryのデフォルトの値を設定する。
-							this.Songs.LoadElement(root.Element(SongsCollection.ELEMENT_NAME));
-							this.Questions.LoadElement(root.Element(QuestionsCollection.ELEMENT_NAME));
-							return true;
+							return LoadGrandMutusDocument(root, fileName);
 						}
 					}
 				}
-
 
 			}
 			return false;
 
 		}
+
+		// (0.6.4.1)NowLoadingの処理を追加．
+		// (0.6.4)RootDirectory関連の処理をSongs.LoadDocumentに移動．
+		// (0.6.3)純粋に読み込むだけの処理を分離(大丈夫かなぁ)．
+		public bool LoadGrandMutusDocument(XElement root, string fileName)
+		{
+			//this.Songs.RootDirectory = Path.GetDirectoryName(fileName);
+			NowLoading = true;
+			try
+			{
+				this.Songs.LoadElement(root.Element(SongsCollection.ELEMENT_NAME), System.IO.Path.GetDirectoryName(fileName));
+				this.Questions.LoadElement(root.Element(QuestionsCollection.ELEMENT_NAME));
+			}
+			finally
+			{
+				NowLoading = false;
+			}
+			return true;
+		}
+
 
 		protected override bool SaveDocument(string destination)
 		{
