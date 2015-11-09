@@ -8,6 +8,8 @@ using System.Windows.Media;
 using System.ComponentModel;
 using System.Windows.Threading;
 
+using System.Threading;
+
 namespace GrandMutus.Base
 {
 	// 08/02/2015 by aldentea : HyperMutusの同名クラスをコピペ。
@@ -259,5 +261,32 @@ namespace GrandMutus.Base
 		#endregion
 	}
 	#endregion
+
+
+	public class SongPlayer2 : SongPlayer
+	{
+		public SongPlayer2()
+			: base()
+		{
+			this.MediaOpened += (sdr, ea) =>
+			{
+				mediaOpenedEvent.Set();
+			};
+		}
+
+		AutoResetEvent mediaOpenedEvent = new AutoResetEvent(false);
+
+		public Task OpenAsync(string fileName)
+		{
+			return new Task(() =>
+			{
+				_mPlayer.Open(new Uri(fileName));
+				mediaOpenedEvent.WaitOne(3000);
+				NotifyPropertyChanged("CurrentState");
+				NotifyPropertyChanged("IsActive");
+			});
+		}
+
+	}
 
 }
