@@ -67,14 +67,19 @@ namespace GrandMutus.Data
 		int? _no = null;
 		#endregion
 
+		// (0.6.3)get時にnullを返さない(代わりにstring.Emptyを返す)ように修正。
 		// (0.4.8)setterにnullが与えられたときにstring.Emptyをsetする．
 		// (0.4.5.2)Category変更前に、Noをnullにする。
 		#region *Categoryプロパティ
+		/// <summary>
+		/// この曲の属するカテゴリを取得／設定します。
+		/// 取得時にはnullは返らないようになっています。
+		/// </summary>
 		public string Category
 		{
 			get
 			{
-				return _category;
+				return _category ?? string.Empty;
 			}
 			set
 			{
