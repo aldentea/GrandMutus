@@ -29,7 +29,7 @@ namespace GrandMutus.Data
 		int _id = -1;	// (0.1.2)-1は未設定であることを示す．
 		#endregion
 
-		// (0.6.3)get時にnullを返さない(代わりにstring.Emptyを返す)ように修正。
+		// (0.6.5)get時にnullを返さない(代わりにstring.Emptyを返す)ように修正。
 		#region *Titleプロパティ
 		/// <summary>
 		/// 曲のタイトルを取得／設定します．
@@ -76,7 +76,7 @@ namespace GrandMutus.Data
 		string _fileName = string.Empty;
 		#endregion
 
-		// (0.6.3)get時にnullを返さない(代わりにstring.Emptyを返す)ように修正。
+		// (0.6.5)get時にnullを返さない(代わりにstring.Emptyを返す)ように修正。
 		#region *Artistプロパティ
 		/// <summary>
 		/// 曲のアーティストを取得／設定します．
