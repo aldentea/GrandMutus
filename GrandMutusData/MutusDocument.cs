@@ -9,6 +9,10 @@ using System.Xml;
 using System.IO;
 using Aldentea.Wpf.Document;
 
+
+// (0.6.5.1)AldenteaWpfDocumentを3.0.1に変更(<-3.0.0.2)．
+
+
 namespace GrandMutus.Data
 {
 	// (0.2.0)継承元をDocumentWithOperationHistoryに変更．
