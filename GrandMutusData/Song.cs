@@ -29,6 +29,8 @@ namespace GrandMutus.Data
 		int _id = -1;	// (0.1.2)-1は未設定であることを示す．
 		#endregion
 
+		#region ISong実装
+
 		// (0.6.5)get時にnullを返さない(代わりにstring.Emptyを返す)ように修正。
 		#region *Titleプロパティ
 		/// <summary>
@@ -123,6 +125,8 @@ namespace GrandMutus.Data
 			}
 		}
 		TimeSpan _sabiPos = TimeSpan.Zero;
+		#endregion
+
 		#endregion
 
 		// (0.3.0)Parentがnullの場合の対策をしておく(OnAddTo(null)が呼ばれるときにまずいことになったので)．
@@ -294,11 +298,10 @@ namespace GrandMutus.Data
 		}
 		#endregion
 
-
 	}
 	#endregion
 
-
+	// (0.7.0)FileNameプロパティのsetterを追加．
 	// (0.6.2)
 	#region *ISongインターフェイス
 	/// <summary>
@@ -308,7 +311,10 @@ namespace GrandMutus.Data
 	{
 		string Title { get; }
 		string Artist { get; }
-		string FileName { get; }
+		/// <summary>
+		/// ファイル名をフルパスで取得／設定します．
+		/// </summary>
+		string FileName { get; set; }
 		TimeSpan SabiPos { get; }
 	}
 	#endregion

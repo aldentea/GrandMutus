@@ -30,10 +30,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AldenteaBackgroundWorkerDialog, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\external\AldenteaBackgroundWorkerDialog.dll</HintPath>
+    </Reference>
+    <Reference Include="AldenteaFolderTreeView">
+      <HintPath>..\external\AldenteaFolderTreeView.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,8 +52,15 @@
   <ItemGroup>
     <Compile Include="Commands.cs" />
     <Compile Include="Converters.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="SongPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GrandMutusData\GrandMutusData.csproj">
+      <Project>{206b085b-f3c5-4ccb-aa5e-4111a1026a60}</Project>
+      <Name>GrandMutusData</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
