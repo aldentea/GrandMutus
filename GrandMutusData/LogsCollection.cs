@@ -49,6 +49,24 @@ namespace GrandMutus.Data
 		}
 		#endregion
 
+		/// <summary>
+		/// 最初のOrderを追加します．
+		/// 追加する必要があるかどうかの判定も行い，不要であれば追加しません．
+		/// </summary>
+		/// <returns></returns>
+		public bool AddFirstOrder()
+		{
+			if (Items.Count == 0)
+			{
+				this.Items.Add(new Order { ID = 0 });
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		public void AddOrder(int question_id)
 		{
 			this.Items.Add(new Order { ID = GenerateNewOrderID(), QuestionID = question_id });
@@ -145,7 +163,7 @@ namespace GrandMutus.Data
 		{
 			get
 			{
-				return Items.Select(order => order.ID);
+				return Items.SelectMany(order => order.UsedIDList);
 			}
 		}
 

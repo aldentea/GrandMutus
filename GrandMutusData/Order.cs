@@ -95,6 +95,14 @@ namespace GrandMutus.Data
 
 		#endregion
 
+		internal IEnumerable<int> UsedIDList
+		{
+			get
+			{
+				return Items.Select(log => log.ID);
+			}
+		}
+
 	}
 		#endregion
 
