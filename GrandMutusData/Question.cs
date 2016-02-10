@@ -8,16 +8,66 @@ using System.ComponentModel;
 
 namespace GrandMutus.Data
 {
+	// (0.8.0.1)abstract化(Answer周辺で)．
 	// (0.4.7)QuestionBaseと分離する．
 	// (0.4.2)
-	public class Question : QuestionBase<QuestionsCollection>
+	public abstract class Question : QuestionBase<QuestionsCollection>
 	{
 	}
 
+	// (0.8.0.1)abstract化(Answer周辺で)．
 	// (0.4.7.2)やっぱやめた．
 	// (0.4.7.1)abstract化．
-	public class QuestionBase<T> : INotifyPropertyChanged, INotifyPropertyChanging
+	public abstract class QuestionBase<T> : QuestionBase
 		where T : class
+	{
+		#region Parentとの関係
+
+		// (0.4.1.1) privateからprotectedに変更．
+		#region *Parentプロパティ
+		protected T Parent
+		{
+			get { return _parent; }
+			set
+			{
+				if (this.Parent != value)
+				{
+					this._parent = value;
+					NotifyPropertyChanged("Parent");
+					//NotifyPropertyChanged("RelativeFileName");
+				}
+			}
+		}
+		T _parent = null;
+		#endregion
+
+		// こういうプロパティを用意して，いつ設定するのか？
+		// →こういうメソッドを用意してみては？
+
+		/// ↓元のParentに依存した処理を行うならば，OnRemovedFromみたいなメソッドを用意する必要が出てきます．
+
+		/// <summary>
+		/// 自身がparentに追加された時に呼び出します．
+		/// 除外されたときは引数をnullにして呼び出せばいいのかな？
+		/// </summary>
+		/// <param name="parent"></param>
+		public virtual void OnAddedTo(T parent)
+		{
+			this.Parent = parent;
+		}
+
+		// で，QuestionsCollectionのCollectionChangedから呼び出す，と．
+
+		#endregion
+	}
+
+	// (0.8.0.1)abstract化(Answer周辺で)．
+	// (0.8.0?)QuestionBase<T>のうち，Tに関係ない部分をこちらに分離する．
+	#region QuestionBaseクラス
+	/// <summary>
+	/// 問題に関して最も基本となるクラスです．
+	/// </summary>
+	public abstract class QuestionBase : INotifyPropertyChanged, INotifyPropertyChanging
 	{
 		// (0.4.7.2)やっぱやめた．苦肉の策で，setterをpublicにする．
 		// (0.4.7.1)abstract化．
@@ -31,7 +81,7 @@ namespace GrandMutus.Data
 			get { return _id; }
 			set { _id = value; }
 		}
-		int _id = -1;	// (0.1.2)-1は未設定であることを示す．
+		int _id = -1; // (0.1.2)-1は未設定であることを示す．
 		#endregion
 
 		// (0.4.5)変更時にNoChangedイベントを発生します．
@@ -98,52 +148,14 @@ namespace GrandMutus.Data
 		string _category = string.Empty;
 		#endregion
 
+		// (0.8.0.1)
+		public abstract string Answer { get; } 
 
 		// (0.4.5)Noについては処理が複雑なので，専用のイベントを使った方がいいのでは？ということで用意．
 		/// <summary>
 		/// Noが変更になったときに発生します．
 		/// </summary>
 		public event EventHandler<ValueChangedEventArgs<int?>> NoChanged = delegate { };
-
-
-		#region Parentとの関係
-
-		// (0.4.1.1) privateからprotectedに変更．
-		#region *Parentプロパティ
-		protected T Parent
-		{
-			get { return _parent; }
-			set
-			{
-				if (this.Parent != value)
-				{
-					this._parent = value;
-					NotifyPropertyChanged("Parent");
-					//NotifyPropertyChanged("RelativeFileName");
-				}
-			}
-		}
-		T _parent = null;
-		#endregion
-
-		// こういうプロパティを用意して，いつ設定するのか？
-		// →こういうメソッドを用意してみては？
-
-		/// ↓元のParentに依存した処理を行うならば，OnRemovedFromみたいなメソッドを用意する必要が出てきます．
-
-		/// <summary>
-		/// 自身がparentに追加された時に呼び出します．
-		/// 除外されたときは引数をnullにして呼び出せばいいのかな？
-		/// </summary>
-		/// <param name="parent"></param>
-		public virtual void OnAddedTo(T parent)
-		{
-			this.Parent = parent;
-		}
-
-		// で，QuestionsCollectionのCollectionChangedから呼び出す，と．
-
-		#endregion
 
 		// (0.3.3)Songからのコピペ。共通実装にしますか？
 		#region INotifyPropertyChanged実装
@@ -167,6 +179,6 @@ namespace GrandMutus.Data
 		#endregion
 
 	}
-
+	#endregion
 
 }

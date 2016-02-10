@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace GrandMutus.Data
 {
-	// ヘルパー的．
-	public class ItemEventArgs<T> : EventArgs
+	// (0.8.0.2)
+	public interface IMutusGameDocument
 	{
-		public T Item { get; set; }
+		LogsCollection Logs { get; }
 
+		//void AddOrder(QuestionBase question);
 	}
+
 }
