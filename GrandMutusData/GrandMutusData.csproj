@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IMutusGameDocument.cs" />
     <Compile Include="IntroQuestion.cs" />
     <Compile Include="ItemEventArgs.cs" />
     <Compile Include="Log.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="MutusDocument.cs" />
     <Compile Include="OperationCache.cs" />
     <Compile Include="Order.cs" />
+    <Compile Include="OrderCache.cs" />
     <Compile Include="Question.cs" />
     <Compile Include="QuestionsCache.cs" />
     <Compile Include="QuestionsCollection.cs" />
