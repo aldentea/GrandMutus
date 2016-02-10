@@ -8,15 +8,17 @@ using System.ComponentModel;
 
 namespace GrandMutus.Data
 {
+	// (0.8.0.1)abstract化(Answer周辺で)．
 	// (0.4.7)QuestionBaseと分離する．
 	// (0.4.2)
-	public class Question : QuestionBase<QuestionsCollection>
+	public abstract class Question : QuestionBase<QuestionsCollection>
 	{
 	}
 
+	// (0.8.0.1)abstract化(Answer周辺で)．
 	// (0.4.7.2)やっぱやめた．
 	// (0.4.7.1)abstract化．
-	public class QuestionBase<T> : QuestionBase
+	public abstract class QuestionBase<T> : QuestionBase
 		where T : class
 	{
 		#region Parentとの関係
@@ -59,12 +61,13 @@ namespace GrandMutus.Data
 		#endregion
 	}
 
+	// (0.8.0.1)abstract化(Answer周辺で)．
 	// (0.8.0?)QuestionBase<T>のうち，Tに関係ない部分をこちらに分離する．
 	#region QuestionBaseクラス
 	/// <summary>
 	/// 問題に関して最も基本となるクラスです．
 	/// </summary>
-	public class QuestionBase : INotifyPropertyChanged, INotifyPropertyChanging
+	public abstract class QuestionBase : INotifyPropertyChanged, INotifyPropertyChanging
 	{
 		// (0.4.7.2)やっぱやめた．苦肉の策で，setterをpublicにする．
 		// (0.4.7.1)abstract化．
@@ -145,6 +148,8 @@ namespace GrandMutus.Data
 		string _category = string.Empty;
 		#endregion
 
+		// (0.8.0.1)
+		public abstract string Answer { get; } 
 
 		// (0.4.5)Noについては処理が複雑なので，専用のイベントを使った方がいいのでは？ということで用意．
 		/// <summary>
