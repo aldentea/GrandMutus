@@ -9,6 +9,7 @@ using System.Xml.Linq;
 namespace GrandMutus.Data
 {
 
+	#region Logクラス
 	public class Log : INotifyPropertyChanged
 	{
 		// ログに関する情報を保持します．
@@ -63,6 +64,7 @@ namespace GrandMutus.Data
 		decimal _value = 0;
 		#endregion
 
+		// 「コメント」はどうする？
 
 		#region XML入出力関連
 
@@ -76,18 +78,38 @@ namespace GrandMutus.Data
 		const string CODE_ATTRIBUTE = "code";
 		const string VALUE_ATTRIBUTE = "value";
 
-		// (0.3.2)sabi_pos要素を出力．
 		#region *XML要素を生成(GenerateElement)
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="songs_root">曲ファイルを格納しているディレクトリのフルパスです．</param>
 		/// <returns></returns>
-		public XElement GenerateElement(string songs_root = null)
+		public XElement GenerateElement()
 		{
 			var element = new XElement(ELEMENT_NAME);
 			element.Add(new XAttribute(ID_ATTRIBUTE, this.ID));
+			element.Add(new XAttribute(CODE_ATTRIBUTE, this.Code));
+			element.Add(new XAttribute(VALUE_ATTRIBUTE, this.Value));
 			return element;
+		}
+		#endregion
+
+		#region *[static]XML要素からオブジェクトを生成(Generate)
+		public static Log Generate(XElement logElement)
+		{
+			Log log = new Log();
+
+			// XMLからインスタンスを生成するならばIDは常にあるのでは？
+			// songのようにインポートの問題も考えなくていいし...
+
+			var id_attribute = logElement.Attribute(ID_ATTRIBUTE);
+			if (id_attribute != null)
+			{
+				log.ID = (int)id_attribute;
+			}
+			log.Code = (string)logElement.Attribute(CODE_ATTRIBUTE);
+			log.Value = (decimal)logElement.Attribute(VALUE_ATTRIBUTE);
+
+			return log;
 		}
 		#endregion
 
@@ -106,6 +128,6 @@ namespace GrandMutus.Data
 		#endregion
 
 	}
-
+	#endregion
 
 }
