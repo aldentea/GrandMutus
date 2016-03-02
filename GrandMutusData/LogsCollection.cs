@@ -72,6 +72,19 @@ namespace GrandMutus.Data
 			this.Items.Add(new Order { ID = GenerateNewOrderID(), QuestionID = question_id });
 		}
 
+		// (0.8.1.3)QuestionIDを返すように修正。
+		// (0.8.1)
+		/// <summary>
+		/// AddOrderのアンドゥ操作としてのみ使われることが想定されています。QuestionIDが返ります。
+		/// </summary>
+		public int? RemoveOrder()
+		{
+			int n = this.Items.Count - 1;
+			int? q_id = this.Items[n].QuestionID;
+			this.Items.RemoveAt(n);
+			return q_id;
+		}
+
 		/// <summary>
 		/// 現在の出題についてログを追加します．
 		/// </summary>

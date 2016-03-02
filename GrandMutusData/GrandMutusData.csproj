@@ -68,6 +68,7 @@
     <Compile Include="OperationCache.cs" />
     <Compile Include="Order.cs" />
     <Compile Include="OrderCache.cs" />
+    <Compile Include="OrderEventArgs.cs" />
     <Compile Include="Question.cs" />
     <Compile Include="QuestionsCache.cs" />
     <Compile Include="QuestionsCollection.cs" />
