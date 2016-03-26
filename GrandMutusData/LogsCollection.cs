@@ -14,6 +14,15 @@ namespace GrandMutus.Data
 	public class LogsCollection : ObservableCollection<Order>
 	{
 
+		// (0.8.0.2)
+		public bool IsEmpty
+		{
+			get
+			{
+				return Items.Count == 0;
+			}
+		}
+
 		#region *コンストラクタ(LogsCollection)
 		public LogsCollection()
 		{

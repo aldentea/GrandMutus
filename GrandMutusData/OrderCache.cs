@@ -29,10 +29,13 @@ namespace GrandMutus.Data
 
 		public void Reverse()
 		{
-
+			throw new NotImplementedException();
 		}
 
-		public abstract bool CanCancelWith(IOperationCache other);
+		public bool CanCancelWith(IOperationCache other)
+		{
+			throw new NotImplementedException();
+		}
 
 	}
 	#endregion
