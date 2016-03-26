@@ -8,10 +8,16 @@ namespace GrandMutus
 {
 	namespace Data
 	{
+		// (0.8.2) IsRehearsalプロパティを追加。
 		// (0.8.0.2)
 		public interface IMutusGameDocument
 		{
 			LogsCollection Logs { get; }
+
+			/// <summary>
+			/// リハーサルモードであるかどうかの値を取得します。
+			/// </summary>
+			bool IsRehearsal { get; set; }
 
 			// (0.8.1.1)型を変更。
 			// (0.8.1)
