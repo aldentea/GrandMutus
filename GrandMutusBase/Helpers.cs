@@ -96,6 +96,7 @@ namespace GrandMutus
 			#endregion
 
 
+			// (0.3.3)song.FileNameを変更する必要はないので，それ用の引数を追加する．
 			// (0.3.0)HyperMutusからコピペ．HyperMutusのISongからGrandMutusのISongに変更．overwriting引数を追加．
 			// 11/20/2013 by aldentea : Helper化．
 			// 08/19/2013 by aldentea : ★★RealFileNameプロパティの廃止に伴い，FileNameプロパティで代替．
@@ -105,17 +106,32 @@ namespace GrandMutus
 			/// ドキュメントの曲ファイルを指定した場所にコピーします．
 			/// </summary>
 			/// <param name="destination">コピー先のディレクトリ．</param>
-			public static void ExportAllSongs(IEnumerable<ISong> songs, string destination, FileOverwriting overwriting = FileOverwriting.IfNew)
+			public static void ExportAllSongs(IEnumerable<ISong> songs, string destination, FileOverwriting overwriting = FileOverwriting.IfNew, bool changeSongFileName = true)
 			{
-				Helpers.WorkBackground<ISong>(
-					songs,
-					(song) =>
-					{
+				if (changeSongFileName)
+				{
+					Helpers.WorkBackground<ISong>(
+						songs,
+						(song) =>
+						{
 						// 1.ファイルをコピーする．
 						// 2.songのFileNameを変更する．
 						song.FileName = CopyFileTo(song.FileName, destination, overwriting);
-					}
-				);
+						}
+					);
+				}
+				else
+				{
+					Helpers.WorkBackground<ISong>(
+						songs,
+						(song) =>
+						{
+							// 1.ファイルをコピーする．
+							CopyFileTo(song.FileName, destination, overwriting);
+						}
+					);
+
+				}
 			}
 			#endregion
 
