@@ -69,6 +69,9 @@
     <Compile Include="Order.cs" />
     <Compile Include="OrderCache.cs" />
     <Compile Include="OrderEventArgs.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="PlayerOperationCache.cs" />
+    <Compile Include="PlayersCollection.cs" />
     <Compile Include="Question.cs" />
     <Compile Include="QuestionsCache.cs" />
     <Compile Include="QuestionsCollection.cs" />
