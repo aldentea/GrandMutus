@@ -14,7 +14,7 @@ namespace GrandMutus.Data
 {
 
 	#region SongsCollectionクラス
-	public class SongsCollection : ObservableCollection<Song>
+	public class SongsCollection : ObservableCollection<Song>, ISongsCollection
 	{
 
 

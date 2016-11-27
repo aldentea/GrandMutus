@@ -131,13 +131,14 @@ namespace GrandMutus.Data
 
 	// for songs
 
+	// (0.8.5) _songsCollectionをISongsCollectionに変更(インターフェイス化)。
 	// (0.4.4)
 	#region SongsRootDirectoryChangedCacheクラス
 	public class SongsRootDirectoryChangedCache : PropertyChangedCache<string>
 	{
-		readonly SongsCollection _songsCollection;
+		readonly ISongsCollection _songsCollection;
 
-		public SongsRootDirectoryChangedCache(SongsCollection songs, string from, string to) : base(from, to)
+		public SongsRootDirectoryChangedCache(ISongsCollection songs, string from, string to) : base(from, to)
 		{
 			this._songsCollection = songs;
 		}
