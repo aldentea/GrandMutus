@@ -105,6 +105,18 @@ namespace GrandMutus.Data
 			CurrentOrder.Add(log);
 		}
 
+		// (0.9.1)
+		/// <summary>
+		/// 現在の出題についてログを追加します．
+		/// </summary>
+		/// <param name="code"></param>
+		/// <param name="value"></param>
+		public void AddLog(int playerID, string code, decimal value)
+		{
+			var log = new Log { ID = GenerateNewLogID(), PlayerID = playerID, Code = code, Value = value };
+			CurrentOrder.Add(log);
+		}
+
 		#endregion
 
 

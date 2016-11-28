@@ -24,7 +24,25 @@ namespace GrandMutus.Data
 		int _id = -1; // (0.1.2)-1は未設定であることを示す．
 		#endregion
 
-		// Player関連はおいておく．
+		// (0.9.1)とりあえず従来通りの実装をする。
+		#region *PlayerIDプロパティ
+		public int? PlayerID
+		{
+			get
+			{
+				return _playerID;
+			}
+			set
+			{
+				if (_playerID != value)
+				{
+					_playerID = value;
+					NotifyPropertyChanged("PlayerID");
+				}
+			}
+		}
+		int? _playerID;
+		#endregion
 
 		#region *Codeプロパティ
 		public string Code
@@ -66,6 +84,7 @@ namespace GrandMutus.Data
 
 		// 「コメント」はどうする？
 
+		// (0.9.1)PlayerID関連を実装。
 		#region XML入出力関連
 
 		// どこに置くかは未定．
@@ -75,9 +94,11 @@ namespace GrandMutus.Data
 		// このあたり本来はXNameなんだけど，手抜きをする．
 		public const string ELEMENT_NAME = "log";
 		const string ID_ATTRIBUTE = "id";
+		const string PLAYER_ID_ATTRIBUTE = "player_id";
 		const string CODE_ATTRIBUTE = "code";
 		const string VALUE_ATTRIBUTE = "value";
 
+		// (0.9.1)PlayerID関連を実装。
 		#region *XML要素を生成(GenerateElement)
 		/// <summary>
 		/// 
@@ -87,12 +108,17 @@ namespace GrandMutus.Data
 		{
 			var element = new XElement(ELEMENT_NAME);
 			element.Add(new XAttribute(ID_ATTRIBUTE, this.ID));
+			if (PlayerID.HasValue)
+			{
+				element.Add(new XAttribute(PLAYER_ID_ATTRIBUTE, this.PlayerID.Value));
+			}
 			element.Add(new XAttribute(CODE_ATTRIBUTE, this.Code));
 			element.Add(new XAttribute(VALUE_ATTRIBUTE, this.Value));
 			return element;
 		}
 		#endregion
 
+		// (0.9.1)PlayerID関連を実装。
 		#region *[static]XML要素からオブジェクトを生成(Generate)
 		public static Log Generate(XElement logElement)
 		{
@@ -106,6 +132,12 @@ namespace GrandMutus.Data
 			{
 				log.ID = (int)id_attribute;
 			}
+			var player_id_attribute = logElement.Attribute(PLAYER_ID_ATTRIBUTE);
+			if (player_id_attribute != null)
+			{
+				log.PlayerID = (int)player_id_attribute;
+			}
+
 			log.Code = (string)logElement.Attribute(CODE_ATTRIBUTE);
 			log.Value = (decimal)logElement.Attribute(VALUE_ATTRIBUTE);
 
