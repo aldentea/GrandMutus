@@ -8,8 +8,10 @@ namespace GrandMutus
 {
 	namespace Data
 	{
+		// (0.9.0) Player関連を実装。
 		// (0.8.2) IsRehearsalプロパティを追加。
 		// (0.8.0.2)
+		#region IMutusGameDocumentインターフェイス
 		public interface IMutusGameDocument
 		{
 			LogsCollection Logs { get; }
@@ -52,7 +54,51 @@ namespace GrandMutus
 				this.OrderRemoved(this, EventArgs.Empty);
 			}
 			*/
+
+			// (0.9.0)
+			#region Player関連
+
+			PlayersCollection Players { get; }
+
+			/// <summary>
+			/// Playerが追加されたときに発生します。
+			/// </summary>
+			event EventHandler<PlayerEventArgs> PlayerAdded;
+
+			/// <summary>
+			/// Playerが削除されたときに発生します。
+			/// </summary>
+			event EventHandler<PlayerEventArgs> PlayerRemoved;
+
+			/// <summary>
+			/// プレイヤーを追加します。
+			/// </summary>
+			/// <param name="name"></param>
+			void AddPlayer(string name);
+			/* 実装はコピペでいいと思います。
+			{
+				Players.AddPlayer(name);
+				this.PlayerAdded(this, EventArgs.Empty);
+			}
+			*/
+
+			/// <summary>
+			/// プレイヤーを削除します。
+			/// </summary>
+			void RemovePlayer(string name);
+			/* 実装はコピペでいいと思います。
+			{
+				Players.RemovePlayer(name);
+				this.PlayerRemoved(this, EventArgs.Empty);
+			}
+			*/
+
+
+			#endregion
+
+
 		}
+		#endregion
 
 	}
 }

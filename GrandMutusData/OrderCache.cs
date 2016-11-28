@@ -13,12 +13,13 @@ namespace GrandMutus.Data
 	// Song.Titleを変更したときのような可逆なものと，
 	// Orderを追加するような，基本的には不可逆なものと．
 
+	// (0.9.0)名前をMutusGameDocumentCacheに変更。 
 	// (0.8.1)
-	public abstract class SweetMutusDocumentCache : IOperationCache
+	public abstract class MutusGameDocumentCache : IOperationCache
 	{
 		public IMutusGameDocument Document { get; protected set; }
 
-		protected SweetMutusDocumentCache(IMutusGameDocument document)
+		protected MutusGameDocumentCache(IMutusGameDocument document)
 		{
 			this.Document = document;
 		}
@@ -30,7 +31,7 @@ namespace GrandMutus.Data
 
 	// (0.3.1.1)
 	#region AddOrderCacheクラス
-	public class AddOrderCache : SweetMutusDocumentCache
+	public class AddOrderCache : MutusGameDocumentCache
 	{
 		public int? QuestionID { get; protected set; }
 
@@ -62,7 +63,7 @@ namespace GrandMutus.Data
 
 	// (0.3.1.1)
 	#region RemoveOrderCacheクラス
-	public class RemoveOrderCache : SweetMutusDocumentCache
+	public class RemoveOrderCache : MutusGameDocumentCache
 	{
 		public int? QuestionID { get; protected set; }
 

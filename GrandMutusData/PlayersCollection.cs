@@ -19,10 +19,37 @@ namespace GrandMutus.Data
 			this.CollectionChanged += PlayersCollection_CollectionChanged;
 		}
 
+		// (0.9.0)
+		public void Initialize()
+		{
+			// ClearItems()やItems.Clear()とはどう違うのかな？
+			this.Clear();
+		}
+
+		// (0.9.0)
+		public Player FindPlayer(string name)
+		{
+			return this.SingleOrDefault(player => player.Name == name);
+		}
 
 
 		#region コレクション変更関連
 
+		// (0.9.0)
+		public void AddPlayer(string name)
+		{
+			var player = new Player { Name = name };
+			this.Add(player);
+		}
+
+		public void RemovePlayer(string name)
+		{
+			var player = FindPlayer(name);
+			if (player != null)
+			{
+				this.Remove(player);
+			}
+		}
 
 
 		void PlayersCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -51,7 +78,6 @@ namespace GrandMutus.Data
 					// →UIから複数曲をまとめて削除すると、既定では1曲ずつこのイベントが呼び出される．それらをまとめてキャッシュする手段がない！？
 					// →仕方がないので，UIの処理を修正し(0.3.4.1)，複数曲の削除をまとめて受け取るようにした．
 
-					//★IList<string> song_files = new List<string>();
 					IList<Player> players = new List<Player>();
 					foreach (var player in e.OldItems.Cast<Player>())
 					{
@@ -61,13 +87,6 @@ namespace GrandMutus.Data
 						players.Add(player);
 					}
 
-					// (0.4.4.1)↓UIから曲を削除する場合もMutusDocumentを経由する方針になったので，この処理を削除．
-					// (MutusDocumentを経由せずに)UIから削除される場合もあるので，
-					// ここでOperationCacheの処理を行うことにした．
-					//if (songs.Count > 0)
-					//{
-					//	this.SongsRemoved(this, new ItemEventArgs<IEnumerable<Song>> { Item = songs });
-					//}
 					break;
 				case NotifyCollectionChangedAction.Reset:
 					// ClearしたときにはResetが発生するのか？←そのようです．
