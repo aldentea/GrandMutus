@@ -36,16 +36,42 @@ namespace GrandMutus.Data
 		#region コレクション変更関連
 
 		// (0.9.0)
+		/// <summary>
+		/// 指定した名前のプレイヤーを追加します。
+		/// nameが空文字列、あるいは既存のプレイヤー名と重複する場合は、ArgumentExceptionをスローします。
+		/// </summary>
+		/// <param name="name"></param>
 		public void AddPlayer(string name)
 		{
-			var player = new Player { Name = name };
-			this.Add(player);
+			if (string.IsNullOrEmpty(name))
+			{
+				throw new ArgumentException("名前を空文字列にすることは認めません。");
+			}
+			else if (this.Any(player => player.Name == name))
+			{
+				throw new ArgumentException("プレイヤー名を重複させることは認めません。");
+			}
+			else
+			{
+				var player = new Player { Name = name };
+				this.Add(player);
+			}
 		}
 
+		// (0.9.0)
+		/// <summary>
+		/// 指定した名前のプレイヤーを削除します。
+		/// 該当プレイヤーが存在しない場合は、ArgumentExceptionをスローします。
+		/// </summary>
+		/// <param name="name"></param>
 		public void RemovePlayer(string name)
 		{
 			var player = FindPlayer(name);
-			if (player != null)
+			if (player == null)
+			{
+				throw new ArgumentException($"'{name}'という名前のプレイヤーは存在しません。");
+			}
+			else
 			{
 				this.Remove(player);
 			}
