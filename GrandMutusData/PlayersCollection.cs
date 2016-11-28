@@ -32,6 +32,11 @@ namespace GrandMutus.Data
 			return this.SingleOrDefault(player => player.Name == name);
 		}
 
+		// (0.9.2)
+		public Player Get(int id)
+		{
+			return this.Single(player => player.ID == id);
+		}
 
 		#region コレクション変更関連
 

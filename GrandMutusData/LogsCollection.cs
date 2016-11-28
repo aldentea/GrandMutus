@@ -38,6 +38,18 @@ namespace GrandMutus.Data
 			this.Clear();
 		}
 
+		// (0.9.2)
+		/// <summary>
+		/// すべてのログを取得します。
+		/// </summary>
+		public IEnumerable<Log> AllLog
+		{
+			get
+			{
+				return Items.SelectMany(order => order);
+			}
+		}
+
 
 		// ここに書く？
 
