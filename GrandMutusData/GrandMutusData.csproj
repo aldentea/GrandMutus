@@ -68,6 +68,7 @@
     <Compile Include="MutusDocument.cs" />
     <Compile Include="OperationCache.cs" />
     <Compile Include="Order.cs" />
+    <Compile Include="LogCache.cs" />
     <Compile Include="PlayerCache.cs" />
     <Compile Include="OrderCache.cs" />
     <Compile Include="PlayerEventArgs.cs" />

@@ -19,4 +19,25 @@ namespace GrandMutus.Data
 	}
 	#endregion
 
+	// (0.9.4)
+	#region LogEventArgsクラス
+	public class LogEventArgs : EventArgs
+	{
+		public int? QuestionID { get; private set; }
+		public int? PlayerID { get; private set; }
+		public string Code { get; private set; }
+		public decimal Value { get; set; }
+
+		public LogEventArgs(string code, decimal value, int? player_id = null, int? question_id = null) : base()
+		{
+			this.QuestionID = question_id;
+			this.PlayerID = player_id;
+			this.Code = code;
+			this.Value = value;
+		}
+	}
+
+	#endregion
+
+
 }

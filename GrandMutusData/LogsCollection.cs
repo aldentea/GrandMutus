@@ -4,7 +4,8 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
-
+using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace GrandMutus.Data
 {
@@ -50,16 +51,70 @@ namespace GrandMutus.Data
 			}
 		}
 
+		// (0.4.5) NoChangedイベントハンドラの着脱を追加．
+		// (0.4.1) Remove時の処理を追加(ほとんどSongsCollectionのコピペ)．
+		private void LogsCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+
+			switch (e.Action)
+			{
+				case NotifyCollectionChangedAction.Add:
+					foreach (var item in e.NewItems)
+					{
+						var order = (Order)item;
+
+						// IDを付与する．
+						// (0.1.2)IDが既に設定されているかどうかを確認．
+						if (order.ID < 0) // 無効な値．
+						{
+							order.ID = GenerateNewOrderID();
+						}
+						// ☆songのプロパティ変更をここで受け取る？MutusDocumentで行えばここでは不要？
+						//question.PropertyChanging += Question_PropertyChanging;
+						//question.PropertyChanged += Question_PropertyChanged;
+						//order.NoChanged += Question_NoChanged;
+
+						// これいる？
+						//order.OnAddedTo(this);
+					}
+					break;
+
+				case NotifyCollectionChangedAction.Remove:
+					//IList<Order> logs = new List<Order>();
+					foreach (var order in e.OldItems.Cast<Order>())
+					{
+
+						// ※↓これいるの？
+						// 削除にあたって、変更通知機能を抑止。
+						//order.PropertyChanging -= Song_PropertyChanging;
+						//order.PropertyChanged -= Song_PropertyChanged;
+						//question.NoChanged -= Question_NoChanged;
+
+						//logs.Add(order);
+					}
+
+					// QuestionのようにUIから直接削除される場合は想定していないので、
+					// この処理は不要だと思う(SongsCollectionを参照)。よって、logsも不要。
+					//if (logs.Count > 0)
+					//{
+					//	this.LogsRemoved(this, new ItemEventArgs<IEnumerable<Order>> { Item = logs });
+					//}
+					break;
+			}
+		}
+
+
 
 		// ここに書く？
 
 		#region ログ追加関連
 
+		// (0.9.4)public化。
 		#region *CurrentOrderプロパティ
 		/// <summary>
 		/// 現在の問題に対応するOrder(もしくはnull)を返します．
 		/// </summary>
-		private Order CurrentOrder
+		public Order CurrentOrder
 		{
 			// とりあえずidが最大のorderを返します．
 			// orderが1つもなければ，nullを返します．
@@ -111,10 +166,10 @@ namespace GrandMutus.Data
 		/// </summary>
 		/// <param name="code"></param>
 		/// <param name="value"></param>
+		[Obsolete("1.0で廃止となります。3引数のバージョンを使用してください。")]
 		public void AddLog(string code, decimal value)
 		{
-			var log = new Log { ID = GenerateNewLogID(), Code = code, Value = value };
-			CurrentOrder.Add(log);
+			AddLog(null, code, value);
 		}
 
 		// (0.9.1)
@@ -123,7 +178,7 @@ namespace GrandMutus.Data
 		/// </summary>
 		/// <param name="code"></param>
 		/// <param name="value"></param>
-		public void AddLog(int playerID, string code, decimal value)
+		public void AddLog(int? playerID, string code, decimal value)
 		{
 			var log = new Log { ID = GenerateNewLogID(), PlayerID = playerID, Code = code, Value = value };
 			CurrentOrder.Add(log);

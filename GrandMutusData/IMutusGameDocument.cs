@@ -55,6 +55,28 @@ namespace GrandMutus
 			}
 			*/
 
+			event EventHandler<LogEventArgs> LogAdded;
+
+			event EventHandler<LogEventArgs> LogRemoved;
+
+			void AddLog(int? player_id, string code, decimal value);
+
+			/// <summary>
+			/// アンドゥ用。
+			/// ↑なら、protectedでもいいんじゃないの？
+			/// </summary>
+			/// <param name="log"></param>
+			void AddLog(Log log, int order_id);
+
+			void RemoveLog(int log_id);
+
+			/// <summary>
+			/// アンドゥ用。
+			/// ↑なら、protectedでもいいんじゃないの？
+			/// </summary>
+			/// <param name="log"></param>
+			void RemoveLog(int order_id, string code, decimal value, int? player_id);
+
 			// (0.9.0)
 			#region Player関連
 
