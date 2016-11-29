@@ -130,10 +130,10 @@ namespace GrandMutus.Data
 		/// 除外されたときは引数をnullにして呼び出せばいいのかな？
 		/// </summary>
 		/// <param name="parent"></param>
-		public virtual void OnAddedTo(PlayersCollection parent)
-		{
-			this.Parent = parent;
-		}
+		//public virtual void OnAddedTo(PlayersCollection parent)
+		//{
+		//	this.Parent = parent;
+		//}
 
 		// で，PlayersCollectionのCollectionChangedから呼び出す，と．
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace GrandMutus.Data
 {
 	// (0.9.0)
-	#region OrderEventArgsクラス
+	#region PlayerEventArgsクラス
 	public class PlayerEventArgs : EventArgs
 	{
 		//public int? QuestionID { get; private set; }

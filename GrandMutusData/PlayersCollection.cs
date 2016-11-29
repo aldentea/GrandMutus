@@ -102,7 +102,8 @@ namespace GrandMutus.Data
 						// ↑とりあえずこのクラスで使っています。
 						player.PropertyChanging += Player_PropertyChanging;
 						player.PropertyChanged += Player_PropertyChanged;
-						player.OnAddedTo(this);
+						// いまのところ使い道がない？
+						//player.OnAddedTo(this);
 					}
 					break;
 				case NotifyCollectionChangedAction.Remove:

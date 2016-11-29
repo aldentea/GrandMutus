@@ -67,7 +67,7 @@ namespace GrandMutus.Data
 	/// <summary>
 	/// 問題に関して最も基本となるクラスです．
 	/// </summary>
-	public abstract class QuestionBase : IQuestionBase, INotifyPropertyChanged, INotifyPropertyChanging
+	public abstract class QuestionBase : IQuestionBase
 	{
 		// (0.4.7.2)やっぱやめた．苦肉の策で，setterをpublicにする．
 		// (0.4.7.1)abstract化．
@@ -181,9 +181,10 @@ namespace GrandMutus.Data
 	}
 	#endregion
 
+	// (0.9.3)INotifyPropertyChanged, INotifyPropertyChangingをこちらに追加(QuestionBaseから移動)。
 	// (0.8.4)とりあえず追加。
 	#region IQuestionBaseインターフェイス
-	public interface IQuestionBase
+	public interface IQuestionBase : INotifyPropertyChanged, INotifyPropertyChanging
 	{
 		int ID { get; set; }
 	}
