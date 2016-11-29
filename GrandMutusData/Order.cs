@@ -41,8 +41,53 @@ namespace GrandMutus.Data
 		#endregion
 
 
-		// コンストラクタはとりあえずデフォルトのものを使用する．
+		// (0.9.5) 未使用。
+		public LogsCollection Parent { get; protected set; }
 
+		// (0.9.5)
+		public void OnAddedTo(LogsCollection parent)
+		{
+			this.Parent = parent;
+		}
+
+		// (0.9.5)
+		public Order()
+		{
+			this.CollectionChanged += Order_CollectionChanged;
+		}
+
+		// (0.9.5)
+		private void Order_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+		{
+			switch(e.Action)
+			{
+				case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+					foreach (var log in e.NewItems.Cast<Log>())
+					{
+						this.LogAdded(this, new LogEventArgs(log.Code, log.Value, log.PlayerID, this.QuestionID));
+					}
+					break;
+				case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+					foreach (var log in e.OldItems.Cast<Log>())
+					{
+						this.LogRemoved(this, new LogEventArgs(log.Code, log.Value, log.PlayerID, this.QuestionID));
+					}
+					break;
+			}
+		}
+
+		// (0.9.5)
+		/// <summary>
+		/// ログが追加されたときに発生します。
+		/// </summary>
+		public event EventHandler<LogEventArgs> LogAdded = delegate { };
+
+
+		// (0.9.5)
+		/// <summary>
+		/// ログが削除されたときに発生します。
+		/// </summary>
+		public event EventHandler<LogEventArgs> LogRemoved = delegate { };
 
 		#region XML入出力関連
 

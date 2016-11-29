@@ -27,7 +27,7 @@ namespace GrandMutus.Data
 		#region *コンストラクタ(LogsCollection)
 		public LogsCollection()
 		{
-			//this.CollectionChanged += LogsCollection_CollectionChanged;
+			this.CollectionChanged += LogsCollection_CollectionChanged;
 
 		}
 		#endregion
@@ -75,7 +75,7 @@ namespace GrandMutus.Data
 						//order.NoChanged += Question_NoChanged;
 
 						// これいる？
-						//order.OnAddedTo(this);
+						order.OnAddedTo(this);
 					}
 					break;
 
@@ -88,9 +88,12 @@ namespace GrandMutus.Data
 						// 削除にあたって、変更通知機能を抑止。
 						//order.PropertyChanging -= Song_PropertyChanging;
 						//order.PropertyChanged -= Song_PropertyChanged;
-						//question.NoChanged -= Question_NoChanged;
 
 						//logs.Add(order);
+
+						order.OnAddedTo(null);
+						order.LogAdded += Order_LogAdded;
+						order.LogRemoved += Order_LogRemoved;
 					}
 
 					// QuestionのようにUIから直接削除される場合は想定していないので、
@@ -103,6 +106,32 @@ namespace GrandMutus.Data
 			}
 		}
 
+		// (0.9.5)
+		private void Order_LogAdded(object sender, LogEventArgs e)
+		{
+			this.LogAdded(sender, e);
+		}
+
+
+		// (0.9.5)
+		private void Order_LogRemoved(object sender, LogEventArgs e)
+		{
+			this.LogRemoved(sender, e);
+		}
+
+
+		// (0.9.5)
+		/// <summary>
+		/// ログが追加されたときに発生します。
+		/// </summary>
+		public event EventHandler<LogEventArgs> LogAdded = delegate { };
+
+
+		// (0.9.5)
+		/// <summary>
+		/// ログが削除されたときに発生します。
+		/// </summary>
+		public event EventHandler<LogEventArgs> LogRemoved = delegate { };
 
 
 		// ここに書く？
@@ -134,7 +163,7 @@ namespace GrandMutus.Data
 		{
 			if (Items.Count == 0)
 			{
-				this.Items.Add(new Order { ID = 0 });
+				this.Add(new Order { ID = 0 });
 				return true;
 			}
 			else
@@ -145,7 +174,7 @@ namespace GrandMutus.Data
 
 		public void AddOrder(int question_id)
 		{
-			this.Items.Add(new Order { ID = GenerateNewOrderID(), QuestionID = question_id });
+			this.Add(new Order { ID = GenerateNewOrderID(), QuestionID = question_id });
 		}
 
 		// (0.8.1.3)QuestionIDを返すように修正。
@@ -157,7 +186,7 @@ namespace GrandMutus.Data
 		{
 			int n = this.Items.Count - 1;
 			int? q_id = this.Items[n].QuestionID;
-			this.Items.RemoveAt(n);
+			this.RemoveAt(n);
 			return q_id;
 		}
 
