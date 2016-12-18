@@ -13,9 +13,9 @@ namespace GrandMutus.Base
 	// 08/02/2015 by aldentea : HyperMutusの同名クラスをコピペ。
 	// 12/04/2013 by aldentea : DialogWithSongから，MediaPlayerや現在位置更新用のタイマを分離．
 
-
+	// (0.3.4)親インターフェイスをISongPlayerに変更。
 	#region SongPlayerクラス
-	public class SongPlayer : INotifyPropertyChanged
+	public class SongPlayer : ISongPlayer
 	{
 		protected MediaPlayer _mPlayer = new MediaPlayer();			// とりあえずprotectedにしておく．
 		DispatcherTimer _updatePositionTimer;
@@ -90,21 +90,16 @@ namespace GrandMutus.Base
 		}
 		#endregion
 
+		// (0.3.4)TimeSpan型に変更。nullになる可能性を考えないことにした。
 		// 12/04/2013 by aldentea : DialogWithSongから移動．
 		#region *Durationプロパティ
-		public TimeSpan? Duration
+		public TimeSpan Duration
 		{
 			get
 			{
-				// 基本的に曲ファイルなので，NaturalDurationがTimeSpanでないことは考えにくいが...
-				if (_mPlayer.NaturalDuration.HasTimeSpan)
-				{
-					return _mPlayer.NaturalDuration.TimeSpan;
-				}
-				else
-				{
-					return null;
-				}
+				// 基本的に曲ファイルなので，NaturalDurationがTimeSpanでないことは考えにくい。
+				// →ので、考えないことにする。
+				return _mPlayer.NaturalDuration.TimeSpan;
 			}
 		}
 		#endregion
@@ -149,45 +144,26 @@ namespace GrandMutus.Base
 		#region *IsActiveプロパティ
 		public bool IsActive
 		{
-			get { return CurrentState != State.Inactive; }
+			get { return CurrentState != SongPlayerState.Inactive; }
 		}
 		#endregion
 
 		// 12/05/2013 by aldentea
 		#region *CurrentStateプロパティ
-		public State CurrentState
+		public SongPlayerState CurrentState
 		{
 			get
 			{
 				if (MediaSource == null)
 				{
-					return State.Inactive;
+					return SongPlayerState.Inactive;
 				}
 				else
 				{
 					// _mPlayerからは再生中か否かを取得できない？
-					return _updatePositionTimer.IsEnabled ? State.Playing : State.Paused;
+					return _updatePositionTimer.IsEnabled ? SongPlayerState.Playing : SongPlayerState.Paused;
 				}
 			}
-		}
-		#endregion
-
-		// 12/05/2013 by aldentea
-		#region State構造体
-		public enum State
-		{
-			/// <summary>
-			/// ソースを開いていない状態です．
-			/// </summary>
-			Inactive,
-			/// <summary>
-			/// 再生中です．
-			/// </summary>
-			Playing,
-			/// <summary>
-			/// 一時停止中です．
-			/// </summary>
-			Paused
 		}
 		#endregion
 
@@ -219,15 +195,15 @@ namespace GrandMutus.Base
 		}
 
 		// 12/05/2013 by aldentea
-		#region *再生と一時停止を切替(ToglePlayPause)
+		#region *再生と一時停止を切替(TogglePlayPause)
 		public void TogglePlayPause()
 		{
 			switch (CurrentState)
 			{
-				case State.Playing:
+				case SongPlayerState.Playing:
 					Pause();
 					break;
-				case State.Paused:
+				case SongPlayerState.Paused:
 					Play();
 					break;
 				default:

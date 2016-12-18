@@ -65,12 +65,43 @@ namespace GrandMutus.Base
 		}
 		#endregion
 
+		// (0.3.4.1)
+		#region *[static]NextQuestionプロパティ
+		/// <summary>
+		/// 次の出題を決定するコマンドを表す値を取得します．
+		/// </summary>
+		public static RoutedCommand NextQuestion
+		{
+			get
+			{
+				return nextQuestionCommand;
+			}
+		}
+		#endregion
+
+		// (0.3.4.1)
+		#region *[static]Judgeプロパティ
+		/// <summary>
+		/// 解答の判定を行うコマンドを表す値を取得します．
+		/// </summary>
+		public static RoutedCommand Judge
+		{
+			get
+			{
+				return judgeCommand;
+			}
+		}
+		#endregion
 
 
 		static RoutedCommand startCommand = new RoutedCommand();
 		static RoutedCommand endCommand = new RoutedCommand();
 		static RoutedCommand stopCommand = new RoutedCommand();
 		static RoutedCommand followCommand = new RoutedCommand();
+
+		// ※とりあえずここに置いておくが，QuizCommandsに入れた方がいいかな？
+		static RoutedCommand nextQuestionCommand = new RoutedCommand();
+		static RoutedCommand judgeCommand = new RoutedCommand(); // 判定内容はパラメータで与える．
 
 	}
 	#endregion
