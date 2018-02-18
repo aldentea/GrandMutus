@@ -44,6 +44,7 @@ namespace GrandMutus.Base
 
 		#endregion
 
+		// (0.4.0)再生終了時にポインタを先頭に戻さないようにする。
 		// (0.1.0)再生終了後にCurrentPositionの通知をするように変更。
 		#region *コンストラクタ(SongPlayer)
 		public SongPlayer()
@@ -53,11 +54,12 @@ namespace GrandMutus.Base
 				MediaOpened(this, EventArgs.Empty);
 			};
 
+			// (0.4.0)再生終了時にポインタを先頭に戻さないようにする。
 			// 再生終了位置に達したときは，ポインタを先頭に戻して一時停止状態にする．
 			_mPlayer.MediaEnded += (sdr, ea) =>
 			{
 				Pause();
-				CurrentPosition = TimeSpan.Zero;
+				//CurrentPosition = TimeSpan.Zero;
 				MediaEnded(this, EventArgs.Empty);
 				this.NotifyPropertyChanged("CurrentPosition");
 			};
