@@ -340,12 +340,13 @@ namespace GrandMutus.Data
 			Songs.Initialize();
 		}
 
+		// (1.0.0)async化。
 		// (0.4.0.1)Songs.RootDirectoryの設定を追加。
-		protected override bool LoadDocument(string fileName)
+		protected async override Task<bool> LoadDocument(string fileName)
 		{
 			using (XmlReader reader = XmlReader.Create(fileName))
 			{
-				var xdoc = XDocument.Load(reader);
+				var xdoc = await XDocumentExtension.LoadAsync(reader);
 				var root = xdoc.Root;
 
 				// ☆ここから下は，継承先でオーバーライドできるようにしておきましょう．
@@ -386,11 +387,12 @@ namespace GrandMutus.Data
 		}
 
 
-		protected override bool SaveDocument(string destination)
+		// (1.0.0)async化。
+		protected async override Task<bool> SaveDocument(string destination)
 		{
 			using (XmlWriter writer = XmlWriter.Create(destination, this.WriterSettings))
 			{
-				GenerateXml(destination).WriteTo(writer);
+				await GenerateXml(destination).WriteToAsync(writer);
 			}
 			// 基本的にtrueを返せばよろしい．
 			// falseを返すべきなのは，保存する前にキャンセルした時とかかな？
