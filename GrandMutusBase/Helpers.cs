@@ -296,6 +296,39 @@ namespace GrandMutus
 			}
 			#endregion
 
+			// (1.0.1)
+			#region *ランダムな順列を取得(GetPermutation)
+			/// <summary>
+			/// 1からmaxまでの順列からランダムに1つを取得します。
+			/// </summary>
+			/// <param name="max"></param>
+			/// <returns></returns>
+			public static List<int> GetPermutation(int max)
+			{
+				if (max < 1)
+				{
+					throw new ArgumentOutOfRangeException("maxには1以上の整数を与えてください。");
+				}
+				var integer_list = new List<int>();
+				var shuffled = new List<int>();
+				for (int i = 1; i < max; i++)
+				{
+					integer_list.Add(i);
+				}
+
+				for (int i = max; i > 1; i--)
+				{
+					var result = r.Next(i);
+					shuffled.Add(integer_list[result]);
+					integer_list.RemoveAt(result);
+				}
+				return shuffled;
+			}
+
+			static readonly Random r = new Random();
+			#endregion
+
+
 		}
 	}
 }
