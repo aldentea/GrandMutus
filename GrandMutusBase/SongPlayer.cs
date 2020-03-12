@@ -232,20 +232,17 @@ namespace GrandMutus.Base
 		}
 		#endregion
 
+		// (1.0.3) ランダムラントロモードのチェックを廃止。
 		// (1.0.1)
 		#region *シークして再生開始(SeekPlay)
 		/// <summary>
-		/// 曲をシークした後に、再生を開始します。ランダムラントロ用のメソッドです。
-		/// IsRandomRantroがfalseの場合は何もしません。
+		/// 曲をシークした後に、再生を開始します。
 		/// </summary>
 		/// <param name="startPosition"></param>
 		public void SeekPlay(TimeSpan playPosition)
 		{
-			if (IsRandomRantro)
-			{
-				CurrentPosition = playPosition;
-				Play();
-			}
+			CurrentPosition = playPosition;
+			Play();
 		}
 		#endregion
 
