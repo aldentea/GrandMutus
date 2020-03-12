@@ -129,7 +129,7 @@ namespace GrandMutus.Base
 		}
 		#endregion
 
-
+		#region *MediaSourceプロパティ
 		/// <summary>
 		/// 再生中のソースのUriを取得します．
 		/// ※設定するにはOpenメソッドを使用して下さい．
@@ -141,6 +141,8 @@ namespace GrandMutus.Base
 				return _mPlayer.Source;
 			}
 		}
+		#endregion
+
 
 		// 12/05/2013 by aldentea
 		#region *IsActiveプロパティ
@@ -168,6 +170,21 @@ namespace GrandMutus.Base
 			}
 		}
 		#endregion
+
+		// (1.0.1)
+		public bool IsRandomRantro
+		{
+			get => _isRandomRantro;
+			set
+			{
+				if (_isRandomRantro != value)
+				{
+					_isRandomRantro = value;
+					NotifyPropertyChanged("IsRandomRantro");
+				}
+			}
+		}
+		bool _isRandomRantro = false;
 
 		/// <summary>
 		/// ファイルを開きます．
@@ -211,6 +228,23 @@ namespace GrandMutus.Base
 				default:
 					// ※とりあえず無処理．例外投げる？
 					break;
+			}
+		}
+		#endregion
+
+		// (1.0.1)
+		#region *シークして再生開始(SeekPlay)
+		/// <summary>
+		/// 曲をシークした後に、再生を開始します。ランダムラントロ用のメソッドです。
+		/// IsRandomRantroがfalseの場合は何もしません。
+		/// </summary>
+		/// <param name="startPosition"></param>
+		public void SeekPlay(TimeSpan playPosition)
+		{
+			if (IsRandomRantro)
+			{
+				CurrentPosition = playPosition;
+				Play();
 			}
 		}
 		#endregion
