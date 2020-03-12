@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Commands.cs" />
     <Compile Include="Converters.cs" />
+    <Compile Include="ExportDialog.xaml.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="ISongPlayer.cs" />
     <Compile Include="QuizCommands.cs" />
@@ -64,6 +65,12 @@
       <Project>{206b085b-f3c5-4ccb-aa5e-4111a1026a60}</Project>
       <Name>GrandMutusData</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="ExportDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

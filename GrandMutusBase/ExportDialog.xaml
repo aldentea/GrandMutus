@@ -1,0 +1,49 @@
+﻿<Window x:Class="GrandMutus.Base.ExportDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+				xmlns:local="clr-namespace:GrandMutus.Base"
+        Title="エクスポート (1/1)" Height="214" Width="549"
+				DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+				Loaded="Window_Loaded">
+	<Window.CommandBindings>
+		<CommandBinding Command="{x:Static local:ExportDialog.OKCommand}"
+										Executed="OK_Executed"
+										CanExecute="OK_CanExecute" />
+		<CommandBinding Command="{x:Static local:ExportDialog.SelectDestinationCommand}"
+										Executed="SelectDestination_Executed"
+										CanExecute="SelectDestination_CanExecute" />
+	</Window.CommandBindings>
+    <Grid RadioButton.Checked="RadioButton_Checked" >
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="100" />
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<Grid.Resources>
+			<Style TargetType="Label">
+				<Setter Property="HorizontalAlignment" Value="Center" />
+				<Setter Property="VerticalAlignment" Value="Top" />
+				<Setter Property="Height" Value="28" />
+			</Style>
+			<Style TargetType="Button">
+				<Setter Property="Height" Value="23" />
+				<Setter Property="HorizontalAlignment" Value="Right" />
+			</Style>
+		</Grid.Resources>
+		<Label Content="エクスポート先" Margin="0,15,0,0" Grid.Column="0" />
+		<Label Content="曲フォルダ" Margin="0,50,0,0" Grid.Column="0" />
+		<TextBox Height="24" Margin="3,17,93,0" Name="textBoxDestination" VerticalAlignment="Top" IsReadOnly="True"
+						 Grid.Column="1" Text="{Binding Path=Destination}" />
+		<RadioButton Content="使わない" Height="16" HorizontalAlignment="Left" Margin="15,55,0,0" Name="radioButtonNo" VerticalAlignment="Top"
+								 Grid.Column="1" />
+		<RadioButton Content="使う" Height="16" HorizontalAlignment="Left" Margin="138,55,0,0" Name="radioButtonYes" VerticalAlignment="Top"
+								 Grid.Column="1" IsChecked="True" />
+		<TextBox Grid.Column="1" Height="24" Margin="195,52,67,0" Name="textBoxSongDirectory" VerticalAlignment="Top"
+						 Text="songs" />
+		<Button Content="選択" Grid.Column="1" Margin="0,17,12,0" Name="button1" VerticalAlignment="Top" Width="69"
+						Command="{x:Static local:ExportDialog.SelectDestinationCommand}" />
+		<Button Content="キャンセル" Grid.Column="1" Margin="0,0,93,6" Name="buttonCancel" VerticalAlignment="Bottom" Width="75"
+						IsCancel="True" />
+		<Button Content="OK" Margin="0,0,12,6" Name="buttonOK" Grid.Column="1" Width="75" Height="23"
+						VerticalAlignment="Bottom" Command="{x:Static local:ExportDialog.OKCommand}" />
+	</Grid>
+</Window>
