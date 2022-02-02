@@ -362,24 +362,28 @@ namespace GrandMutus.Net6.Data
 		}
 
 		// (0.4.0.1)Songs.RootDirectoryの設定を追加。
-		protected override bool LoadDocument(string fileName)
+		protected override async Task<bool> LoadDocument(string fileName)
 		{
+			CancellationToken token = CancellationToken.None;
 			using (XmlReader reader = XmlReader.Create(fileName))
 			{
-				var xdoc = XDocument.Load(reader);
-				var root = xdoc.Root;
-
-				if (root != null)
+				var xdoc = await XDocument.LoadAsync(reader, LoadOptions.None, token);
+				if (xdoc.Root != null)
 				{
-					// ※ここから下は，継承先でオーバーライドできるようにしておきましょう．
-					if (root.Name == ROOT_ELEMENT_NAME)
+					var root = xdoc.Root;
+
+					if (root != null)
 					{
-						decimal? version = (decimal?)root.Attribute(VERSION_ATTERIBUTE);
-						if (version.HasValue)
+						// ※ここから下は，継承先でオーバーライドできるようにしておきましょう．
+						if (root.Name == ROOT_ELEMENT_NAME)
 						{
-							if (version >= 3.0M)
+							decimal? version = (decimal?)root.Attribute(VERSION_ATTERIBUTE);
+							if (version.HasValue)
 							{
-								return LoadGrandMutusDocument(root, fileName);
+								if (version >= 3.0M)
+								{
+									return LoadGrandMutusDocument(root, fileName);
+								}
 							}
 						}
 					}
@@ -419,11 +423,12 @@ namespace GrandMutus.Net6.Data
 		}
 
 
-		protected override bool SaveDocument(string destination)
+		protected override async Task<bool> SaveDocument(string destination)
 		{
+			CancellationToken token = CancellationToken.None;
 			using (XmlWriter writer = XmlWriter.Create(destination, this.WriterSettings))
 			{
-				GenerateXml(destination).WriteTo(writer);
+				await GenerateXml(destination).WriteToAsync(writer, token);
 			}
 			// 基本的にtrueを返せばよろしい．
 			// falseを返すべきなのは，保存する前にキャンセルした時とかかな？
