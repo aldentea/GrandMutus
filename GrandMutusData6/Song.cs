@@ -8,7 +8,7 @@ using System.ComponentModel;
 using System.Xml.Linq;
 using System.IO;
 
-namespace GrandMutus.Data
+namespace GrandMutus.Net6.Data
 {
 	// (0.6.2) ISongインターフェイスを実装．
 	#region Songクラス
@@ -162,7 +162,7 @@ namespace GrandMutus.Data
 		// 問題2. 親要素への参照を設定できるか？
 
 		#region *Parentプロパティ
-		SongsCollection Parent
+		SongsCollection? Parent
 		{
 			get { return _parent; }
 			set
@@ -175,7 +175,7 @@ namespace GrandMutus.Data
 				}
 			}
 		}
-		SongsCollection _parent = null;
+		SongsCollection? _parent = null;
 		#endregion
 
 		// こういうプロパティを用意して，いつ設定するのか？
@@ -217,7 +217,7 @@ namespace GrandMutus.Data
 		/// </summary>
 		/// <param name="songs_root">曲ファイルを格納しているディレクトリのフルパスです．</param>
 		/// <returns></returns>
-		public XElement GenerateElement(string songs_root = null)
+		public XElement GenerateElement(string songs_root = "")
 		{
 			var element = new XElement(ELEMENT_NAME);
 			element.Add(new XAttribute(ID_ATTRIBUTE, this.ID));
@@ -246,7 +246,7 @@ namespace GrandMutus.Data
 		// (0.3.2)sabi_pos属性の処理を追加．
 		// (0.1.2)
 		#region *[static]XML要素からオブジェクトを生成(Generate)
-		public static Song Generate(XElement songElement, string songsRoot = null)
+		public static Song Generate(XElement songElement, string songsRoot = "")
 		{
 			Song song = new Song();
 
@@ -258,9 +258,9 @@ namespace GrandMutus.Data
 			{
 				song.ID = (int)id_attribute;
 			}
-			song.Title = (string)songElement.Element(TITLE_ELEMENT);
-			song.Artist = (string)songElement.Element(ARTIST_ELEMENT);
-			var file_name = (string)songElement.Element(FILE_NAME_ELEMENT);	// 相対パスをフルパスに直す作業が必要！
+			song.Title = (string?)songElement.Element(TITLE_ELEMENT) ?? string.Empty;
+			song.Artist = (string?)songElement.Element(ARTIST_ELEMENT) ?? string.Empty;
+			var file_name = (string?)songElement.Element(FILE_NAME_ELEMENT) ?? string.Empty;	// 相対パスをフルパスに直す作業が必要！
 			if (!Path.IsPathRooted(file_name))
 			{
 				file_name = Path.Combine(songsRoot, file_name);
