@@ -9,8 +9,6 @@ using System.Xml.Linq;
 using System.ComponentModel;
 
 
-using GrandMutus.Data;
-
 namespace GrandMutus.Net6.Data
 {
 	// (0.3.3)

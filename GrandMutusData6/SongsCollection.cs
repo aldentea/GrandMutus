@@ -10,8 +10,6 @@ using System.Xml.Linq;
 //using System.Diagnostics;
 using Aldentea.Wpf.Document;
 
-using GrandMutus.Data; // for ISongsCollection, ValueChangedEventArgs, ItemEventArgs, SongTitleChangedCache, ...
-
 namespace GrandMutus.Net6.Data
 {
 

@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 using Aldentea.Wpf.Document;
 
-
-using GrandMutus.Data; // for PropertyChangedCache
-
 namespace GrandMutus.Net6.Data
 {
 

@@ -10,11 +10,11 @@ namespace GrandMutus.Net6.Data
 
 	// (0.9.0)
 	#region [abstract]PlayerCacheクラス
-	public abstract class PlayerCache : GrandMutus.Data.MutusGameDocumentCache
+	public abstract class PlayerCache : MutusGameDocumentCache
 	{
 		public string PlayerName { get; protected set; }
 
-		public PlayerCache(GrandMutus.Data.IMutusGameDocument document, string name) : base(document)
+		public PlayerCache(IMutusGameDocument document, string name) : base(document)
 		{
 			this.PlayerName = name;
 		}
@@ -27,7 +27,7 @@ namespace GrandMutus.Net6.Data
 	public class AddPlayerCache : PlayerCache
 	{
 
-		public AddPlayerCache(GrandMutus.Data.IMutusGameDocument document, string name) : base(document, name)
+		public AddPlayerCache(IMutusGameDocument document, string name) : base(document, name)
 		{
 		}
 
@@ -55,7 +55,7 @@ namespace GrandMutus.Net6.Data
 	#region RemovePlayerCacheクラス
 	public class RemovePlayerCache : PlayerCache
 	{
-		public RemovePlayerCache(GrandMutus.Data.IMutusGameDocument document, string name) : base(document, name)
+		public RemovePlayerCache(IMutusGameDocument document, string name) : base(document, name)
 		{
 		}
 

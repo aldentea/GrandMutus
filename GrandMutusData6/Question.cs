@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 using System.ComponentModel;
 
-using GrandMutus.Data;
-
 namespace GrandMutus.Net6.Data
 {
 	// (0.8.0.1)abstract化(Answer周辺で)．

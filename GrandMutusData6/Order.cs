@@ -42,10 +42,10 @@ namespace GrandMutus.Net6.Data
 
 
 		// (0.9.5) 未使用。
-		public LogsCollection Parent { get; protected set; }
+		public LogsCollection? Parent { get; protected set; }
 
 		// (0.9.5)
-		public void OnAddedTo(LogsCollection parent)
+		public void OnAddedTo(LogsCollection? parent)
 		{
 			this.Parent = parent;
 		}
@@ -68,7 +68,7 @@ namespace GrandMutus.Net6.Data
 					}
 					foreach (var log in e.NewItems.Cast<Log>())
 					{
-						this.LogAdded(this, new GrandMutus.Data.LogEventArgs(log.Code, log.Value, log.PlayerID, this.QuestionID));
+						this.LogAdded(this, new LogEventArgs(log.Code, log.Value, log.PlayerID, this.QuestionID));
 					}
 
 					break;
@@ -79,7 +79,7 @@ namespace GrandMutus.Net6.Data
 					}
 					foreach (var log in e.OldItems.Cast<Log>())
 					{
-						this.LogRemoved(this, new GrandMutus.Data.LogEventArgs(log.Code, log.Value, log.PlayerID, this.QuestionID));
+						this.LogRemoved(this, new LogEventArgs(log.Code, log.Value, log.PlayerID, this.QuestionID));
 					}
 					break;
 			}
@@ -89,14 +89,14 @@ namespace GrandMutus.Net6.Data
 		/// <summary>
 		/// ログが追加されたときに発生します。
 		/// </summary>
-		public event EventHandler<GrandMutus.Data.LogEventArgs> LogAdded = delegate { };
+		public event EventHandler<LogEventArgs> LogAdded = delegate { };
 
 
 		// (0.9.5)
 		/// <summary>
 		/// ログが削除されたときに発生します。
 		/// </summary>
-		public event EventHandler<GrandMutus.Data.LogEventArgs> LogRemoved = delegate { };
+		public event EventHandler<LogEventArgs> LogRemoved = delegate { };
 
 		#region XML入出力関連
 
@@ -134,15 +134,23 @@ namespace GrandMutus.Net6.Data
 		/// <param name="orderElement"></param>
 		public static Order Generate(XElement orderElement)
 		{
-			int id = (int)orderElement.Attribute(ID_ATTRIBUTE);
-			int? question_id = (int?)orderElement.Attribute(QUESTION_ID_ATTRIBUTE);
-			var order = new Order { ID = id, QuestionID = question_id };
 
-			foreach (var log in orderElement.Elements(Log.ELEMENT_NAME))
+			int? id = (int?)orderElement.Attribute(ID_ATTRIBUTE);
+			if (id.HasValue)
 			{
-				order.Items.Add(Log.Generate(log));
+				int? question_id = (int?)orderElement.Attribute(QUESTION_ID_ATTRIBUTE);
+				var order = new Order { ID = id.Value, QuestionID = question_id };
+
+				foreach (var log in orderElement.Elements(Log.ELEMENT_NAME))
+				{
+					order.Items.Add(Log.Generate(log));
+				}
+				return order;
 			}
-			return order;
+			else
+			{
+				throw new Exception("order要素にid属性がないか、id属性が不正な値を持っています（自然数のみが認められます）。");
+			}
 		}
 		#endregion
 

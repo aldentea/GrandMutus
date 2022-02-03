@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Xml.Linq;
 
-using GrandMutus.Data;
 
 namespace GrandMutus.Net6.Data
 {

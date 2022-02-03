@@ -204,6 +204,7 @@ namespace GrandMutus.Data
 			//AddOperationHistory(new SongsRemovedCache(this, e.Item));
 		//}
 
+		// (0.10.0)m4aファイルに対応。
 		// (0.4.3.1)サビ位置が読み込まれていなかったのを修正。
 		// HyperMutusからのパクリ．古いメソッドだけど，とりあえずそのまま使う．
 		// 場所も未定．とりあえずstatic化してここに置いておく．
@@ -213,10 +214,18 @@ namespace GrandMutus.Data
 		/// </summary>
 		static void LoadInformation(Song song)
 		{
-			SPP.Aldente.IID3Tag tag = SPP.Aldente.AldenteMP3TagAccessor.ReadFile(song.FileName);
-			song.Title = tag == null ? string.Empty : tag.Title;
-			song.Artist = tag == null ? string.Empty : tag.Artist;
-			song.SabiPos = tag == null ? TimeSpan.Zero : TimeSpan.FromSeconds(Convert.ToDouble(tag.SabiPos));
+			var extension = System.IO.Path.GetExtension(song.FileName);
+			switch (extension.ToLower())
+			{
+				case ".mp3":
+				case ".rmp":
+					SPP.Aldente.IID3Tag tag = SPP.Aldente.AldenteMP3TagAccessor.ReadFile(song.FileName);
+					song.Title = tag == null ? string.Empty : tag.Title;
+					song.Artist = tag == null ? string.Empty : tag.Artist;
+					song.SabiPos = tag == null ? TimeSpan.Zero : TimeSpan.FromSeconds(Convert.ToDouble(tag.SabiPos));
+					break;
+
+			}
 		}
 		#endregion
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using Aldentea.Wpf.Controls;
 
-namespace GrandMutus
+namespace GrandMutus.Net6
 {
 	using Data;
 
@@ -33,18 +33,21 @@ namespace GrandMutus
 				bw.DoWork += new DoWorkEventHandler(
 					(sender, e) =>
 					{
-						BackgroundWorker worker = (BackgroundWorker)sender;
-						int i = 0;
-						foreach (var item in (IEnumerable<T>)e.Argument)
+						if (sender is BackgroundWorker && e.Argument is IEnumerable<T>)
 						{
-							if (bw.CancellationPending)
+							BackgroundWorker worker = (BackgroundWorker)sender;
+							int i = 0;
+							foreach (var item in (IEnumerable<T>)e.Argument)
 							{
-								return;
-							}
-							// ここで個別の処理を行う．
-							action.Invoke(item);
+								if (bw.CancellationPending)
+								{
+									return;
+								}
+								// ここで個別の処理を行う．
+								action.Invoke(item);
 
-							worker.ReportProgress(++i);
+								worker.ReportProgress(++i);
+							}
 						}
 					});
 
@@ -84,7 +87,10 @@ namespace GrandMutus
 				bw.DoWork += new DoWorkEventHandler(
 					(sender, e) =>
 					{
-						Parallel.ForEach((IEnumerable<T>)e.Argument, loopAction);
+						if (e.Argument is IEnumerable<T>)
+						{
+							Parallel.ForEach((IEnumerable<T>)e.Argument, loopAction);
+						}
 					});
 
 				bw.ProgressChanged += (sender, e) => { bwd.Current = e.ProgressPercentage; };
@@ -234,7 +240,7 @@ namespace GrandMutus
 				}
 				else
 				{
-					return null;
+					return new string[] { };
 				}
 
 			}
@@ -259,7 +265,7 @@ namespace GrandMutus
 			///	}
 			///	</code>
 			/// </example>
-			public static string SelectSongsRoot(string currentSongsRoot)
+			public static string? SelectSongsRoot(string currentSongsRoot)
 			{
 				FolderBrowserDialog dialog = new FolderBrowserDialog
 				{
@@ -269,7 +275,7 @@ namespace GrandMutus
 				return SelectSongsRoot(currentSongsRoot, dialog);
 			}
 
-			public static string SelectSongsRoot(string currentSongsRoot, double fontSize)
+			public static string? SelectSongsRoot(string currentSongsRoot, double fontSize)
 			{
 				FolderBrowserDialog dialog = new FolderBrowserDialog
 				{
@@ -280,7 +286,7 @@ namespace GrandMutus
 				return SelectSongsRoot(currentSongsRoot, dialog);
 			}
 
-			static string SelectSongsRoot(string currentSongsRoot, FolderBrowserDialog dialog)
+			static string? SelectSongsRoot(string currentSongsRoot, FolderBrowserDialog dialog)
 			{
 				if (!string.IsNullOrEmpty(currentSongsRoot))
 				{
@@ -295,6 +301,39 @@ namespace GrandMutus
 					return null;
 				}
 			}
+			#endregion
+
+
+			// (1.0.1)
+			#region *ランダムな順列を取得(GetPermutation)
+			/// <summary>
+			/// 1からmaxまでの順列からランダムに1つを取得します。
+			/// </summary>
+			/// <param name="max"></param>
+			/// <returns></returns>
+			public static List<int> GetPermutation(int max)
+			{
+				if (max < 1)
+				{
+					throw new ArgumentOutOfRangeException("maxには1以上の整数を与えてください。");
+				}
+				var integer_list = new List<int>();
+				var shuffled = new List<int>();
+				for (int i = 1; i < max; i++)
+				{
+					integer_list.Add(i);
+				}
+
+				for (int i = max; i > 1; i--)
+				{
+					var result = r.Next(i);
+					shuffled.Add(integer_list[result]);
+					integer_list.RemoveAt(result);
+				}
+				return shuffled;
+			}
+
+			static readonly Random r = new Random();
 			#endregion
 
 		}

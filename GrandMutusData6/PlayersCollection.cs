@@ -27,7 +27,7 @@ namespace GrandMutus.Net6.Data
 		}
 
 		// (0.9.0)
-		public Player FindPlayer(string name)
+		public Player? FindPlayer(string name)
 		{
 			return this.SingleOrDefault(player => player.Name == name);
 		}
@@ -83,7 +83,7 @@ namespace GrandMutus.Net6.Data
 		}
 
 
-		void PlayersCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		void PlayersCollection_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
 		{
 			switch (e.Action)
 			{
@@ -142,7 +142,7 @@ namespace GrandMutus.Net6.Data
 		/// <summary>
 		/// 格納されているアイテムのプロパティ値が変化したときに発生します．
 		/// </summary>
-		public event EventHandler<GrandMutus.Data.ItemEventArgs<IOperationCache>> ItemChanged = delegate { };
+		public event EventHandler<ItemEventArgs<IOperationCache>> ItemChanged = delegate { };
 
 
 		string _nameCache = string.Empty; 
@@ -187,28 +187,28 @@ namespace GrandMutus.Net6.Data
 				switch (e.PropertyName)
 				{
 					case "Name":
-						this.ItemChanged(this, new GrandMutus.Data.ItemEventArgs<IOperationCache>
+						this.ItemChanged(this, new ItemEventArgs<IOperationCache>
 						{
 							Item = new PlayerNameChangedCache(player, _nameCache, player.Name)
 						});
 						_nameCache = string.Empty;
 						break;
 					case "Maru":
-						this.ItemChanged(this, new GrandMutus.Data.ItemEventArgs<IOperationCache>
+						this.ItemChanged(this, new ItemEventArgs<IOperationCache>
 						{
 							Item = new PlayerMaruChangedCache(player, _maruCache, player.Maru)
 						});
 						_maruCache = 0;
 						break;
 					case "Batsu":
-						this.ItemChanged(this, new GrandMutus.Data.ItemEventArgs<IOperationCache>
+						this.ItemChanged(this, new ItemEventArgs<IOperationCache>
 						{
 							Item = new PlayerBatsuChangedCache(player, _batsuCache, player.Batsu)
 						});
 						_batsuCache = 0;
 						break;
 					case "Score":
-						this.ItemChanged(this, new GrandMutus.Data.ItemEventArgs<IOperationCache>
+						this.ItemChanged(this, new ItemEventArgs<IOperationCache>
 						{
 							Item = new PlayerScoreChangedCache(player, _scoreCache, player.Score)
 						});

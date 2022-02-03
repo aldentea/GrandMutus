@@ -13,8 +13,6 @@ using Aldentea.Wpf.Document;
 // (0.6.5.1)AldenteaWpfDocumentを3.0.1に変更(<-3.0.0.2)．
 
 
-using GrandMutus.Data;
-
 namespace GrandMutus.Net6.Data
 {
 	// (0.2.0)継承元をDocumentWithOperationHistoryに変更．
@@ -75,7 +73,7 @@ namespace GrandMutus.Net6.Data
 		// (0.2.0)Songs以外でも共通に使えるのではなかろうか？
 		void Songs_ItemChanged(object? sender, ItemEventArgs<IOperationCache> e)
 		{
-			var operationCache = (IOperationCache)e.Item;
+			var operationCache = (IOperationCache?)e.Item;
 			if (operationCache != null)
 			{
 				this.AddOperationHistory(operationCache);
@@ -294,6 +292,10 @@ namespace GrandMutus.Net6.Data
 		// (0.4.1)
 		void Questions_QuestionsRemoved(object? sender, ItemEventArgs<IEnumerable<Question>> e)
 		{
+			if (e.Item == null)
+			{
+				throw new Exception("Itemがnullです（困りましたね）。");
+			}
 			AddOperationHistory(new QuestionsRemovedCache(this, e.Item));
 		}
 

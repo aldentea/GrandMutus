@@ -110,7 +110,7 @@ namespace GrandMutus.Net6.Data
 
 
 		#region *Parentプロパティ
-		PlayersCollection Parent
+		PlayersCollection? Parent
 		{
 			get { return _parent; }
 			set
@@ -122,7 +122,7 @@ namespace GrandMutus.Net6.Data
 				}
 			}
 		}
-		PlayersCollection _parent = null;
+		PlayersCollection? _parent = null;
 		#endregion
 
 		/// <summary>

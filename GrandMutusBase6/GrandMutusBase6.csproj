@@ -8,4 +8,17 @@
     <Authors>aldentea</Authors>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GrandMutusData6\GrandMutusData6.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="AldenteaBackgroundWorkerDialog">
+      <HintPath>..\external\AldenteaBackgroundWorkerDialog.dll</HintPath>
+    </Reference>
+    <Reference Include="AldenteaFolderTreeView">
+      <HintPath>..\external\AldenteaFolderTreeView.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

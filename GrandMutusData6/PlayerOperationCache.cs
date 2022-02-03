@@ -9,7 +9,7 @@ using Aldentea.Wpf.Document;
 namespace GrandMutus.Net6.Data
 {
 
-	public abstract class PlayerPropertyChangedCache<T> : GrandMutus.Data.PropertyChangedCache<T>
+	public abstract class PlayerPropertyChangedCache<T> : PropertyChangedCache<T>
 	{
 		protected Player _player;
 

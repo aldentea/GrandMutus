@@ -53,12 +53,17 @@ namespace GrandMutus.Net6.Data
 
 		// (0.4.5) NoChangedイベントハンドラの着脱を追加．
 		// (0.4.1) Remove時の処理を追加(ほとんどSongsCollectionのコピペ)．
-		private void LogsCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		private void LogsCollection_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
 		{
 
 			switch (e.Action)
 			{
 				case NotifyCollectionChangedAction.Add:
+					if (e.NewItems == null)
+					{
+						throw new Exception("NewItemsがnullです（困りましたね）。");
+					}
+
 					foreach (var item in e.NewItems)
 					{
 						var order = (Order)item;
@@ -81,6 +86,10 @@ namespace GrandMutus.Net6.Data
 
 				case NotifyCollectionChangedAction.Remove:
 					//IList<Order> logs = new List<Order>();
+					if (e.OldItems == null)
+					{
+						throw new Exception("OldItemsがnullです（困りましたね）。");
+					}
 					foreach (var order in e.OldItems.Cast<Order>())
 					{
 
@@ -107,14 +116,14 @@ namespace GrandMutus.Net6.Data
 		}
 
 		// (0.9.5)
-		private void Order_LogAdded(object sender, GrandMutus.Data.LogEventArgs e)
+		private void Order_LogAdded(object? sender, LogEventArgs e)
 		{
 			this.LogAdded(sender, e);
 		}
 
 
 		// (0.9.5)
-		private void Order_LogRemoved(object sender, GrandMutus.Data.LogEventArgs e)
+		private void Order_LogRemoved(object? sender, LogEventArgs e)
 		{
 			this.LogRemoved(sender, e);
 		}
@@ -124,14 +133,14 @@ namespace GrandMutus.Net6.Data
 		/// <summary>
 		/// ログが追加されたときに発生します。
 		/// </summary>
-		public event EventHandler<GrandMutus.Data.LogEventArgs> LogAdded = delegate { };
+		public event EventHandler<LogEventArgs> LogAdded = delegate { };
 
 
 		// (0.9.5)
 		/// <summary>
 		/// ログが削除されたときに発生します。
 		/// </summary>
-		public event EventHandler<GrandMutus.Data.LogEventArgs> LogRemoved = delegate { };
+		public event EventHandler<LogEventArgs> LogRemoved = delegate { };
 
 
 		// ここに書く？
@@ -143,7 +152,7 @@ namespace GrandMutus.Net6.Data
 		/// <summary>
 		/// 現在の問題に対応するOrder(もしくはnull)を返します．
 		/// </summary>
-		public Order CurrentOrder
+		public Order? CurrentOrder
 		{
 			// とりあえずidが最大のorderを返します．
 			// orderが1つもなければ，nullを返します．
@@ -209,8 +218,11 @@ namespace GrandMutus.Net6.Data
 		/// <param name="value"></param>
 		public void AddLog(int? playerID, string code, decimal value)
 		{
-			var log = new Log { ID = GenerateNewLogID(), PlayerID = playerID, Code = code, Value = value };
-			CurrentOrder.Add(log);
+			if (CurrentOrder != null)
+			{
+				var log = new Log { ID = GenerateNewLogID(), PlayerID = playerID, Code = code, Value = value };
+				CurrentOrder.Add(log);
+			}
 		}
 
 		#endregion

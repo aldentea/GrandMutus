@@ -9,10 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GrandMutusData\GrandMutusData.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="AldenteaWpfDocument">
       <HintPath>..\external\net6.0-windows\AldenteaWpfDocument.dll</HintPath>
     </Reference>

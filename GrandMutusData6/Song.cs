@@ -304,6 +304,8 @@ namespace GrandMutus.Net6.Data
 	}
 	#endregion
 
+	
+
 	// (0.7.0)FileNameプロパティのsetterを追加．
 	// (0.6.2)
 	#region *ISongインターフェイス
@@ -322,4 +324,5 @@ namespace GrandMutus.Net6.Data
 	}
 	#endregion
 
+	
 }
