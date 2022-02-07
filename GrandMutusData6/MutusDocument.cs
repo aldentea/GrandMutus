@@ -167,12 +167,11 @@ namespace GrandMutus.Net6.Data
 
 		public Func<IEnumerable<string>, IList<Song>>? AddSongsAction = null;
 
+		// (1.6.0)fileNameに対応するSongがないと信じて、FirstOrDefaultをFirstに変更。
 		// (0.3.0)
 		#region *曲を削除(RemoveSongs)
 		public void RemoveSongs(IEnumerable<string> fileNames)
 		{
-			// ☆fileNameに対応するSongがないことってあるの？
-			//RemoveSongs(fileNames.Select(fileName => _songs.FirstOrDefault(s => s.FileName == fileName)).Where(s => s != null));
 			RemoveSongs(fileNames.Select(fileName => _songs.First(s => s.FileName == fileName)));
 		}
 
@@ -238,7 +237,7 @@ namespace GrandMutus.Net6.Data
 		/// </summary>
 		//public event EventHandler<ItemEventArgs<Song>> SongAdded = delegate { };
 
-		// ☆.Net6対応で、nullを返さないように変更。
+		// (1.6.0).Net6対応で、nullを返さないように変更。
 		public Song GetSong(int id)
 		{
 			return Songs.Single(song => song.ID == id);
@@ -396,7 +395,7 @@ namespace GrandMutus.Net6.Data
 
 		}
 
-		// ☆nullチェック追加。
+		// (1.6.0)nullチェック追加。
 		// (0.6.4.1)NowLoadingの処理を追加．
 		// (0.6.4)RootDirectory関連の処理をSongs.LoadDocumentに移動．
 		// (0.6.3)純粋に読み込むだけの処理を分離(大丈夫かなぁ)．

@@ -6,6 +6,8 @@
     <UseWPF>true</UseWPF>
     <RootNamespace>GrandMutus.Net6.Base</RootNamespace>
     <Authors>aldentea</Authors>
+    <Version>1.6.0</Version>
+    <RepositoryUrl>https://github.com/aldentea/GrandMutus.git</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

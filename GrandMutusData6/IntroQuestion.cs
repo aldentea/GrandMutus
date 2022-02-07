@@ -122,7 +122,7 @@ namespace GrandMutus.Net6.Data
 		}
 		#endregion
 
-		// ☆.Net6対応。
+		// (1.6.0) .Net6対応。
 		// (0.6.4.2)CategoryプロパティをNoプロパティより先にsetするように修正．
 		// (0.3.3)
 		#region *[static]XML要素からオブジェクトを生成(Generate)

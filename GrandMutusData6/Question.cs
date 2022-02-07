@@ -117,7 +117,7 @@ namespace GrandMutus.Net6.Data
 		int? _no = null;
 		#endregion
 
-		// ☆.Net6では、非nullであることが保証される。
+		// (1.6.0).Net6では、非nullであることが保証される。
 		// (0.6.5)get時にnullを返さない(代わりにstring.Emptyを返す)ように修正。
 		// (0.4.8)setterにnullが与えられたときにstring.Emptyをsetする．
 		// (0.4.5.2)Category変更前に、Noをnullにする。

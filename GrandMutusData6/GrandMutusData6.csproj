@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
     <RootNamespace>GrandMutus.Net6.Data</RootNamespace>
     <Authors>aldentea</Authors>
+    <AssemblyVersion>1.6.0.0</AssemblyVersion>
+    <FileVersion>1.6.0.0</FileVersion>
+    <Version>1.6.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
