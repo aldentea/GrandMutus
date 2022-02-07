@@ -206,7 +206,7 @@ namespace GrandMutus.Net6
 			/// <returns>選択されたファイル名の配列，あるいはnull．</returns>
 			public static string[] SelectSongFiles()
 			{
-				return SelectSongFiles("オーディオファイル(*.mp3;*.rmp;.m4a;*.ogg;*.oga;*.ogx)", "mp3ファイル(*.mp3)", "m4aファイル(*.m4a)");
+				return SelectSongFiles("オーディオファイル(*.mp3;*.rmp;*.m4a;*.ogg;*.oga;*.ogx)", "mp3ファイル(*.mp3)", "m4aファイル(*.m4a)");
 			}
 
 			/// <summary>
