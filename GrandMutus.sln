@@ -3,17 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrandMutusData", "GrandMutusData\GrandMutusData.csproj", "{206B085B-F3C5-4CCB-AA5E-4111A1026A60}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckGrandMutusData", "CheckGrandMutusData\CheckGrandMutusData.csproj", "{F7E926A1-1BC7-48A8-884A-7225FDCFA613}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrandMutusDataTest", "SongsTest\GrandMutusDataTest.csproj", "{5B9B0099-A5D8-4293-9A5B-A43B78044F1A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrandMutusBase", "GrandMutusBase\GrandMutusBase.csproj", "{023E769A-F9CC-45C9-B418-687C9959F41C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrandMutusData6", "GrandMutusData6\GrandMutusData6.csproj", "{81660CF0-BE4B-4959-83FE-8D3181C24384}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrandMutusBase6", "GrandMutusBase6\GrandMutusBase6.csproj", "{DC44C579-4ACE-4C39-AC4F-9F5EFCD0C25A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrandMutusBase6", "GrandMutusBase6\GrandMutusBase6.csproj", "{DC44C579-4ACE-4C39-AC4F-9F5EFCD0C25A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,22 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{206B085B-F3C5-4CCB-AA5E-4111A1026A60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{206B085B-F3C5-4CCB-AA5E-4111A1026A60}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{206B085B-F3C5-4CCB-AA5E-4111A1026A60}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{206B085B-F3C5-4CCB-AA5E-4111A1026A60}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F7E926A1-1BC7-48A8-884A-7225FDCFA613}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F7E926A1-1BC7-48A8-884A-7225FDCFA613}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F7E926A1-1BC7-48A8-884A-7225FDCFA613}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F7E926A1-1BC7-48A8-884A-7225FDCFA613}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5B9B0099-A5D8-4293-9A5B-A43B78044F1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5B9B0099-A5D8-4293-9A5B-A43B78044F1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5B9B0099-A5D8-4293-9A5B-A43B78044F1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5B9B0099-A5D8-4293-9A5B-A43B78044F1A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{023E769A-F9CC-45C9-B418-687C9959F41C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{023E769A-F9CC-45C9-B418-687C9959F41C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{023E769A-F9CC-45C9-B418-687C9959F41C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{023E769A-F9CC-45C9-B418-687C9959F41C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{81660CF0-BE4B-4959-83FE-8D3181C24384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{81660CF0-BE4B-4959-83FE-8D3181C24384}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81660CF0-BE4B-4959-83FE-8D3181C24384}.Release|Any CPU.ActiveCfg = Release|Any CPU
